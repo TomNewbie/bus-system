@@ -21,6 +21,8 @@ These guidelines are for installation on a windows machine.
 | Nguyễn Ngọc Vĩnh     | Title          |
 | Phan Chí Thọ         | Text           |
 | Lê Hoàng Đăng Nguyên | defenestration |
+| Lê Hoàng Kim Thanh | Front end |
+
 
 ## Project Descriptions
 
