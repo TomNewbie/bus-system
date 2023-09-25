@@ -1,7 +1,7 @@
 use actix_web::{
-    get,
+    get, routes,
     web::{self, Data, Path, ServiceConfig},
-    HttpResponse, routes,
+    HttpResponse,
 };
 use bson::oid::ObjectId;
 use mongodb::Client;
