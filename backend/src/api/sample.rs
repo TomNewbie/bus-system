@@ -61,10 +61,7 @@ pub struct SampleData {
 
 // TODO: add error handling
 #[get("/sample")]
-#[tracing::instrument(
-    name = "Getting sample data",
-    skip(client),
-)]
+#[tracing::instrument(name = "Getting sample data", skip(client))]
 pub async fn sample(client: web::Data<Client>) -> impl Responder {
     let coll: Collection<SampleData> = client.database("sampledb").collection("sample");
     let docs = coll.find(doc! {}, None).await.unwrap();

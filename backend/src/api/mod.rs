@@ -1,3 +1,4 @@
+pub mod bus_line;
 pub mod health_check;
 pub mod sample;
 
