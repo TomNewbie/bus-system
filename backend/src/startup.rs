@@ -2,6 +2,7 @@ use std::net::TcpListener;
 
 use actix_web::{dev::Server, web::Data, App, HttpServer};
 use mongodb::Client;
+use tracing_actix_web::TracingLogger;
 
 use crate::api::{health_check, sample};
 
@@ -9,6 +10,7 @@ pub fn run(listener: TcpListener, client: Client) -> Result<Server, std::io::Err
     let client = Data::new(client);
     let server = HttpServer::new(move || {
         App::new()
+            .wrap(TracingLogger::default())
             .service(health_check)
             .service(sample)
             .app_data(client.clone())

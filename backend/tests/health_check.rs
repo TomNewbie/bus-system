@@ -2,6 +2,7 @@ use std::net::TcpListener;
 
 use gmanbus::{api::SampleData, configuration};
 use mongodb::Client;
+use secrecy::ExposeSecret;
 
 #[tokio::test]
 async fn health_check_works() {
@@ -37,6 +38,7 @@ async fn sample_returns_100_json_objects() {
 async fn spawn_app() -> String {
     let configuration = configuration::get_configuration().expect("Failed to read configuration.");
     let uri = configuration.database.connection_string();
+    let uri = uri.expose_secret();
     let client = Client::with_uri_str(uri)
         .await
         .expect("Failed to connect to MongoDB.");
