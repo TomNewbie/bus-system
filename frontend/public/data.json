@@ -1,0 +1,37 @@
+[{"trip_id":4496944,"arrival_time":"4:15:00","departure_time":"4:15:00","stop_id":"4523","stop_sequence":1,"stop_name":"KALIHI TRANSIT CENTER","stop_lat":21.334465,"stop_lon":-157.887741}
+,{"trip_id":4496944,"arrival_time":"4:18:00","departure_time":"4:18:00","stop_id":"163","stop_sequence":2,"stop_name":"KALIHI-PALAMA BUS FACILITY","stop_lat":21.336199,"stop_lon":-157.886154}
+,{"trip_id":4496944,"arrival_time":"4:20:00","departure_time":"4:20:00","stop_id":"1025","stop_sequence":3,"stop_name":"N KING ST + UMI ST","stop_lat":21.3349,"stop_lon":-157.880928}
+,{"trip_id":4496944,"arrival_time":"4:21:00","departure_time":"4:21:00","stop_id":"993","stop_sequence":4,"stop_name":"N KING ST + GULICK AVE","stop_lat":21.33298,"stop_lon":-157.878942}
+,{"trip_id":4496944,"arrival_time":"4:22:00","departure_time":"4:22:00","stop_id":"3061","stop_sequence":5,"stop_name":"N KING ST + MOKAUEA ST","stop_lat":21.331772,"stop_lon":-157.877451}
+,{"trip_id":4496944,"arrival_time":"4:23:00","departure_time":"4:23:00","stop_id":"994","stop_sequence":6,"stop_name":"N KING ST + KALIHI ST","stop_lat":21.330742,"stop_lon":-157.875131}
+,{"trip_id":4496944,"arrival_time":"4:24:00","departure_time":"4:24:00","stop_id":"3062","stop_sequence":7,"stop_name":"N KING ST + HAKA DR","stop_lat":21.329777,"stop_lon":-157.873349}
+,{"trip_id":4496944,"arrival_time":"4:25:00","departure_time":"4:25:00","stop_id":"3063","stop_sequence":8,"stop_name":"N KING ST + WAIAKAMILO RD","stop_lat":21.327977,"stop_lon":-157.87104}
+,{"trip_id":4496944,"arrival_time":"4:26:00","departure_time":"4:26:00","stop_id":"3064","stop_sequence":9,"stop_name":"N KING ST + KOHOU ST","stop_lat":21.325159,"stop_lon":-157.86908}
+,{"trip_id":4496944,"arrival_time":"4:27:00","departure_time":"4:27:00","stop_id":"995","stop_sequence":10,"stop_name":"N KING ST + KOKEA ST","stop_lat":21.324317,"stop_lon":-157.868601}
+,{"trip_id":4496944,"arrival_time":"4:27:00","departure_time":"4:27:00","stop_id":"3065","stop_sequence":11,"stop_name":"N KING ST + HIKINA LN","stop_lat":21.323382,"stop_lon":-157.868158}
+,{"trip_id":4496944,"arrival_time":"4:28:00","departure_time":"4:28:00","stop_id":"1027","stop_sequence":12,"stop_name":"N KING ST + OPP PALAMA ST","stop_lat":21.321577,"stop_lon":-157.867078}
+,{"trip_id":4496944,"arrival_time":"4:29:00","departure_time":"4:29:00","stop_id":"996","stop_sequence":13,"stop_name":"N KING ST + DILLINGHAM BL","stop_lat":21.318734,"stop_lon":-157.864991}
+,{"trip_id":4496944,"arrival_time":"4:33:00","departure_time":"4:33:00","stop_id":"126","stop_sequence":15,"stop_name":"N HOTEL ST + MAUNAKEA ST","stop_lat":21.312312,"stop_lon":-157.862868}
+,{"trip_id":4496944,"arrival_time":"4:39:00","departure_time":"4:39:00","stop_id":"132","stop_sequence":20,"stop_name":"S KING ST + SOUTH ST","stop_lat":21.303626,"stop_lon":-157.85525}
+,{"trip_id":4496944,"arrival_time":"4:41:00","departure_time":"4:41:00","stop_id":"135","stop_sequence":22,"stop_name":"S KING ST + WARD AVE","stop_lat":21.301652,"stop_lon":-157.849339}
+,{"trip_id":4496944,"arrival_time":"4:45:00","departure_time":"4:45:00","stop_id":"141","stop_sequence":27,"stop_name":"S KING ST + KAHEKA ST","stop_lat":21.297695,"stop_lon":-157.838136}
+,{"trip_id":4496944,"arrival_time":"4:46:00","departure_time":"4:46:00","stop_id":"852","stop_sequence":28,"stop_name":"S KING ST + PUNAHOU ST","stop_lat":21.297026,"stop_lon":-157.836241}
+,{"trip_id":4496944,"arrival_time":"4:47:00","departure_time":"4:47:00","stop_id":"854","stop_sequence":29,"stop_name":"S KING ST + HAUOLI ST","stop_lat":21.295746,"stop_lon":-157.832653}
+,{"trip_id":4496944,"arrival_time":"4:48:00","departure_time":"4:48:00","stop_id":"856","stop_sequence":30,"stop_name":"S KING ST + MCCULLY ST","stop_lat":21.294719,"stop_lon":-157.829805}
+,{"trip_id":4496944,"arrival_time":"4:49:00","departure_time":"4:49:00","stop_id":"858","stop_sequence":31,"stop_name":"S KING ST + MAKAHIKI WAY","stop_lat":21.293972,"stop_lon":-157.827699}
+,{"trip_id":4496944,"arrival_time":"4:50:00","departure_time":"4:50:00","stop_id":"859","stop_sequence":32,"stop_name":"S KING ST + ISENBERG ST","stop_lat":21.293132,"stop_lon":-157.825366}
+,{"trip_id":4496944,"arrival_time":"4:51:00","departure_time":"4:51:00","stop_id":"3067","stop_sequence":33,"stop_name":"S KING ST + KAPAAKEA LN","stop_lat":21.292098,"stop_lon":-157.822578}
+,{"trip_id":4496944,"arrival_time":"4:51:00","departure_time":"4:51:00","stop_id":"3068","stop_sequence":34,"stop_name":"S KING ST + KAHUNA LN","stop_lat":21.291357,"stop_lon":-157.820999}
+,{"trip_id":4496944,"arrival_time":"4:53:00","departure_time":"4:53:00","stop_id":"3070","stop_sequence":35,"stop_name":"S KING ST + CHURCH LN","stop_lat":21.289723,"stop_lon":-157.81795}
+,{"trip_id":4496944,"arrival_time":"4:54:00","departure_time":"4:54:00","stop_id":"2997","stop_sequence":36,"stop_name":"KAPIOLANI BL + WAIALAE AVE","stop_lat":21.288822,"stop_lon":-157.814098}
+,{"trip_id":4496944,"arrival_time":"4:55:00","departure_time":"4:55:00","stop_id":"2998","stop_sequence":37,"stop_name":"WAIALAE AVE + OPP ST LOUIS DR","stop_lat":21.288898,"stop_lon":-157.81122}
+,{"trip_id":4496944,"arrival_time":"4:56:00","departure_time":"4:56:00","stop_id":"2999","stop_sequence":38,"stop_name":"WAIALAE AVE + 3RD AVE","stop_lat":21.287834,"stop_lon":-157.809132}
+,{"trip_id":4496944,"arrival_time":"4:56:00","departure_time":"4:56:00","stop_id":"3071","stop_sequence":39,"stop_name":"WAIALAE AVE + 4TH AVE","stop_lat":21.287055,"stop_lon":-157.807612}
+,{"trip_id":4496944,"arrival_time":"4:57:00","departure_time":"4:57:00","stop_id":"3073","stop_sequence":40,"stop_name":"WAIALAE AVE + 7TH AVE","stop_lat":21.285852,"stop_lon":-157.805256}
+,{"trip_id":4496944,"arrival_time":"4:58:00","departure_time":"4:58:00","stop_id":"3075","stop_sequence":41,"stop_name":"WAIALAE AVE + 9TH AVE","stop_lat":21.284408,"stop_lon":-157.802399}
+,{"trip_id":4496944,"arrival_time":"4:58:00","departure_time":"4:58:00","stop_id":"3076","stop_sequence":42,"stop_name":"WAIALAE AVE + 10TH AVE","stop_lat":21.283794,"stop_lon":-157.801246}
+,{"trip_id":4496944,"arrival_time":"4:59:00","departure_time":"4:59:00","stop_id":"3078","stop_sequence":43,"stop_name":"WAIALAE AVE + KOKO HEAD AVE","stop_lat":21.282374,"stop_lon":-157.798399}
+,{"trip_id":4496944,"arrival_time":"5:00:00","departure_time":"5:00:00","stop_id":"3079","stop_sequence":44,"stop_name":"WAIALAE AVE + 14TH AVE","stop_lat":21.281162,"stop_lon":-157.796065}
+,{"trip_id":4496944,"arrival_time":"5:00:00","departure_time":"5:00:00","stop_id":"3081","stop_sequence":45,"stop_name":"WAIALAE AVE + 16TH AVE","stop_lat":21.280221,"stop_lon":-157.794282}
+,{"trip_id":4496944,"arrival_time":"5:02:00","departure_time":"5:02:00","stop_id":"3153","stop_sequence":47,"stop_name":"KILAUEA AVE + WAIALAE AVE","stop_lat":21.278953,"stop_lon":-157.784441}
+]
