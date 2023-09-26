@@ -2,8 +2,8 @@ import pandas as pd
 import folium
 from folium.plugins import MarkerCluster
 # Load data
-stops_df = pd.read_csv('D:\Coding\BusManagementProject\RMV\stops.txt')
-stop_times_df = pd.read_csv('D:\Coding\BusManagementProject\RMV\stop_times.txt', low_memory=False)
+stops_df = pd.read_csv('stops.txt')
+stop_times_df = pd.read_csv('stop_times.txt', low_memory=False)
 
 # Choose column
 columns_stops = ['stop_id', 'stop_name', 'stop_lat', 'stop_lon', 'location_type']
