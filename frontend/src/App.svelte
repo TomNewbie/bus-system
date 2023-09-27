@@ -35,6 +35,7 @@
         <input placeholder="Search bus service or bus stop" />
         <p>Cancel</p>
       </div>
+      <p>Hello</p>
     </div>
   </Map>
 </body>
