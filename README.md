@@ -16,12 +16,13 @@ These guidelines are for installation on a windows machine.
 
 ## Team Members
 
-| Name                 | Description    |
-| -------------------- | -------------- |
-| Nguyễn Ngọc Vĩnh     | Title          |
-| Phan Chí Thọ         | Text           |
-| Lê Hoàng Đăng Nguyên | defenestration |
-| Lê Hoàng Kim Thanh | Front end |
+| Name                 | Description    | ID |
+| -------------------- | -------------- |----|
+| Nguyễn Ngọc Vĩnh     | Title          |18691|
+| Phan Chí Thọ         | Text           ||
+| Lê Hoàng Đăng Nguyên | defenestration ||
+| Lê Hoàng Kim Thanh | Front end ||
+|                    |||
 
 
 ## Project Descriptions
