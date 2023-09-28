@@ -121,7 +121,3 @@ Please refer to the individual file descriptions for more details on the columns
 ## Licensing
 
 Please note that the usage of this dataset may be subject to licensing agreements or restrictions, depending on the source of the data. Ensure that you comply with any applicable licensing terms and conditions when using this dataset.
-
-## Acknowledgments
-
-If this dataset was sourced from external providers or agencies, consider acknowledging them for providing the data for your project.
