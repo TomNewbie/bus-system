@@ -4,15 +4,13 @@ services:
   mongo:
     build: .
     restart: always
+    container_name: bus-system-db
     environment:
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: example
-      MONGO_INITDB_DATABASE: sampledb
-    command: 'mongod --auth &&
-      mongoimport -d ${MONGO_INITDB_DATABASE} -c sample --file /tmp/sample.json \
-      --jsonArray -u ${MONGO_INITDB_ROOT_USERNAME} -p ${MONGO_INITDB_ROOT_PASSWORD}'
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=example
+      - MONGO_INITDB_DATABASE=sampledb
+    command: "mongod --auth"
     volumes:
       - ./init-mongo.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
-      - ./sample.json:/tmp/sample.json
     ports:
       - '27017-27019:27017-27019'
