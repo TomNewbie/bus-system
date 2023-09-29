@@ -1,10 +1,13 @@
 <script>
+	import BusLineItem from '../BusLineItem.svelte';
 	import Map from '../Map.svelte';
-	import Popover from '../Popover.svelte';
+	import MapMarker from '../MapMarker.svelte';
+	import SearchPopOver from '../SearchPopOver.svelte';
+	import BLinePopover from '../BLinePopover.svelte';
 </script>
 
 <body>
-	<Map lat={21.48} lon={-157.966} zoom={10}>
-		<Popover />
+	<Map lat={35} lon={-84} zoom={3.5}>
+		<BLinePopover />
 	</Map>
 </body>
