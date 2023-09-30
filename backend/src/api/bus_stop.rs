@@ -63,7 +63,7 @@ async fn get_bus_stop_by_id(db_client: Data<Client>, path: Path<String>) -> Http
             Some(bus_stop) => bus_stop,
             None => {
                 tracing::error!("stop_id: {} not found", id);
-                return HttpResponse::BadRequest().body("ID not found");
+                return HttpResponse::NotFound().body("ID not found");
             }
         },
         Err(err) => {
