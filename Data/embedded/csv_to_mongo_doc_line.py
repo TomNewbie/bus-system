@@ -20,7 +20,7 @@ for trip_id, trip_group in filtered_trips_df.groupby('trip_id'):
     trip_attributes = trip_group[['route_id', 'trip_id', 'shape_id', 'start_stop_name', 'end_stop_name', 'agency_name']].iloc[0].to_dict()
     
     # Remove duplicate stops based on stop_id
-    unique_stops = trip_group.drop_duplicates(subset='stop_id')[['arrival_time', 'departure_time', 'stop_sequence', 'stop_name', 'stop_lat', 'stop_lon']]
+    unique_stops = trip_group.drop_duplicates(subset='stop_id')[['stop_id','arrival_time', 'departure_time', 'stop_sequence', 'stop_name', 'stop_lat', 'stop_lon']]
     stops_info = unique_stops.to_dict(orient='records')
     
     trip_data = {

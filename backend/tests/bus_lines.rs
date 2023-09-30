@@ -23,10 +23,27 @@ async fn get_bus_lines_by_id_return_valid_object() {
     let client = reqwest::Client::new();
 
     let response = client
-        .get(&format!("{}/bus-lines/651137007b4ebbc415c07d0c", &address))
+        .get(&format!(
+            "{}/bus-lines/10-703-024-7544.2.22:092800-9-1_1C283E93-0335-4F49-9EAB-AF41012CC60B",
+            &address
+        ))
         .send()
         .await
         .expect("Failed to execute request");
 
     assert!(response.status().is_success());
+}
+
+#[tokio::test]
+async fn get_bus_lines_with_invalid_id() {
+    let address = spawn_app().await;
+    let client = reqwest::Client::new();
+
+    let response = client
+        .get(&format!("{}/bus-lines/12342", &address))
+        .send()
+        .await
+        .expect("Failed to execute request");
+
+    assert!(response.status().is_client_error());
 }
