@@ -10,8 +10,9 @@ These guidelines are for installation on a windows machine.
 - Install `docker`: [link](https://docs.docker.com/desktop/install/windows-install/).
 
 ### Starting the server
-
+- Notes: The set up is still stupid so one step missing will cause the server to behave incorrectly.
 - Start the `mongo` database with `docker compose up` on the top-level folder.
+- Load the data into `mongo` database with `docker exec -it bus-system-db "/tmp/mongo_import.sh"`
 - Start the server with `cd backend && cargo run`.
 
 ## Team Members
@@ -20,7 +21,7 @@ These guidelines are for installation on a windows machine.
 | -------------------- | -------------- |----|
 | Nguyễn Ngọc Vĩnh     | Title          |18691|
 | Phan Chí Thọ         | Text           ||
-| Lê Hoàng Đăng Nguyên | defenestration ||
+| Lê Hoàng Đăng Nguyên | defenestration |17028|
 | Lê Hoàng Kim Thanh | Front end ||
 |                    |||
 
