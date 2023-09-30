@@ -4,10 +4,9 @@ use serde::{Deserialize, Serialize};
 // TODO: add join on bus stop
 #[derive(Debug, Serialize, Deserialize, PartialEq)]
 pub struct BusLine {
-    #[serde(rename = "_id", skip_serializing_if = "Option::is_none")]
-    pub id: Option<ObjectId>,
-    pub name: String,
-    pub start_dest: String,
-    pub end_dest: String,
-    pub duration: f64,
+    pub route_id: usize,
+    pub trip_id: String,
+    pub start_stop_name: String,
+    pub end_stop_name: String,
+    pub agency_name: String,
 }
