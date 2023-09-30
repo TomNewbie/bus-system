@@ -35,7 +35,7 @@ async fn get_bus_lines_by_id_return_valid_object() {
 }
 
 #[tokio::test]
-async fn get_bus_lines_with_invalid_id() {
+async fn get_bus_lines_return_404_for_non_existed_id() {
     let address = spawn_app().await;
     let client = reqwest::Client::new();
 
@@ -45,5 +45,5 @@ async fn get_bus_lines_with_invalid_id() {
         .await
         .expect("Failed to execute request");
 
-    assert!(response.status().is_client_error());
+    assert_eq!(404, response.status().as_u16());
 }
