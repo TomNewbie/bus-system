@@ -42,6 +42,15 @@
 				<BusLineItem bus_id={12} bus_start={'Blk 151'} bus_end={'Lakeside Stn'} />
 				<BusLineItem bus_id={12} bus_start={'Blk 151'} bus_end={'Lakeside Stn'} />
 				<BusLineItem bus_id={12} bus_start={'Blk 151'} bus_end={'Lakeside Stn'} />
+				<BusLineItem bus_id={12} bus_start={'Blk 151'} bus_end={'Lakeside Stn'} />
+				<BusLineItem bus_id={12} bus_start={'Blk 151'} bus_end={'Lakeside Stn'} />
+				<BusLineItem bus_id={12} bus_start={'Blk 151'} bus_end={'Lakeside Stn'} />
+				<BusLineItem bus_id={12} bus_start={'Blk 151'} bus_end={'Lakeside Stn'} />
+				<BusLineItem bus_id={12} bus_start={'Blk 151'} bus_end={'Lakeside Stn'} />
+				<BusLineItem bus_id={12} bus_start={'Blk 151'} bus_end={'Lakeside Stn'} />
+				<BusLineItem bus_id={12} bus_start={'Blk 151'} bus_end={'Lakeside Stn'} />
+				<BusLineItem bus_id={12} bus_start={'Blk 151'} bus_end={'Lakeside Stn'} />
+				<BusLineItem bus_id={12} bus_start={'Blk 151'} bus_end={'Lakeside Stn'} />
 			</div>
 		</div>
 	</div>
