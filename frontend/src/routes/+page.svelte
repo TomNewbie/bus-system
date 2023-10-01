@@ -8,7 +8,7 @@
 </script>
 
 <body>
-	<Map lat={35} lon={-84} zoom={3.5}>
+	<Map>
 		<!-- <BStopPopover stop_id={12} stop_name={'The Trillium'} /> -->
 		<!-- <SearchPopOver /> -->
 		<BLinePopover bus_id={1} stop_start={'Blk 307A'} stop_end={'Bishan Stn'} number_stops={7} />
