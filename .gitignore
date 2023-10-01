@@ -1,2 +1,8 @@
 **/target
 *.txt
+agency.csv
+routes.csv
+shapes.csv
+stop_times.csv
+stops.csv
+trips.csv

@@ -8,4 +8,3 @@ db.createUser({
     },
   ],
 });
-db.createCollection('sample');
