@@ -22,7 +22,7 @@ These guidelines are for installation on a windows machine.
 | Phan Chí Thọ         | Text           ||
 | Lê Hoàng Đăng Nguyên | defenestration ||
 | Lê Hoàng Kim Thanh | Front end ||
-|                    |||
+| Trần Quang Minh      | Data           |17061||
 
 
 ## Project Descriptions
