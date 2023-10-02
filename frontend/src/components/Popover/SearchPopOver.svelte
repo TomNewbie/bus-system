@@ -1,6 +1,10 @@
 <script>
 	import BusLineItem from '../BusLineItem.svelte';
-	// @ts-ignore
+	import {
+		searchPopoverVisible,
+		busLinePopoverVisible,
+		busStopPopoverVisible
+	} from '../../stores/stores';
 	import BusStopItem from '../BusStopItem.svelte';
 
 	let isTransformed = false;
@@ -17,10 +21,41 @@
 	$: containerClass = `absolute bottom-0 z-10 w-1/4 transition-transform duration-500 transform right-10 bg-white/90 rounded-t-xl  ${
 		isTransformed ? 'h-9/10' : 'h-1/8'
 	}`;
+
+	$: inputClass = `w-3/4 py-1 border border-solid rounded-xl border-neutral-30 ${
+		isTransformed ? 'w-3/4' : 'w-full'
+	}`;
+
+	let busLines = [
+		{ bus_id: 1, bus_start: 'Blk 1', bus_end: 'Lakeside Stn' },
+		{ bus_id: 2, bus_start: 'Blk 2', bus_end: 'Downtown' },
+		{ bus_id: 3, bus_start: 'Blk 3', bus_end: 'Airport' }
+	];
+
+	let busStops = [
+		{ stop_id: 1, stop_name: 'Blk 1' },
+		{ stop_id: 2, stop_name: 'Blk 2' },
+		{ stop_id: 3, stop_name: 'Blk 3' }
+	];
+
+	// @ts-ignore
+	function navigateToBusLine() {
+		// @ts-ignore
+		toggleTransform('cancel');
+		searchPopoverVisible.update((value) => !value);
+		busLinePopoverVisible.update((value) => !value);
+	}
+
+	function navigateToBusStop() {
+		// @ts-ignore
+		toggleTransform('cancel');
+		searchPopoverVisible.update((value) => !value);
+		busStopPopoverVisible.update((value) => !value);
+	}
 </script>
 
 <body>
-	<div class={containerClass}>
+	<div class={containerClass} class:hidden={!$searchPopoverVisible}>
 		<div class="relative">
 			<div
 				class="sticky top-0 left-0 right-0 flex items-center justify-around px-4 py-4 popover-search bg-white/50 rounded-t-xl"
@@ -28,29 +63,35 @@
 				<input
 					on:click={() => toggleTransform('input')}
 					placeholder="Search for bus line or bus stop"
-					class="w-3/4 py-1 border border-solid rounded-xl border-neutral-30"
+					class={inputClass}
 				/>
-				<button on:click={() => toggleTransform('cancel')} class="text-base">Cancel</button>
+				<button
+					class:hidden={!isTransformed}
+					on:click={() => toggleTransform('cancel')}
+					class="text-base">Cancel</button
+				>
 			</div>
 			<div
 				class="flex flex-col flex-grow gap-4 overflow-y-auto popover-scroll last:border-b-2 last:border-t-0 last:pb-4"
-				style="height: calc(100vh - 130px);"
+				style="height: calc(100vh - 130px); "
 			>
-				<BusLineItem bus_id={12} bus_start={'Blk 151'} bus_end={'Lakeside Stn'} />
-				<BusLineItem bus_id={12} bus_start={'Blk 151'} bus_end={'Lakeside Stn'} />
-				<BusLineItem bus_id={12} bus_start={'Blk 151'} bus_end={'Lakeside Stn'} />
-				<BusLineItem bus_id={12} bus_start={'Blk 151'} bus_end={'Lakeside Stn'} />
-				<BusLineItem bus_id={12} bus_start={'Blk 151'} bus_end={'Lakeside Stn'} />
-				<BusLineItem bus_id={12} bus_start={'Blk 151'} bus_end={'Lakeside Stn'} />
-				<BusLineItem bus_id={12} bus_start={'Blk 151'} bus_end={'Lakeside Stn'} />
-				<BusLineItem bus_id={12} bus_start={'Blk 151'} bus_end={'Lakeside Stn'} />
-				<BusLineItem bus_id={12} bus_start={'Blk 151'} bus_end={'Lakeside Stn'} />
-				<BusLineItem bus_id={12} bus_start={'Blk 151'} bus_end={'Lakeside Stn'} />
-				<BusLineItem bus_id={12} bus_start={'Blk 151'} bus_end={'Lakeside Stn'} />
-				<BusLineItem bus_id={12} bus_start={'Blk 151'} bus_end={'Lakeside Stn'} />
-				<BusLineItem bus_id={12} bus_start={'Blk 151'} bus_end={'Lakeside Stn'} />
-				<BusLineItem bus_id={12} bus_start={'Blk 151'} bus_end={'Lakeside Stn'} />
-				<BusLineItem bus_id={12} bus_start={'Blk 151'} bus_end={'Lakeside Stn'} />
+				{#each busLines as busLine}
+					<BusLineItem
+						bus_id={busLine.bus_id}
+						bus_start={busLine.bus_start}
+						bus_end={busLine.bus_end}
+						handleClick={() => navigateToBusLine()}
+					/>
+				{/each}
+				{#each busStops as busStop}
+					<BusStopItem
+						stop_id={busStop.stop_id}
+						stop_name={busStop.stop_name}
+						handleClick={() => {
+							navigateToBusStop();
+						}}
+					/>
+				{/each}
 			</div>
 		</div>
 	</div>

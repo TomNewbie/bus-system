@@ -2,26 +2,23 @@
 	// @ts-nocheck
 
 	import BusLineTag from '../BusLineTag.svelte';
-	// @ts-ignore
+	import { searchPopoverVisible, busStopPopoverVisible } from '../../stores/stores';
 	export let stop_id;
-	// @ts-ignore
 	export let stop_name;
 	export let number_bus_line = 1;
 
-	let isTransformed = false;
-
 	// @ts-ignore
-	function toggleTransform() {
-		!isTransformed;
+	function navigateToSearch() {
+		searchPopoverVisible.update((value) => !value);
+		busStopPopoverVisible.update((value) => !value);
 	}
-
-	$: containerClass = `absolute bottom-0 z-10 w-1/4 pb-0 mb-0 transition-transform duration-500 transform right-10 bg-white/90 rounded-t-xl   ${
-		isTransformed ? 'hidden' : 'h-1/2'
-	}`;
 </script>
 
 <body>
-	<div class={containerClass}>
+	<div
+		class:hidden={!$busStopPopoverVisible}
+		class="absolute bottom-0 z-10 w-1/4 pb-0 mb-0 transition-transform duration-500 transform right-10 bg-white/90 rounded-t-xl h-9/10"
+	>
 		<div class="relative">
 			<div
 				class="sticky top-0 left-0 right-0 flex items-start justify-start p-4 py-4 popover-stop bg-white/50 rounded-t-xl"
@@ -35,10 +32,15 @@
 					</div>
 
 					<div class="text-xl font-bold text-black">{stop_name}</div>
+
+					<!-- svelte-ignore a11y-click-events-have-key-events -->
+					<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
 					<img
 						src="./times.svg"
 						alt="times-icon"
 						class="absolute w-8 h-8 rounded-full bg-slate-200/60 right-4"
+						on:click={() => navigateToSearch()}
+						style="cursor: pointer;"
 					/>
 				</div>
 			</div>
