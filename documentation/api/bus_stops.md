@@ -82,10 +82,9 @@ Retrieve information about a specific bus stop using its ID.
     "stop_name": "string",
     "stop_lat": double,
     "stop_lon": double,
-    "trips": [
+    "routes": [
             {
                 "route_id": number,
-                "trip_id": "string",
                 "shape_id": "string",
                 "start_stop_name": "string",
                 "end_stop_name": "string",
@@ -99,37 +98,19 @@ Retrieve information about a specific bus stop using its ID.
 
 ```json
 {
-    "stop_id": 43,
-    "stop_name": "Bonn Propsthof Nord",
-    "stop_lat": 50.739096,
-    "stop_lon": 7.073507,
-    "trips": [
-        {
-            "trip_id": "6330039-633-006-8832.2.23:132500-26-1_5EF8EA74-519F-4EBB-AA1A-AF4700977A83",
-            "route_id": 600633,
-            "shape_id": 3124,
-            "start_stop_name": "Bonn Gerhart-Hauptmann-Str.",
-            "end_stop_name": "Bonn Endenich Nord Bf",
-            "agency_name": "SWB Stadtwerke Bonn Verkehrs GmbH"
-        },
-        {
-            "trip_id": "6330041-633-006-8832.2.23:135500-26-1_54CE0B47-2849-4675-8A18-AF4700977A83",
-            "route_id": 600633,
-            "shape_id": 3124,
-            "start_stop_name": "Bonn Gerhart-Hauptmann-Str.",
-            "end_stop_name": "Bonn Endenich Nord Bf",
-            "agency_name": "SWB Stadtwerke Bonn Verkehrs GmbH"
-        },
-        {
-            "trip_id": "6330043-633-006-8832.2.23:142500-26-1_D84D0A28-C243-4F93-B94E-AF4700977A83",
-            "route_id": 600633,
-            "shape_id": 3124,
-            "start_stop_name": "Bonn Gerhart-Hauptmann-Str.",
-            "end_stop_name": "Bonn Endenich Nord Bf",
-            "agency_name": "SWB Stadtwerke Bonn Verkehrs GmbH"
-        },
-        ...
-    ]
+  "stop_id": 43,
+  "stop_name": "Bonn Propsthof Nord",
+  "stop_lat": 50.739096,
+  "stop_lon": 7.073507,
+  "routes": [
+    {
+      "route_id": 600633,
+      "shape_id": 3124,
+      "start_stop_name": "Bonn Gerhart-Hauptmann-Str.",
+      "end_stop_name": "Bonn Endenich Nord Bf",
+      "agency_name": "SWB Stadtwerke Bonn Verkehrs GmbH"
+    }
+  ]
 }
 ```
 
