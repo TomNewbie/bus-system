@@ -4,7 +4,7 @@
 	import { onMount, onDestroy } from 'svelte';
 	// @ts-ignore
 	import { Map } from 'mapbox-gl';
-	import '../node_modules/mapbox-gl/dist/mapbox-gl.css';
+	import '../../../node_modules/mapbox-gl/dist/mapbox-gl.css';
 
 	// @ts-ignore
 	let map;
@@ -66,5 +66,9 @@
 		position: absolute;
 		width: 100%;
 		height: 100%;
+		bottom: 0;
+		top: 0;
+		right: 0;
+		left: 0;
 	}
 </style>

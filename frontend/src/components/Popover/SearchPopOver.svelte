@@ -1,7 +1,7 @@
 <script>
-	import BusLineItem from './BusLineItem.svelte';
+	import BusLineItem from '../BusLineItem.svelte';
 	// @ts-ignore
-	import BusStopItem from './BusStopItem.svelte';
+	import BusStopItem from '../BusStopItem.svelte';
 
 	let isTransformed = false;
 

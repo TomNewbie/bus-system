@@ -1,7 +1,7 @@
 <script>
 	// @ts-nocheck
 
-	import BusStopTag from './BusStopTag.svelte';
+	import BusStopTag from '../BusStopTag.svelte';
 
 	// @ts-ignore
 	export let bus_id;

@@ -1,24 +1,27 @@
 <script>
 	// @ts-nocheck
 
-	import BusLineItem from './BusLineItem.svelte';
-	import BusLineTag from './BusLineTag.svelte';
-	// @ts-ignore
-	// @ts-ignore
-	import BusStopItem from './BusStopItem.svelte';
-
-	let isTransformed = false;
+	import BusLineTag from '../BusLineTag.svelte';
 	// @ts-ignore
 	export let stop_id;
 	// @ts-ignore
 	export let stop_name;
 	export let number_bus_line = 1;
+
+	let isTransformed = false;
+
+	// @ts-ignore
+	function toggleTransform() {
+		!isTransformed;
+	}
+
+	$: containerClass = `absolute bottom-0 z-10 w-1/4 pb-0 mb-0 transition-transform duration-500 transform right-10 bg-white/90 rounded-t-xl   ${
+		isTransformed ? 'hidden' : 'h-1/2'
+	}`;
 </script>
 
 <body>
-	<div
-		class="absolute bottom-0 z-10 w-1/4 pb-0 mb-0 transition-transform duration-500 transform right-10 bg-white/90 rounded-t-xl h-1/2"
-	>
+	<div class={containerClass}>
 		<div class="relative">
 			<div
 				class="sticky top-0 left-0 right-0 flex items-start justify-start p-4 py-4 popover-stop bg-white/50 rounded-t-xl"
