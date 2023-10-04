@@ -3,7 +3,7 @@ use actix_web::{
     web::{self, Data, Path, ServiceConfig},
     HttpResponse,
 };
-use bson::doc;
+use bson::{doc, Bson};
 use futures::TryStreamExt;
 use mongodb::{Client, Collection};
 
@@ -48,13 +48,21 @@ async fn get_bus_line_by_id(db_client: Data<Client>, path: Path<String>) -> Http
         return HttpResponse::BadRequest().body("invalid ID");
     }
 
+    let id: usize = match id.parse() {
+        Ok(id) => id,
+        Err(err) => {
+            tracing::error!("Failed to parse the ID: {:?}", err);
+            return HttpResponse::BadRequest().body("invalid ID");
+        }
+    };
+
     let col: Collection<BusLineWithStop> = db_client.database("sampledb").collection("lines");
-    let filter = doc! {"trip_id": &id};
+    let filter = doc! {"route_id": Bson::Int64(id as i64)};
     let bus_line = match col.find_one(filter, None).await {
         Ok(opt) => match opt {
             Some(bus_line) => bus_line,
             None => {
-                tracing::error!("trip_id: {} not found", id);
+                tracing::error!("route_id: {} not found", id);
                 return HttpResponse::NotFound().body("ID not found");
             }
         },

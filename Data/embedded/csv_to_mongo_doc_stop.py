@@ -21,35 +21,17 @@ visited_trip_ids = set()
 # Group by stop_id and aggregate the required information for each stop
 stops_data = []
 for stop_id, stop_group in filtered_trips_df.groupby('stop_id'):
-    stop_info = stop_group[['stop_name', 'stop_id', 'stop_lat', 'stop_lon']].iloc[0].to_dict()
+    stop_attributes = stop_group[['stop_name', 'stop_id', 'stop_lat', 'stop_lon']].iloc[0].to_dict()
     
     # Extract trip information for this stop
     trips_info = []
-    for index, row in stop_group.iterrows():
-        trip_id = row['trip_id']
-        
-        # Skip duplicates
-        if trip_id in visited_trip_ids:
-            continue
-        
-        visited_trip_ids.add(trip_id)
-        
-        trip_info = {
-            'trip_id': trip_id,
-            'route_id': row['route_id'],
-            'shape_id': row['shape_id'],
-            'start_stop_name': row['start_stop_name'],
-            'end_stop_name': row['end_stop_name'],
-            'agency_name': row['agency_name']
-        }
-        trips_info.append(trip_info)
+    unique_routes = stop_group.drop_duplicates(subset='route_id')[['route_id','shape_id', 'start_stop_name', 'end_stop_name', 'agency_name']]
+    routes_info = unique_routes.to_dict(orient='records')
     
     stop_data = {
-        'stop_name': stop_info['stop_name'],
-        'stop_id': stop_info['stop_id'],
-        'stop_lat': stop_info['stop_lat'],
-        'stop_lon': stop_info['stop_lon'],
-        'trips': trips_info
+        'stop_id': stop_id,
+        **stop_attributes,
+        'routes': routes_info
     }
     stops_data.append(stop_data)
 
