@@ -3,7 +3,6 @@ use serde::{Deserialize, Serialize};
 #[derive(Debug, Serialize, Deserialize, PartialEq)]
 pub struct BusLineWithoutStop {
     pub route_id: usize,
-    pub trip_id: String,
     pub start_stop_name: String,
     pub end_stop_name: String,
     pub agency_name: String,
@@ -12,7 +11,6 @@ pub struct BusLineWithoutStop {
 #[derive(Debug, Serialize, Deserialize, PartialEq)]
 pub struct BusLineWithStop {
     pub route_id: usize,
-    pub trip_id: String,
     pub start_stop_name: String,
     pub end_stop_name: String,
     pub agency_name: String,
@@ -22,8 +20,6 @@ pub struct BusLineWithStop {
 #[derive(Debug, Serialize, Deserialize, PartialEq)]
 pub struct BusStop {
     pub stop_id: usize,
-    pub arrival_time: String,
-    pub departure_time: String,
     pub stop_sequence: usize,
     pub stop_name: String,
     pub stop_lat: f64,

@@ -13,12 +13,11 @@ pub struct BusStopWithTrip {
     pub stop_name: String,
     pub stop_lat: f64,
     pub stop_lon: f64,
-    pub trips: Vec<BusTrip>,
+    pub routes: Vec<BusRoute>,
 }
 
 #[derive(Debug, Serialize, Deserialize, PartialEq)]
-pub struct BusTrip {
-    pub trip_id: String,
+pub struct BusRoute {
     pub route_id: usize,
     pub shape_id: usize,
     pub start_stop_name: String,
