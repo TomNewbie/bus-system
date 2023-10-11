@@ -6,3 +6,7 @@ shapes.csv
 stop_times.csv
 stops.csv
 trips.csv
+line_freq.csv
+speeds_data.csv
+stop_freq.csv
+segment_data.csv
