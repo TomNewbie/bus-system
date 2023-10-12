@@ -8,3 +8,7 @@ stops.csv
 trips.csv
 configuration.yaml
 segments.json
+line_freq.csv
+speeds_data.csv
+stop_freq.csv
+segment_data.csv
