@@ -4,7 +4,9 @@ use actix_web::{dev::Server, web::Data, App, HttpServer};
 use mongodb::Client;
 use tracing_actix_web::TracingLogger;
 
-use crate::api::{bus_line::bus_line_config, bus_stop::bus_stop_config, health_check};
+use crate::api::{
+    bus_line::bus_line_config, bus_stop::bus_stop_config, health_check, segments::segments_config,
+};
 
 // TODO: Refactor the bus api after the get data
 pub fn run(listener: TcpListener, client: Client) -> Result<Server, std::io::Error> {
@@ -15,6 +17,7 @@ pub fn run(listener: TcpListener, client: Client) -> Result<Server, std::io::Err
             .service(health_check)
             .configure(bus_line_config)
             .configure(bus_stop_config)
+            .configure(segments_config)
             .app_data(client.clone())
     })
     .listen(listener)?
