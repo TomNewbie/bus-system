@@ -21,7 +21,7 @@ pub fn bus_line_config(cfg: &mut ServiceConfig) {
 #[get("")]
 #[get("/")]
 async fn get_all_bus_lines(db_client: Data<Client>) -> HttpResponse {
-    let col: Collection<BusLineWithoutStop> = db_client.database("sampledb").collection("lines");
+    let col: Collection<BusLineWithoutStop> = db_client.database("bus").collection("lines");
     let cursor = match col.find(doc! {}, None).await {
         Ok(cursor) => cursor,
         Err(err) => {
@@ -56,7 +56,7 @@ async fn get_bus_line_by_id(db_client: Data<Client>, path: Path<String>) -> Http
         }
     };
 
-    let col: Collection<BusLineWithStop> = db_client.database("sampledb").collection("lines");
+    let col: Collection<BusLineWithStop> = db_client.database("bus").collection("lines");
     let filter = doc! {"route_id": Bson::Int64(id as i64)};
     let bus_line = match col.find_one(filter, None).await {
         Ok(opt) => match opt {

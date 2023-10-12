@@ -6,3 +6,5 @@ shapes.csv
 stop_times.csv
 stops.csv
 trips.csv
+configuration.yaml
+segments.json
