@@ -4,9 +4,16 @@
 	export let stop_id;
 	export let stop_name;
 	export let is_last_stop = false;
+	export let handleClick;
 </script>
 
-<div class="relative flex pb-12">
+<!-- svelte-ignore a11y-click-events-have-key-events -->
+<!-- svelte-ignore a11y-no-static-element-interactions -->
+<div
+	class="relative flex pb-10 h-fit"
+	on:click={() => handleClick(stop_id)}
+	style="cursor: pointer;"
+>
 	{#if !is_last_stop}
 		<div class="absolute inset-0 flex items-center justify-center w-10 h-full bar">
 			<div class="w-1 h-full bg-[#F01B48] pointer-events-none" />

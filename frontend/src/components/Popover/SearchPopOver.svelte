@@ -1,11 +1,11 @@
 <script>
 	// @ts-nocheck
-
 	import BusLineItem from '../BusLineItem.svelte';
 	import {
 		searchPopoverVisible,
 		busLinePopoverVisible,
-		busStopPopoverVisible
+		busStopPopoverVisible,
+		currentBusLine
 	} from '../../stores/stores';
 	import { onMount } from 'svelte';
 
@@ -21,7 +21,7 @@
 	}
 
 	$: containerClass = `absolute bottom-0 z-10 w-1/4 transition-transform duration-500 transform right-10 bg-white/90 rounded-t-xl  ${
-		isTransformed ? 'h-9/10' : 'h-1/8'
+		isTransformed ? 'h-9/10' : 'h-1/10'
 	}`;
 
 	$: inputClass = `w-3/4 py-1 border border-solid rounded-xl border-neutral-30 ${
@@ -35,14 +35,14 @@
 	onMount(async function () {
 		const response = await fetch(endpoint);
 		const data = await response.json();
-		console.log(data);
 		busLines = data;
 	});
 
-	function navigateToBusLine() {
+	function navigateToBusLine(busLine) {
 		toggleTransform('cancel');
 		searchPopoverVisible.update((value) => !value);
 		busLinePopoverVisible.update((value) => !value);
+		currentBusLine.update((value) => busLine);
 	}
 
 	// @ts-ignore
@@ -72,6 +72,7 @@
 			</div>
 			<div
 				class="flex flex-col flex-grow gap-4 overflow-y-auto popover-scroll last:border-b-2 last:border-t-0 last:pb-4"
+				class:hidden={!isTransformed}
 				style="height: calc(100vh - 130px); "
 			>
 				{#each busLines as busLine}
@@ -79,7 +80,7 @@
 						bus_id={busLine.route_id}
 						bus_start={busLine.start_stop_name}
 						bus_end={busLine.end_stop_name}
-						handleClick={() => navigateToBusLine()}
+						handleClick={() => navigateToBusLine(busLine.route_id)}
 					/>
 				{/each}
 			</div>
