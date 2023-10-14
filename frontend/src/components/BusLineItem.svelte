@@ -17,11 +17,11 @@
 		style="cursor: pointer;"
 	>
 		<div
-			class="mx-6 bg-[#DBF6D0] text-[#3A6727] px-3 py-1 font-semibold rounded-md border-solid border-2 border-white text-base"
+			class="ml-6 mr-1 bg-[#DBF6D0] text-[#3A6727] px-2 py-1 font-semibold rounded-md border-solid border-2 border-white text-sm"
 		>
 			{bus_id}
 		</div>
 
-		<div class="text-base text-black font-regular">{bus_start} → {bus_end}</div>
+		<div class="mr-1 text-base text-black font-regular">{bus_start} → {bus_end}</div>
 	</div>
 </body>

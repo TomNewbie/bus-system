@@ -1,11 +1,13 @@
 <script>
+	// @ts-nocheck
+
 	import BusLineItem from '../BusLineItem.svelte';
 	import {
 		searchPopoverVisible,
 		busLinePopoverVisible,
 		busStopPopoverVisible
 	} from '../../stores/stores';
-	import BusStopItem from '../BusStopItem.svelte';
+	import { onMount } from 'svelte';
 
 	let isTransformed = false;
 
@@ -26,28 +28,25 @@
 		isTransformed ? 'w-3/4' : 'w-full'
 	}`;
 
-	let busLines = [
-		{ bus_id: 1, bus_start: 'Blk 1', bus_end: 'Lakeside Stn' },
-		{ bus_id: 2, bus_start: 'Blk 2', bus_end: 'Downtown' },
-		{ bus_id: 3, bus_start: 'Blk 3', bus_end: 'Airport' }
-	];
-
-	let busStops = [
-		{ stop_id: 1, stop_name: 'Blk 1' },
-		{ stop_id: 2, stop_name: 'Blk 2' },
-		{ stop_id: 3, stop_name: 'Blk 3' }
-	];
-
+	let endpoint = 'http://localhost:8000/bus-lines';
 	// @ts-ignore
+	let busLines = [];
+
+	onMount(async function () {
+		const response = await fetch(endpoint);
+		const data = await response.json();
+		console.log(data);
+		busLines = data;
+	});
+
 	function navigateToBusLine() {
-		// @ts-ignore
 		toggleTransform('cancel');
 		searchPopoverVisible.update((value) => !value);
 		busLinePopoverVisible.update((value) => !value);
 	}
 
+	// @ts-ignore
 	function navigateToBusStop() {
-		// @ts-ignore
 		toggleTransform('cancel');
 		searchPopoverVisible.update((value) => !value);
 		busStopPopoverVisible.update((value) => !value);
@@ -77,19 +76,10 @@
 			>
 				{#each busLines as busLine}
 					<BusLineItem
-						bus_id={busLine.bus_id}
-						bus_start={busLine.bus_start}
-						bus_end={busLine.bus_end}
+						bus_id={busLine.route_id}
+						bus_start={busLine.start_stop_name}
+						bus_end={busLine.end_stop_name}
 						handleClick={() => navigateToBusLine()}
-					/>
-				{/each}
-				{#each busStops as busStop}
-					<BusStopItem
-						stop_id={busStop.stop_id}
-						stop_name={busStop.stop_name}
-						handleClick={() => {
-							navigateToBusStop();
-						}}
 					/>
 				{/each}
 			</div>
