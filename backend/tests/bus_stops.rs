@@ -37,7 +37,10 @@ async fn get_bus_stop_by_id_return_valid_object() {
 async fn get_bus_stop_by_id_return_error_for_invalid_request() {
     let address = spawn_app().await;
     let client = reqwest::Client::new();
-    let test_cases = vec![(400, "abcdef", "ID is not usize"), (404, "21430843", "ID not found")];
+    let test_cases = vec![
+        (400, "abcdef", "ID is not usize"),
+        (404, "21430843", "ID not found"),
+    ];
 
     for (status_code, invalid_body, error_msg) in test_cases {
         let response = client

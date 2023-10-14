@@ -16,7 +16,7 @@
 	markerElement.style.width = '5px'; // Customize the size of the circle
 	markerElement.style.height = '5px';
 	markerElement.style.transform = 'translate(-50%, -50%)'; // Center the marker
-
+    // add icon con cu
 	const popup = new mapbox.Popup({ offset: 25 }).setText(label);
 
 	const customMarker = new mapbox.Marker({

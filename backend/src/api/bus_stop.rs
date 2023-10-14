@@ -7,7 +7,7 @@ use bson::{doc, Bson};
 use futures::TryStreamExt;
 use mongodb::{Client, Collection};
 
-use crate::models::bus_stop::{BusStopWithoutTrip, BusStopWithTrip};
+use crate::models::bus_stop::{BusStopWithTrip, BusStopWithoutTrip};
 
 pub fn bus_stop_config(cfg: &mut ServiceConfig) {
     cfg.service(
@@ -21,7 +21,7 @@ pub fn bus_stop_config(cfg: &mut ServiceConfig) {
 #[get("")]
 #[get("/")]
 async fn get_all_bus_stops(db_client: Data<Client>) -> HttpResponse {
-    let col: Collection<BusStopWithoutTrip> = db_client.database("sampledb").collection("stops");
+    let col: Collection<BusStopWithoutTrip> = db_client.database("bus").collection("stops");
     let cursor = match col.find(doc! {}, None).await {
         Ok(cursor) => cursor,
         Err(err) => {
@@ -56,7 +56,7 @@ async fn get_bus_stop_by_id(db_client: Data<Client>, path: Path<String>) -> Http
         }
     };
 
-    let col: Collection<BusStopWithTrip> = db_client.database("sampledb").collection("stops");
+    let col: Collection<BusStopWithTrip> = db_client.database("bus").collection("stops");
     let filter = doc! {"stop_id": Bson::Int64(id as i64)};
     let bus_stop = match col.find_one(filter, None).await {
         Ok(opt) => match opt {
