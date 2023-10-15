@@ -5,7 +5,6 @@ import json
 chunk_size = 10000
 
 # Load the CSV files into DataFrames
-trips_df = pd.read_csv('trips.csv')
 stops_df = pd.read_csv('stops.csv')
 stop_times_df = pd.read_csv('stop_times.csv')
 
@@ -13,7 +12,7 @@ stop_times_df = pd.read_csv('stop_times.csv')
 routes_data = []
 
 # Process the CSV files in chunks
-for trips_chunk in pd.read_csv('RMV/Data/trips.csv', chunksize=chunk_size):
+for trips_chunk in pd.read_csv('trips.csv', chunksize=chunk_size):
     # Use the already loaded DataFrames in each iteration
     merged_chunk = trips_chunk.merge(stop_times_df, on='trip_id', how='inner')
     merged_chunk = merged_chunk.merge(stops_df, on='stop_id', how='inner')
