@@ -49,7 +49,7 @@
 <body>
 	<div
 		class:hidden={!$busStopPopoverVisible}
-		class="absolute bottom-0 z-10 w-1/4 pb-0 mb-0 transition-transform duration-500 transform right-10 bg-white/90 rounded-t-xl h-9/10"
+		class="absolute bottom-0 z-10 w-1/4 pb-0 mb-0 transition-transform duration-500 transform left-10 bg-white/90 rounded-t-xl h-9/10"
 	>
 		{#if isLoading}
 			<!-- Check if data is loading -->
