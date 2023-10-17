@@ -20,7 +20,7 @@
 		}
 	}
 
-	$: containerClass = `absolute bottom-0 z-10 w-1/4 transition-transform duration-500 transform right-10 bg-white/90 rounded-t-xl  ${
+	$: containerClass = `absolute bottom-0 z-10 w-1/4 transition-transform duration-500 transform left-10 bg-white/90 rounded-t-xl  ${
 		isTransformed ? 'h-9/10' : 'h-1/10'
 	}`;
 
@@ -33,6 +33,7 @@
 	let busLines = [];
 
 	onMount(async function () {
+		console.log('hjehe');
 		const response = await fetch(endpoint);
 		const data = await response.json();
 		busLines = data;
