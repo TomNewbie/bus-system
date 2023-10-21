@@ -69,7 +69,6 @@ with open("metrics.txt", 'w') as outfile:
 # -- Save the trained model to a file --
 model.save("model\\LSTM_1_model_saved_model")
 
-
 # -- Example for making predictions --
 input_data = X_test[10:20]  # Adjust the slice as needed
 predicted_congestion = model.predict(input_data)
