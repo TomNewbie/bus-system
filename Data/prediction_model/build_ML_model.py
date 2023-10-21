@@ -61,6 +61,10 @@ Y_pred_1d = Y_pred.reshape(-1)  # Reshape to a 1D array
 mse = mean_squared_error(Y_test_1d, Y_pred_1d)
 print(f"Mean Squared Error: {mse}")
 
+# Write scores to a file
+with open("metrics.txt", 'w') as outfile:
+        outfile.write("Mean Squared Error: %2.1f%%\n" % mse)
+
 
 # -- Save the trained model to a file --
 model.save("model\\LSTM_1_model_saved_model")
