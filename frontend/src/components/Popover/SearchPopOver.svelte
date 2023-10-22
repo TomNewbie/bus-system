@@ -43,7 +43,6 @@
 		console.log(index);
 	}
 	onMount(async function () {
-		isLoading = false;
 		console.log($hehe);
 	});
 

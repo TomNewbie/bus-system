@@ -5,7 +5,12 @@
 	// @ts-ignore
 	import { Map, Marker, Popup, NavigationControl, LngLatBounds } from 'mapbox-gl';
 	import '../../../node_modules/mapbox-gl/dist/mapbox-gl.css';
-	import { currentIndex, hehe } from '../../stores/stores';
+	import {
+		busLinePopoverVisible,
+		currentIndex,
+		hehe,
+		searchPopoverVisible
+	} from '../../stores/stores';
 	import { listen } from 'svelte/internal';
 
 	// @ts-ignore
@@ -69,10 +74,6 @@
 		isFilter = false;
 	}
 
-	function handleDraw(event) {
-		console.log('asdas');
-		drawDetailBusline(event.detail.results, event.detail.index);
-	}
 	function drawDetailBusline(results, index) {
 		if (index == -1 || index == undefined) return;
 		const routeNumber = index;
@@ -82,16 +83,16 @@
 				results[routeNumber][results[routeNumber].length - 1].geometry.coordinates.length - 1
 			]
 		);
-		map.fitBounds(bounds, {
-			padding: 30
-		});
+
 		results[routeNumber].forEach((segment) => {
 			let startStopLabel = segment['properties']['start_stop_name'];
 			let startStopLngLat = segment['geometry']['coordinates'][0];
 			let popup = new Popup({ offset: 25 }).setText(startStopLabel);
 			const marker = new Marker().setLngLat(startStopLngLat).setPopup(popup).addTo(map);
 			stopsMarker.push(marker);
+			bounds.extend(segment['geometry']['coordinates'][0]);
 		});
+
 		let result = results[routeNumber];
 		let endStopLabel = result[result.length - 1]['properties']['end_stop_name'];
 
@@ -104,7 +105,15 @@
 				]
 			)
 			.addTo(map);
+		bounds.extend(
+			result[result.length - 1]['geometry']['coordinates'][
+				result[result.length - 1]['geometry']['coordinates'].length - 1
+			]
+		);
 		stopsMarker.push(marker);
+		map.fitBounds(bounds, {
+			padding: 30
+		});
 		setDisableLayer(results, index);
 	}
 
@@ -134,13 +143,13 @@
 			groupedData[shapeId].push(feature);
 		});
 
-		hehe.set(Object.values(groupedData));
+		const fullData = Object.values(groupedData);
+		hehe.set(fullData.slice(0, 70));
 	}
 	onMount(async () => {
 		// const unsubscribe = listen(window, 'custom-event', handleDraw);
-		window.addEventListener('custom-event', (event) => {
-			drawDetailBusline(event.detail.results, event.detail.index);
-		});
+		await fetchBusLine();
+
 		map = new Map({
 			// @ts-ignore
 			container: mapContainer,
@@ -155,8 +164,6 @@
 			updateData();
 		});
 		map.addControl(new NavigationControl());
-
-		await fetchBusLine();
 
 		map.on('load', () => {
 			results.forEach((result, index) => {
@@ -201,6 +208,8 @@
 				center: initialState.center,
 				zoom: initialState.zoom
 			});
+			searchPopoverVisible.update((value) => !value);
+			busLinePopoverVisible.update((value) => !value);
 		});
 	});
 	onDestroy(() => {
