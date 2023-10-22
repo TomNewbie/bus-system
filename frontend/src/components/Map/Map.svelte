@@ -5,6 +5,8 @@
 	// @ts-ignore
 	import { Map, Marker, Popup, NavigationControl, LngLatBounds } from 'mapbox-gl';
 	import '../../../node_modules/mapbox-gl/dist/mapbox-gl.css';
+	import { currentIndex, hehe } from '../../stores/stores';
+	import { listen } from 'svelte/internal';
 
 	// @ts-ignore
 	let map;
@@ -16,10 +18,15 @@
 	lng = 7;
 	lat = 50.7;
 	zoom = 9;
+
 	let data = [];
+	$: {
+		viewFullMap(results);
+		drawDetailBusline(results, $currentIndex);
+	}
 
 	// Load the JSON data
-	$: results = [];
+	$: results = $hehe;
 	let isFilter = false;
 	var stopsMarker = [];
 	const initialState = { lngLat: [7.056734830056906, 51.072861874030004], zoom: 11 };
@@ -52,7 +59,9 @@
 		isFilter = true;
 	}
 
-	function setEnableLayer(results) {
+	function viewFullMap(results) {
+		if (results == undefined) return;
+		removeMarker();
 		if (isFilter)
 			results.forEach((result, index) =>
 				map.setLayoutProperty(`route ${index}`, 'visibility', 'visible')
@@ -60,7 +69,12 @@
 		isFilter = false;
 	}
 
+	function handleDraw(event) {
+		console.log('asdas');
+		drawDetailBusline(event.detail.results, event.detail.index);
+	}
 	function drawDetailBusline(results, index) {
+		if (index == -1 || index == undefined) return;
 		const routeNumber = index;
 		const bounds = new LngLatBounds(
 			results[routeNumber][0].geometry.coordinates[0],
@@ -120,9 +134,13 @@
 			groupedData[shapeId].push(feature);
 		});
 
-		return Object.values(groupedData);
+		hehe.set(Object.values(groupedData));
 	}
 	onMount(async () => {
+		// const unsubscribe = listen(window, 'custom-event', handleDraw);
+		window.addEventListener('custom-event', (event) => {
+			drawDetailBusline(event.detail.results, event.detail.index);
+		});
 		map = new Map({
 			// @ts-ignore
 			container: mapContainer,
@@ -138,7 +156,7 @@
 		});
 		map.addControl(new NavigationControl());
 
-		results = await fetchBusLine();
+		await fetchBusLine();
 
 		map.on('load', () => {
 			results.forEach((result, index) => {
@@ -178,8 +196,7 @@
 		});
 
 		map.on('contextmenu', (e) => {
-			setEnableLayer(results);
-			removeMarker();
+			viewFullMap(results);
 			map.flyTo({
 				center: initialState.center,
 				zoom: initialState.zoom
@@ -190,12 +207,16 @@
 		// @ts-ignore
 		if (map) map.remove();
 	});
+	function doSomething() {
+		console.log('asdasd');
+	}
 </script>
 
 <div>
 	<div class="relative min-h-screen min-w-screen">
 		<div bind:this={mapContainer} class="map">
 			{#if map}
+				<div on:custom-event={doSomething} />
 				<slot />
 			{/if}
 		</div>

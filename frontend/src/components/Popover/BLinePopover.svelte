@@ -30,10 +30,10 @@
 
 	$: {
 		busLine = $currentBusLine; // Update busLine when currentBusLine changes
-		endpoint = `http://localhost:8000/bus-lines/${busLine}`;
+		// endpoint = `http://localhost:8000/bus-lines/${busLine}`;
 
-		// Fetch data whenever the endpoint changes
-		fetchBusLineData();
+		// // Fetch data whenever the endpoint changes
+		// fetchBusLineData();
 	}
 
 	// @ts-ignore
