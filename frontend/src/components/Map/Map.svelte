@@ -7,6 +7,7 @@
 	import '../../../node_modules/mapbox-gl/dist/mapbox-gl.css';
 	import {
 		busLinePopoverVisible,
+		currentBusLine,
 		currentIndex,
 		hehe,
 		searchPopoverVisible
@@ -67,15 +68,22 @@
 	function viewFullMap(results) {
 		if (results == undefined) return;
 		removeMarker();
-		if (isFilter)
+		if (isFilter) {
 			results.forEach((result, index) =>
 				map.setLayoutProperty(`route ${index}`, 'visibility', 'visible')
 			);
+			searchPopoverVisible.update((value) => !value);
+			busLinePopoverVisible.update((value) => !value);
+			currentIndex.set(-1);
+		}
 		isFilter = false;
 	}
 
 	function drawDetailBusline(results, index) {
 		if (index == -1 || index == undefined) return;
+		searchPopoverVisible.update((value) => false);
+		busLinePopoverVisible.update((value) => true);
+		currentBusLine.update((value) => results[index]);
 		const routeNumber = index;
 		const bounds = new LngLatBounds(
 			results[routeNumber][0].geometry.coordinates[0],
@@ -208,8 +216,6 @@
 				center: initialState.center,
 				zoom: initialState.zoom
 			});
-			searchPopoverVisible.update((value) => !value);
-			busLinePopoverVisible.update((value) => !value);
 		});
 	});
 	onDestroy(() => {

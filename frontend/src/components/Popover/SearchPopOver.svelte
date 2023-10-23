@@ -14,7 +14,7 @@
 	import { createEventDispatcher } from 'svelte';
 
 	// Create an event dispatcher
-	const dispatch = createEventDispatcher();
+
 	let isTransformed = false;
 
 	// @ts-ignore
@@ -37,10 +37,9 @@
 	let endpoint = 'http://localhost:8000/bus-lines';
 	// @ts-ignore
 	$: busLines = $hehe;
-
+	// $: triggerSearchBar($currentIndex);
 	function triggerSearchBar() {
 		isTransformed = true;
-		console.log(index);
 	}
 	onMount(async function () {
 		console.log($hehe);
@@ -58,12 +57,6 @@
 		toggleTransform('cancel');
 		searchPopoverVisible.update((value) => !value);
 		busStopPopoverVisible.update((value) => !value);
-	}
-	function callOtherFunc(result, index) {
-		dispatch('custom-event', {
-			results: result,
-			index: index
-		});
 	}
 </script>
 

@@ -47,6 +47,7 @@
 	// Function to fetch bus line data
 	function fetchBusLineData() {
 		if (busLine == 0) return;
+		busStops = [];
 		isLoading = true; // Set loading flag to true
 		// busLine = busLines[busLineIndex]; // Get the bus line from the data
 		// console.log(busLineIndex);
@@ -129,7 +130,6 @@
 								stop_id={busStop.stop_id}
 								stop_name={busStop.stop_name}
 								is_last_stop={busStop.is_last_stop}
-								handleClick={() => navigateToBusStop(busStop.stop_id)}
 							/>
 						{/each}
 					{/if}
