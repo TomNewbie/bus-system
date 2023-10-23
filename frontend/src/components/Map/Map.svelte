@@ -5,6 +5,14 @@
 	// @ts-ignore
 	import { Map, Marker, Popup, NavigationControl, LngLatBounds } from 'mapbox-gl';
 	import '../../../node_modules/mapbox-gl/dist/mapbox-gl.css';
+	import {
+		busLinePopoverVisible,
+		currentBusLine,
+		currentIndex,
+		hehe,
+		searchPopoverVisible
+	} from '../../stores/stores';
+	import { listen } from 'svelte/internal';
 
 	// @ts-ignore
 	let map;
@@ -16,10 +24,15 @@
 	lng = 7;
 	lat = 50.7;
 	zoom = 9;
+
 	let data = [];
+	$: {
+		viewFullMap(results);
+		drawDetailBusline(results, $currentIndex);
+	}
 
 	// Load the JSON data
-	$: results = [];
+	$: results = $hehe;
 	let isFilter = false;
 	var stopsMarker = [];
 	const initialState = { lngLat: [7.056734830056906, 51.072861874030004], zoom: 11 };
@@ -52,15 +65,25 @@
 		isFilter = true;
 	}
 
-	function setEnableLayer(results) {
-		if (isFilter)
+	function viewFullMap(results) {
+		if (results == undefined) return;
+		removeMarker();
+		if (isFilter) {
 			results.forEach((result, index) =>
 				map.setLayoutProperty(`route ${index}`, 'visibility', 'visible')
 			);
+			searchPopoverVisible.update((value) => !value);
+			busLinePopoverVisible.update((value) => !value);
+			currentIndex.set(-1);
+		}
 		isFilter = false;
 	}
 
 	function drawDetailBusline(results, index) {
+		if (index == -1 || index == undefined) return;
+		searchPopoverVisible.update((value) => false);
+		busLinePopoverVisible.update((value) => true);
+		currentBusLine.update((value) => results[index]);
 		const routeNumber = index;
 		const bounds = new LngLatBounds(
 			results[routeNumber][0].geometry.coordinates[0],
@@ -68,16 +91,16 @@
 				results[routeNumber][results[routeNumber].length - 1].geometry.coordinates.length - 1
 			]
 		);
-		map.fitBounds(bounds, {
-			padding: 30
-		});
+
 		results[routeNumber].forEach((segment) => {
 			let startStopLabel = segment['properties']['start_stop_name'];
 			let startStopLngLat = segment['geometry']['coordinates'][0];
 			let popup = new Popup({ offset: 25 }).setText(startStopLabel);
 			const marker = new Marker().setLngLat(startStopLngLat).setPopup(popup).addTo(map);
 			stopsMarker.push(marker);
+			bounds.extend(segment['geometry']['coordinates'][0]);
 		});
+
 		let result = results[routeNumber];
 		let endStopLabel = result[result.length - 1]['properties']['end_stop_name'];
 
@@ -90,7 +113,15 @@
 				]
 			)
 			.addTo(map);
+		bounds.extend(
+			result[result.length - 1]['geometry']['coordinates'][
+				result[result.length - 1]['geometry']['coordinates'].length - 1
+			]
+		);
 		stopsMarker.push(marker);
+		map.fitBounds(bounds, {
+			padding: 30
+		});
 		setDisableLayer(results, index);
 	}
 
@@ -120,9 +151,13 @@
 			groupedData[shapeId].push(feature);
 		});
 
-		return Object.values(groupedData);
+		const fullData = Object.values(groupedData);
+		hehe.set(fullData.slice(0, 70));
 	}
 	onMount(async () => {
+		// const unsubscribe = listen(window, 'custom-event', handleDraw);
+		await fetchBusLine();
+
 		map = new Map({
 			// @ts-ignore
 			container: mapContainer,
@@ -137,8 +172,6 @@
 			updateData();
 		});
 		map.addControl(new NavigationControl());
-
-		results = await fetchBusLine();
 
 		map.on('load', () => {
 			results.forEach((result, index) => {
@@ -178,8 +211,7 @@
 		});
 
 		map.on('contextmenu', (e) => {
-			setEnableLayer(results);
-			removeMarker();
+			viewFullMap(results);
 			map.flyTo({
 				center: initialState.center,
 				zoom: initialState.zoom
@@ -190,12 +222,16 @@
 		// @ts-ignore
 		if (map) map.remove();
 	});
+	function doSomething() {
+		console.log('asdasd');
+	}
 </script>
 
 <div>
 	<div class="relative min-h-screen min-w-screen">
 		<div bind:this={mapContainer} class="map">
 			{#if map}
+				<div on:custom-event={doSomething} />
 				<slot />
 			{/if}
 		</div>

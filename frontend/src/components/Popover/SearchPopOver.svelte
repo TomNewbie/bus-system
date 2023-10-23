@@ -5,9 +5,15 @@
 		searchPopoverVisible,
 		busLinePopoverVisible,
 		busStopPopoverVisible,
-		currentBusLine
+		currentBusLine,
+		hehe,
+		currentIndex
 	} from '../../stores/stores';
 	import { onMount } from 'svelte';
+	import drawDetailBusline from '../Map/Map.svelte';
+	import { createEventDispatcher } from 'svelte';
+
+	// Create an event dispatcher
 
 	let isTransformed = false;
 
@@ -30,13 +36,13 @@
 
 	let endpoint = 'http://localhost:8000/bus-lines';
 	// @ts-ignore
-	let busLines = [];
-
+	$: busLines = $hehe;
+	// $: triggerSearchBar($currentIndex);
+	function triggerSearchBar() {
+		isTransformed = true;
+	}
 	onMount(async function () {
-		console.log('hjehe');
-		const response = await fetch(endpoint);
-		const data = await response.json();
-		busLines = data;
+		console.log($hehe);
 	});
 
 	function navigateToBusLine(busLine) {
@@ -76,12 +82,18 @@
 				class:hidden={!isTransformed}
 				style="height: calc(100vh - 130px); "
 			>
-				{#each busLines as busLine}
+				{#each busLines as busLine, index}
 					<BusLineItem
-						bus_id={busLine.route_id}
-						bus_start={busLine.start_stop_name}
-						bus_end={busLine.end_stop_name}
-						handleClick={() => navigateToBusLine(busLine.route_id)}
+						bus_id={busLine[0].properties.route_id}
+						bus_start={busLine[0].properties.start_stop_name}
+						bus_end={busLine[busLine.length - 1].properties.end_stop_name}
+						handleClick={() => {
+							console.log('hhehee');
+							currentIndex.set(index);
+							searchPopoverVisible.update((value) => !value);
+							busLinePopoverVisible.update((value) => !value);
+							currentBusLine.update((value) => busLine);
+						}}
 					/>
 				{/each}
 			</div>

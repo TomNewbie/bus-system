@@ -7,7 +7,8 @@
 		busLinePopoverVisible,
 		busStopPopoverVisible,
 		currentBusLine,
-		currentBusStop
+		currentBusStop,
+		hehe
 	} from '../../stores/stores';
 
 	// @ts-ignore
@@ -25,14 +26,15 @@
 	}
 
 	let endpoint = ''; // Initialize the endpoint
-	let busLine = ''; // Initialize the busLine
+
 	let isLoading = true; // Add a loading flag
+	let busLine;
 
 	$: {
 		busLine = $currentBusLine; // Update busLine when currentBusLine changes
-		endpoint = `http://localhost:8000/bus-lines/${busLine}`;
+		// endpoint = `http://localhost:8000/bus-lines/${busLine}`;
 
-		// Fetch data whenever the endpoint changes
+		// // Fetch data whenever the endpoint changes
 		fetchBusLineData();
 	}
 
@@ -42,23 +44,35 @@
 	let start_stop_name;
 	let end_stop_name;
 	let number_stops;
-
 	// Function to fetch bus line data
-	async function fetchBusLineData() {
-		if (endpoint) {
-			isLoading = true; // Set loading flag to true
-			const response = await fetch(endpoint);
-			const data = await response.json();
+	function fetchBusLineData() {
+		if (busLine == 0) return;
+		busStops = [];
+		isLoading = true; // Set loading flag to true
+		// busLine = busLines[busLineIndex]; // Get the bus line from the data
+		// console.log(busLineIndex);
+		route_id = busLine[0].properties.route_id;
+		start_stop_name = busLine[0].properties.start_stop_name;
+		end_stop_name = busLine[busLine.length - 1].properties.end_stop_name;
 
-			route_id = data.route_id;
-			start_stop_name = data.start_stop_name;
-			end_stop_name = data.end_stop_name;
-			busStops = data.stops;
-			if (busStops) number_stops = busStops.length;
-			else number_stops = 0;
-			busStops[number_stops - 1].is_last_stop = true;
-			isLoading = false; // Set loading flag to false when data is loaded
-		}
+		busLine.forEach((busStop, index) => {
+			busStops.push({
+				stop_id: busStop.properties.start_stop_id,
+				stop_name: busStop.properties.start_stop_name,
+				is_last_stop: false
+			});
+			if (index == busLine.length - 1) {
+				busStops.push({
+					stop_id: busStop.properties.end_stop_id,
+					stop_name: busStop.properties.end_stop_name,
+					is_last_stop: true
+				});
+			}
+		});
+		if (busStops) number_stops = busStops.length;
+		else number_stops = 0;
+		// busStops[number_stops - 1].is_last_stop = true;
+		isLoading = false; // Set loading flag to false when data is loaded
 	}
 </script>
 
@@ -116,7 +130,6 @@
 								stop_id={busStop.stop_id}
 								stop_name={busStop.stop_name}
 								is_last_stop={busStop.is_last_stop}
-								handleClick={() => navigateToBusStop(busStop.stop_id)}
 							/>
 						{/each}
 					{/if}
