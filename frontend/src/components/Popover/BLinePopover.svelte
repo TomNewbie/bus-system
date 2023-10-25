@@ -8,14 +8,16 @@
 		busStopPopoverVisible,
 		currentBusLine,
 		currentBusStop,
-		hehe
+		currentIndex
 	} from '../../stores/stores';
 
 	// @ts-ignore
 	function navigateToSearch() {
-		searchPopoverVisible.update((value) => !value);
-		busLinePopoverVisible.update((value) => !value);
-		currentBusLine.update((value) => 0);
+		searchPopoverVisible.update((value) => true);
+		busLinePopoverVisible.update((value) => false);
+		currentIndex.update((value) => -1);
+		console.log($searchPopoverVisible);
+		console.log($busLinePopoverVisible);
 	}
 
 	// @ts-ignore
@@ -32,9 +34,6 @@
 
 	$: {
 		busLine = $currentBusLine; // Update busLine when currentBusLine changes
-		// endpoint = `http://localhost:8000/bus-lines/${busLine}`;
-
-		// // Fetch data whenever the endpoint changes
 		fetchBusLineData();
 	}
 
@@ -48,9 +47,7 @@
 	function fetchBusLineData() {
 		if (busLine == 0) return;
 		busStops = [];
-		isLoading = true; // Set loading flag to true
-		// busLine = busLines[busLineIndex]; // Get the bus line from the data
-		// console.log(busLineIndex);
+		isLoading = true;
 		route_id = busLine[0].properties.route_id;
 		start_stop_name = busLine[0].properties.start_stop_name;
 		end_stop_name = busLine[busLine.length - 1].properties.end_stop_name;
@@ -71,14 +68,12 @@
 		});
 		if (busStops) number_stops = busStops.length;
 		else number_stops = 0;
-		// busStops[number_stops - 1].is_last_stop = true;
+
 		isLoading = false; // Set loading flag to false when data is loaded
 	}
 </script>
 
 <body>
-	<button>asdlaskdl;askdl;askd</button>
-
 	<div
 		class:hidden={!$busLinePopoverVisible}
 		class="absolute bottom-0 z-10 w-1/4 mb-0 transition-transform duration-500 transform left-10 bg-white/90 rounded-t-xl h-9/10"

@@ -6,4 +6,5 @@ export const busStopPopoverVisible = writable(false);
 export const currentBusLine = writable(0);
 export const currentBusStop = writable(0);
 export const hehe = writable({});
-export const currentIndex = writable(-1);
+export const currentIndex = writable(undefined);
+export const isFullMap = writable(true);

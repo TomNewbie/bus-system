@@ -10,12 +10,10 @@
 		currentIndex
 	} from '../../stores/stores';
 	import { onMount } from 'svelte';
-	import drawDetailBusline from '../Map/Map.svelte';
-	import { createEventDispatcher } from 'svelte';
 
 	// Create an event dispatcher
 
-	let isTransformed = false;
+	let isTransformed = $searchPopoverVisible;
 
 	// @ts-ignore
 	function toggleTransform(source) {
@@ -34,7 +32,6 @@
 		isTransformed ? 'w-3/4' : 'w-full'
 	}`;
 
-	let endpoint = 'http://localhost:8000/bus-lines';
 	// @ts-ignore
 	$: busLines = $hehe;
 	// $: triggerSearchBar($currentIndex);
@@ -47,8 +44,8 @@
 
 	function navigateToBusLine(busLine) {
 		toggleTransform('cancel');
-		searchPopoverVisible.update((value) => !value);
-		busLinePopoverVisible.update((value) => !value);
+		searchPopoverVisible.update((value) => false);
+		busLinePopoverVisible.update((value) => true);
 		currentBusLine.update((value) => busLine);
 	}
 
@@ -90,8 +87,8 @@
 						handleClick={() => {
 							console.log('hhehee');
 							currentIndex.set(index);
-							searchPopoverVisible.update((value) => !value);
-							busLinePopoverVisible.update((value) => !value);
+							searchPopoverVisible.update((value) => false);
+							busLinePopoverVisible.update((value) => true);
 							currentBusLine.update((value) => busLine);
 						}}
 					/>

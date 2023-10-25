@@ -12,7 +12,6 @@
 		hehe,
 		searchPopoverVisible
 	} from '../../stores/stores';
-	import { listen } from 'svelte/internal';
 
 	// @ts-ignore
 	let map;
@@ -25,9 +24,8 @@
 	lat = 50.7;
 	zoom = 9;
 
-	let data = [];
 	$: {
-		viewFullMap(results);
+		viewFullMap(results, $currentIndex);
 		drawDetailBusline(results, $currentIndex);
 	}
 
@@ -65,8 +63,9 @@
 		isFilter = true;
 	}
 
-	function viewFullMap(results) {
+	function viewFullMap(results, indexA) {
 		if (results == undefined) return;
+		if (indexA == undefined) return;
 		removeMarker();
 		if (isFilter) {
 			results.forEach((result, index) =>
@@ -77,6 +76,10 @@
 			currentIndex.set(-1);
 		}
 		isFilter = false;
+		map.flyTo({
+			center: initialState.center,
+			zoom: initialState.zoom
+		});
 	}
 
 	function drawDetailBusline(results, index) {
@@ -120,7 +123,7 @@
 		);
 		stopsMarker.push(marker);
 		map.fitBounds(bounds, {
-			padding: 30
+			padding: { top: 10, bottom: 25, left: 300, right: 5 }
 		});
 		setDisableLayer(results, index);
 	}
@@ -152,7 +155,7 @@
 		});
 
 		const fullData = Object.values(groupedData);
-		hehe.set(fullData.slice(0, 70));
+		hehe.set(fullData.slice(0, 30));
 	}
 	onMount(async () => {
 		// const unsubscribe = listen(window, 'custom-event', handleDraw);
@@ -211,11 +214,7 @@
 		});
 
 		map.on('contextmenu', (e) => {
-			viewFullMap(results);
-			map.flyTo({
-				center: initialState.center,
-				zoom: initialState.zoom
-			});
+			viewFullMap(results, $currentIndex);
 		});
 	});
 	onDestroy(() => {
