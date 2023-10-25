@@ -12,6 +12,7 @@
 		hehe,
 		searchPopoverVisible
 	} from '../../stores/stores';
+	import { listen } from 'svelte/internal';
 
 	// @ts-ignore
 	let map;
@@ -24,8 +25,9 @@
 	lat = 50.7;
 	zoom = 9;
 
+	let data = [];
 	$: {
-		viewFullMap(results, $currentIndex);
+		viewFullMap(results);
 		drawDetailBusline(results, $currentIndex);
 	}
 
@@ -63,9 +65,8 @@
 		isFilter = true;
 	}
 
-	function viewFullMap(results, indexA) {
+	function viewFullMap(results) {
 		if (results == undefined) return;
-		if (indexA == undefined) return;
 		removeMarker();
 		if (isFilter) {
 			results.forEach((result, index) =>
@@ -76,10 +77,6 @@
 			currentIndex.set(-1);
 		}
 		isFilter = false;
-		map.flyTo({
-			center: initialState.center,
-			zoom: initialState.zoom
-		});
 	}
 
 	function drawDetailBusline(results, index) {
@@ -155,7 +152,7 @@
 		});
 
 		const fullData = Object.values(groupedData);
-		hehe.set(fullData.slice(0, 30));
+		hehe.set(fullData.slice(0, 70));
 	}
 	onMount(async () => {
 		// const unsubscribe = listen(window, 'custom-event', handleDraw);
@@ -166,7 +163,7 @@
 			container: mapContainer,
 			accessToken:
 				'pk.eyJ1IjoidGhhbmgzMDAxIiwiYSI6ImNsbjMwMzlsczBlMTQycm5rY3p2cTltdXIifQ.n7uqai-eq-VyjI9-BtJxYg',
-			style: `mapbox://styles/mapbox/outdoors-v11`,
+			style: `mapbox://styles/mapbox/streets-v12`,
 			center: initialState.lngLat,
 			zoom: initialState.zoom
 		});
@@ -198,7 +195,7 @@
 					},
 					paint: {
 						'line-color': color,
-						'line-width': 8
+						'line-width': 4
 					}
 				});
 				map.on('click', `route ${index}`, (e) => {
@@ -214,7 +211,11 @@
 		});
 
 		map.on('contextmenu', (e) => {
-			viewFullMap(results, $currentIndex);
+			viewFullMap(results);
+			map.flyTo({
+				center: initialState.center,
+				zoom: initialState.zoom
+			});
 		});
 	});
 	onDestroy(() => {
