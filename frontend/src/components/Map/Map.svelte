@@ -163,7 +163,7 @@
 			container: mapContainer,
 			accessToken:
 				'pk.eyJ1IjoidGhhbmgzMDAxIiwiYSI6ImNsbjMwMzlsczBlMTQycm5rY3p2cTltdXIifQ.n7uqai-eq-VyjI9-BtJxYg',
-			style: `mapbox://styles/mapbox/outdoors-v11`,
+			style: `mapbox://styles/mapbox/streets-v12`,
 			center: initialState.lngLat,
 			zoom: initialState.zoom
 		});
@@ -195,7 +195,7 @@
 					},
 					paint: {
 						'line-color': color,
-						'line-width': 8
+						'line-width': 4
 					}
 				});
 				map.on('click', `route ${index}`, (e) => {
