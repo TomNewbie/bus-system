@@ -22,12 +22,12 @@ Build a project to predict the bus congestion
 ## Team Members
 
 | Name                 | Description    | ID    |
-| -------------------- | -------------- | ----- | --- |
+| -------------------- | -------------- | ----- | 
 | Nguyễn Ngọc Vĩnh     | Title          | 18691 |
 | Phan Chí Thọ         | Text           | 17232 |
 | Lê Hoàng Đăng Nguyên | defenestration | 17028 |
 | Lê Hoàng Kim Thanh   | Front end      | 18047 |
-| Trần Quang Minh      | Data           | 17061 |     |
+| Trần Quang Minh      | Data           | 17061 |     
 
 ## Installation
 
