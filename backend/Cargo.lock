@@ -854,6 +854,7 @@ dependencies = [
  "chrono",
  "config",
  "futures",
+ "lazy_static",
  "mongodb",
  "reqwest",
  "secrecy",

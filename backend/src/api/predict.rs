@@ -4,7 +4,14 @@ use actix_web::{
     HttpResponse,
 };
 use bson::Document;
+use lazy_static::lazy_static;
 use serde_json::Value;
+
+lazy_static! {
+    static ref URL: &'static str = std::env::var("APP_ENVIRONMENT")
+        .map(|_| "tfserving")
+        .unwrap_or("localhost");
+}
 
 pub fn predict_config(cfg: &mut ServiceConfig) {
     cfg.service(web::scope("/predict").service(dummy_predict));
@@ -13,7 +20,7 @@ pub fn predict_config(cfg: &mut ServiceConfig) {
 // Dummy route to test for connection to tensorflow serving for model deployment
 #[post("dummy")]
 pub async fn dummy_predict() -> HttpResponse {
-    let url = "http://localhost:8501/v1/models/lstm:predict";
+    let url = format!("http://{}:8501/v1/models/lstm:predict", URL.clone());
     let client = reqwest::Client::new();
     let body = r#"
       {
@@ -37,6 +44,8 @@ pub async fn dummy_predict() -> HttpResponse {
             return HttpResponse::InternalServerError().finish();
         }
     };
+
+    let status = resp.status(); 
     let resp: Document = match resp.json().await {
         Ok(resp) => resp,
         Err(err) => {
@@ -44,5 +53,10 @@ pub async fn dummy_predict() -> HttpResponse {
             return HttpResponse::InternalServerError().finish();
         }
     };
+
+    if !status.is_success() {
+        tracing::error!("Error sending prediction request {}", resp);
+        return HttpResponse::InternalServerError().finish();
+    }
     HttpResponse::Ok().json(resp)
 }

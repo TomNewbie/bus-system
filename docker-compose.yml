@@ -1,18 +1,17 @@
 version: '3.1'
 
 services:
-  mongo:
-    build: .
-    restart: always
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: example
-      MONGO_INITDB_DATABASE: sampledb
-    container_name: bus-system-db
-    command: 'mongod --auth'
+  tensorflow:
+    container_name: tfserving
+    image: 'tensorflow/serving'
     volumes:
-      - ./init-mongo.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
-      - ./scripts/mongo_import.sh:/tmp/mongo_import.sh
-      - ./Data/embedded:/tmp/embedded:ro
+      - './models/LSTM_1_model_saved_model:/models/lstm'
     ports:
-      - '27017-27019:27017-27019'
+      - '8501:8501'
+    environment:
+      - MODEL_NAME=lstm
+  gmanbus:
+    container_name: gmanbus
+    build: ./backend
+    ports:
+      - '8000:8000'
