@@ -1,5 +1,21 @@
 # bus-system
 
+
+## Project Descriptions
+
+Build a project to predict the bus congestion
+
+## Team Members
+
+| Name                 | Description    | ID |
+| -------------------- | -------------- |----|
+| Nguyễn Ngọc Vĩnh     | Title          |18691|
+| Phan Chí Thọ         | Text           |17232|
+| Lê Hoàng Đăng Nguyên | defenestration |17028|
+| Lê Hoàng Kim Thanh | Front end |18047|
+| Trần Quang Minh      | Data           |17061||
+
+
 ## Installation
 
 These guidelines are for installation on a windows machine.
@@ -12,18 +28,3 @@ These guidelines are for installation on a windows machine.
 ### Starting the server
 - Notes: The set up is still stupid so one step missing will cause the server to behave incorrectly.
 - Start the server with `cd backend && cargo run`.
-
-## Team Members
-
-| Name                 | Description    | ID |
-| -------------------- | -------------- |----|
-| Nguyễn Ngọc Vĩnh     | Title          |18691|
-| Phan Chí Thọ         | Text           ||
-| Lê Hoàng Đăng Nguyên | defenestration |17028|
-| Lê Hoàng Kim Thanh | Front end ||
-| Trần Quang Minh      | Data           |17061||
-
-
-## Project Descriptions
-
-Build a project to predict the bus congestion
