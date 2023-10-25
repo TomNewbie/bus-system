@@ -8,6 +8,17 @@ Build a project to predict the bus congestion
 
 ![Architecture](/architecture.png)
 
+## Doc
+
+[Figma design](https://www.figma.com/file/RnBcweRNbW1IM18LsszHox/Bus-Map?type=design&node-id=0%3A1&mode=design&t=zp1iTHFkQuFmu4Cb-1)
+
+[Jira](https://tho-phan-chi.atlassian.net/jira/software/projects/TG/boards/1)
+
+## Resources
+
+- Data for bus line, bus stop and bus schedule: [GTFS](https://gtfs.de/de/feeds/de_nv/)
+- Display map: [Mapbox](https://www.mapbox.com/)
+
 ## Team Members
 
 | Name                 | Description    | ID    |
