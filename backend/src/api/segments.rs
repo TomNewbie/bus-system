@@ -16,7 +16,9 @@ pub fn segments_config(cfg: &mut ServiceConfig) {
 #[get("/")]
 async fn get_segments(db_client: Data<Client>) -> HttpResponse {
     let col: Collection<Document> = db_client.database("bus").collection("segments");
-    let cursor  = match col.find(doc! {}, None).await{
+    let limit = doc! {"$limit": 200};
+    let pipeline = vec![limit];
+    let cursor  = match col.aggregate(pipeline, None).await{
         Ok(cursor) => cursor,
         Err(err) => {
             tracing::error!("Failed to execute the query: {:?}", err);
