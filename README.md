@@ -1,5 +1,34 @@
 # bus-system
 
+## Project Descriptions
+
+Build a project to predict the bus congestion
+
+## Architecture
+
+![Architecture](/architecture.png)
+
+## Doc
+
+[Figma design](https://www.figma.com/file/RnBcweRNbW1IM18LsszHox/Bus-Map?type=design&node-id=0%3A1&mode=design&t=zp1iTHFkQuFmu4Cb-1)
+
+[Jira](https://tho-phan-chi.atlassian.net/jira/software/projects/TG/boards/1)
+
+## Resources
+
+- Data for bus line, bus stop and bus schedule: [GTFS](https://gtfs.de/de/feeds/de_nv/)
+- Display map: [Mapbox](https://www.mapbox.com/)
+
+## Team Members
+
+| Name                 | Description    | ID    |
+| -------------------- | -------------- | ----- | 
+| Nguyễn Ngọc Vĩnh     | Title          | 18691 |
+| Phan Chí Thọ         | Text           | 17232 |
+| Lê Hoàng Đăng Nguyên | defenestration | 17028 |
+| Lê Hoàng Kim Thanh   | Front end      | 18047 |
+| Trần Quang Minh      | Data           | 17061 |     
+
 ## Installation
 
 These guidelines are for installation on a windows machine.
@@ -14,16 +43,3 @@ These guidelines are for installation on a windows machine.
 - Notes: The set up is still stupid so one step missing will cause the server to behave incorrectly.
 - Start the server with: `docker compose up`
 
-## Team Members
-
-| Name                 | Description    | ID    |
-| -------------------- | -------------- | ----- | --- |
-| Nguyễn Ngọc Vĩnh     | Title          | 18691 |
-| Phan Chí Thọ         | Text           |       |
-| Lê Hoàng Đăng Nguyên | defenestration | 17028 |
-| Lê Hoàng Kim Thanh   | Front end      |       |
-| Trần Quang Minh      | Data           | 17061 |     |
-
-## Project Descriptions
-
-Build a project to predict the bus congestion
