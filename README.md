@@ -41,4 +41,5 @@ These guidelines are for installation on a windows machine.
 ### Starting the server
 
 - Notes: The set up is still stupid so one step missing will cause the server to behave incorrectly.
-- Start the server with `cd backend && cargo run`.
+- Start the server with: `docker compose up`
+
