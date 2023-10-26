@@ -21,21 +21,36 @@
 	// @ts-ignore
 	let lng, lat, zoom;
 
-	lng = 7;
-	lat = 50.7;
-	zoom = 9;
-
 	let data = [];
 	$: {
-		viewFullMap(results);
-		drawDetailBusline(results, $currentIndex);
+		viewFullMap(formatedBuslines);
+		drawDetailBusline(formatedBuslines, $currentIndex);
 	}
 
 	// Load the JSON data
-	$: results = $hehe;
+	$: formatedBuslines = $hehe;
 	let isFilter = false;
 	var stopsMarker = [];
-	const initialState = { lngLat: [7.056734830056906, 51.072861874030004], zoom: 11 };
+	const initialState = { zoom: 11 };
+
+	function getCenterLngLat(formatedBuslines) {
+		let lng = 0;
+		let lat = 0;
+		let length = 0;
+		if (formatedBuslines == undefined) return;
+		if (initialState.center) return initialState.center;
+		formatedBuslines.forEach((formatedBusline) => {
+			formatedBusline.forEach((busStop) => {
+				busStop.geometry.coordinates.forEach((coordinate) => {
+					lng += coordinate[0];
+					lat += coordinate[1];
+					length++;
+				});
+			});
+		});
+		initialState.center = [lng / length, lat / length];
+		return initialState.center;
+	}
 
 	function updateData() {
 		// @ts-ignore
@@ -45,6 +60,7 @@
 		// @ts-ignore
 		lat = map.getCenter().lat;
 	}
+
 	function getRainbowColor(index) {
 		const lgbtColorsHex = ['#FF0018', '#FFA52D', '#FFFF41', '#008018', '#0000F9', '#86007D'];
 		return lgbtColorsHex[index % lgbtColorsHex.length];
@@ -69,21 +85,25 @@
 		if (results == undefined) return;
 		removeMarker();
 		if (isFilter) {
+			map.flyTo({
+				center: getCenterLngLat(results),
+				zoom: initialState.zoom
+			});
 			results.forEach((result, index) =>
 				map.setLayoutProperty(`route ${index}`, 'visibility', 'visible')
 			);
-			searchPopoverVisible.update((value) => !value);
-			busLinePopoverVisible.update((value) => !value);
-			currentIndex.set(-1);
+			searchPopoverVisible.set(true);
+			busLinePopoverVisible.set(false);
 		}
 		isFilter = false;
 	}
 
 	function drawDetailBusline(results, index) {
+		if (results == undefined) return;
 		if (index == -1 || index == undefined) return;
-		searchPopoverVisible.update((value) => false);
-		busLinePopoverVisible.update((value) => true);
-		currentBusLine.update((value) => results[index]);
+		searchPopoverVisible.set(false);
+		busLinePopoverVisible.set(true);
+		currentBusLine.set(results[index]);
 		const routeNumber = index;
 		const bounds = new LngLatBounds(
 			results[routeNumber][0].geometry.coordinates[0],
@@ -92,6 +112,7 @@
 			]
 		);
 
+		// Create marker and add Bound to fit line
 		results[routeNumber].forEach((segment) => {
 			let startStopLabel = segment['properties']['start_stop_name'];
 			let startStopLngLat = segment['geometry']['coordinates'][0];
@@ -120,8 +141,9 @@
 		);
 		stopsMarker.push(marker);
 		map.fitBounds(bounds, {
-			padding: 30
+			padding: { top: 10, bottom: 25, left: 300, right: 5 }
 		});
+
 		setDisableLayer(results, index);
 	}
 
@@ -154,6 +176,7 @@
 		const fullData = Object.values(groupedData);
 		hehe.set(fullData.slice(0, 70));
 	}
+
 	onMount(async () => {
 		// const unsubscribe = listen(window, 'custom-event', handleDraw);
 		await fetchBusLine();
@@ -164,17 +187,18 @@
 			accessToken:
 				'pk.eyJ1IjoidGhhbmgzMDAxIiwiYSI6ImNsbjMwMzlsczBlMTQycm5rY3p2cTltdXIifQ.n7uqai-eq-VyjI9-BtJxYg',
 			style: `mapbox://styles/mapbox/streets-v12`,
-			center: initialState.lngLat,
+			// center: initialState.lngLat,
+			center: getCenterLngLat($hehe),
 			zoom: initialState.zoom
 		});
 
 		map.on('move', () => {
 			updateData();
 		});
-		map.addControl(new NavigationControl());
+		// map.addControl(new NavigationControl());
 
 		map.on('load', () => {
-			results.forEach((result, index) => {
+			formatedBuslines.forEach((result, index) => {
 				map.addSource(`route ${index}`, {
 					type: 'geojson',
 					data: {
@@ -199,7 +223,8 @@
 					}
 				});
 				map.on('click', `route ${index}`, (e) => {
-					drawDetailBusline(results, index);
+					if (index == $currentIndex) return;
+					currentIndex.set(index);
 				});
 				map.on('mouseenter', `route ${index}`, () => {
 					map.getCanvas().style.cursor = 'pointer';
@@ -211,11 +236,7 @@
 		});
 
 		map.on('contextmenu', (e) => {
-			viewFullMap(results);
-			map.flyTo({
-				center: initialState.center,
-				zoom: initialState.zoom
-			});
+			currentIndex.set(-1);
 		});
 	});
 	onDestroy(() => {
