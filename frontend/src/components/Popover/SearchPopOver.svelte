@@ -34,7 +34,7 @@
 
 	// @ts-ignore
 	$: busLines = $hehe;
-	// $: triggerSearchBar($currentIndex);
+
 	function triggerSearchBar() {
 		isTransformed = true;
 	}
@@ -85,11 +85,10 @@
 						bus_start={busLine[0].properties.start_stop_name}
 						bus_end={busLine[busLine.length - 1].properties.end_stop_name}
 						handleClick={() => {
-							console.log('hhehee');
 							currentIndex.set(index);
-							searchPopoverVisible.update((value) => false);
-							busLinePopoverVisible.update((value) => true);
-							currentBusLine.update((value) => busLine);
+							searchPopoverVisible.set(false);
+							busLinePopoverVisible.set(true);
+							currentBusLine.set(busLine);
 						}}
 					/>
 				{/each}

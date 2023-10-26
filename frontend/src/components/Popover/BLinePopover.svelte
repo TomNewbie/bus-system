@@ -13,11 +13,7 @@
 
 	// @ts-ignore
 	function navigateToSearch() {
-		searchPopoverVisible.update((value) => true);
-		busLinePopoverVisible.update((value) => false);
-		currentIndex.update((value) => -1);
-		console.log($searchPopoverVisible);
-		console.log($busLinePopoverVisible);
+		currentIndex.set(-1);
 	}
 
 	// @ts-ignore
@@ -33,8 +29,7 @@
 	let busLine;
 
 	$: {
-		busLine = $currentBusLine; // Update busLine when currentBusLine changes
-		fetchBusLineData();
+		formatBuslineData($currentBusLine);
 	}
 
 	// @ts-ignore
@@ -44,7 +39,7 @@
 	let end_stop_name;
 	let number_stops;
 	// Function to fetch bus line data
-	function fetchBusLineData() {
+	function formatBuslineData(busLine) {
 		if (busLine == 0) return;
 		busStops = [];
 		isLoading = true;
