@@ -7,6 +7,8 @@ Build a project to predict the bus congestion
 ## Architecture
 
 ![Architecture](/architecture.png)
+![Data flow for prediction](https://github.com/TomNewbie/bus-system/assets/84883483/706de93c-f563-4143-9d23-2b4091e04427)
+
 
 ## Doc
 
