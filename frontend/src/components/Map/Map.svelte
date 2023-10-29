@@ -243,21 +243,33 @@
 						}
 					});
 
-					map.on('click', `route_${routeIndex}_segment_${segmentIndex}`, (e) => {
-						// Handle click event for this segment
-						if (routeIndex === $currentIndex) return;
-						currentIndex.set(routeIndex);
-					});
+					map.on(
+						'click',
+						`segment_${segment.properties.segment_id}_route_${segment.properties.route_id}`,
+						(e) => {
+							// Handle click event for this segment
+							if (routeIndex === $currentIndex) return;
+							currentIndex.set(routeIndex);
+						}
+					);
 
-					map.on('mouseenter', `route_${routeIndex}_segment_${segmentIndex}`, () => {
-						// Change cursor style on hover
-						map.getCanvas().style.cursor = 'pointer';
-					});
+					map.on(
+						'mouseenter',
+						`segment_${segment.properties.segment_id}_route_${segment.properties.route_id}`,
+						() => {
+							// Change cursor style on hover
+							map.getCanvas().style.cursor = 'pointer';
+						}
+					);
 
-					map.on('mouseleave', `route_${routeIndex}_segment_${segmentIndex}`, () => {
-						// Restore cursor style on mouse leave
-						map.getCanvas().style.cursor = '';
-					});
+					map.on(
+						'mouseleave',
+						`segment_${segment.properties.segment_id}_route_${segment.properties.route_id}`,
+						() => {
+							// Restore cursor style on mouse leave
+							map.getCanvas().style.cursor = '';
+						}
+					);
 				});
 			});
 		});
