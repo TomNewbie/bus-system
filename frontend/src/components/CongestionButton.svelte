@@ -1,6 +1,8 @@
 <script>
 	// @ts-nocheck
 
+	import { busLinePopoverVisible } from '../stores/stores';
+
 	// @ts-ignore
 	function toggleFunction(checkbox) {
 		showTraffic = !showTraffic;
@@ -30,7 +32,7 @@
 	];
 </script>
 
-<body class="relative flex justify-end mt-3 mr-3">
+<body class="relative flex justify-end mt-3 mr-3" class:hidden={!$busLinePopoverVisible}>
 	<div class="absolute flex justify-center p-4 bg-white rounded-lg">
 		<!-- Start: TOGGLE -->
 		<label class="relative items-center mt-2 mr-4 cursor-pointer">

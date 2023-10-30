@@ -10,8 +10,7 @@
 		currentBusLine,
 		currentIndex,
 		hehe,
-		searchPopoverVisible,
-		showTraffic
+		searchPopoverVisible
 	} from '../../stores/stores';
 	import { listen } from 'svelte/internal';
 	import { linear } from 'svelte/easing';
