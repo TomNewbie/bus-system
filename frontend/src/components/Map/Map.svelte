@@ -10,7 +10,8 @@
 		currentBusLine,
 		currentIndex,
 		hehe,
-		searchPopoverVisible
+		searchPopoverVisible,
+		showTraffic
 	} from '../../stores/stores';
 	import { listen } from 'svelte/internal';
 	import { linear } from 'svelte/easing';
@@ -218,7 +219,7 @@
 					const congestionLevel = segment.properties.congestion_level;
 
 					// Determine the color based on congestion level
-					const color = '#37FFF3';
+					let color = '#000000';
 
 					// Create a source and layer for each segment
 					map.addSource(`route_${routeIndex}_segment_${segmentIndex}`, {

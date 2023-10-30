@@ -11,7 +11,6 @@
 			isOpen = false;
 		}
 	}
-
 	let showTraffic = false;
 	let isOpen = false;
 	let items = ['Current', 'Next 10 minutes', 'Next 20 minutes', 'Next 30 minutes'];
@@ -53,8 +52,11 @@
 				on:click={() => (isOpen = !isOpen)}
 				class="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border rounded-lg shadow-sm cursor-pointer"
 				disabled={!showTraffic}
+				style="opacity: {!showTraffic ? '0.5' : '1'}; pointer-events: {!showTraffic
+					? 'none'
+					: 'auto'}"
 			>
-				{#if !time}Traffic flow in{/if} <span class="ml-1">{time}</span>
+				{#if !time}Current{/if} <span class="ml-1">{time}</span>
 				<svg
 					xmlns="http://www.w3.org/2000/svg"
 					class="inline-block w-4 h-4 ml-2"

@@ -8,3 +8,4 @@ export const currentBusStop = writable(0);
 export const hehe = writable(undefined);
 export const currentIndex = writable(undefined);
 export const isFullMap = writable(true);
+export const showTraffic = writable(false);
