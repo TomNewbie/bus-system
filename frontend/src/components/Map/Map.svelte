@@ -219,7 +219,7 @@
 					const congestionLevel = segment.properties.congestion_level;
 
 					// Determine the color based on congestion level
-					let color = '#000000';
+					const color = congestionColors[congestionLevel];
 
 					// Create a source and layer for each segment
 					map.addSource(`route_${routeIndex}_segment_${segmentIndex}`, {
