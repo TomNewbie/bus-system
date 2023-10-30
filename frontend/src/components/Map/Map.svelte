@@ -22,10 +22,10 @@
 	// @ts-ignore
 	let lng, lat, zoom;
 	const congestionColors = {
-		1: '#B7EB8F', // Congestion level 1
+		1: '#43D224', // Congestion level 1
 		2: '#FFE58F', // Congestion level 2
-		3: '#FFA500', // Congestion level 3
-		4: '#FF0000', // Congestion level 4
+		3: '#FE6240', // Congestion level 3
+		4: '#fc7a7a', // Congestion level 4
 		5: '#B60606' // Congestion level 5
 	};
 
@@ -218,7 +218,7 @@
 					const congestionLevel = segment.properties.congestion_level;
 
 					// Determine the color based on congestion level
-					const color = congestionColors[congestionLevel];
+					const color = '#37FFF3';
 
 					// Create a source and layer for each segment
 					map.addSource(`route_${routeIndex}_segment_${segmentIndex}`, {
