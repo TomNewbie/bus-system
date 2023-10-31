@@ -71,7 +71,13 @@ def run_model(route_id, direction_id, future_time):
 
     main_data["congestion_level"] = predicted_congestion
 
-    return main_data[['arrival_hour', 'arrival_minute', 'stop_lat', 'stop_lon', 'next_lat', 'next_lon', 'direction_id', 'congestion_level']]
+    def round_and_constrain(value):
+        rounded = round(value)
+        return min(max(rounded, 0), 4)
+    
+    main_data["congestion_level"] = main_data["congestion_level"].apply(round_and_constrain)
+
+    return main_data[['stop_lat','stop_lon','congestion_level']]
 
 
 # run_model(300025, 0, "2023-10-25 23:50:00")

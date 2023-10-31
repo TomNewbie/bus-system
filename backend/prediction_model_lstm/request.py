@@ -5,7 +5,7 @@ url = "http://127.0.0.1:5000/predict_congestion_lstm"
 
 # Define the data to send in the request
 data = {
-    "route_id": 1700960,
+    "route_id": 300025,
     "direction_id": 1,
     "future_time": "2023-10-25 23:50:00"
 }
