@@ -5,36 +5,28 @@
 	import { allBusLines, currentIndex } from '../../stores/stores';
 
 	// @ts-ignore
-	function navigateToSearch() {
-		busLinePopoverVisible = false;
-		currentIndex.set(-1);
-	}
-
-	function onFullMap(index) {
-		if (index !== -1) return;
-		busLinePopoverVisible = false;
-	}
-
 	let isLoading = true; // Add a loading flag
-
-	$: {
-		formatBuslineData($currentIndex);
-		onFullMap($currentIndex);
-	}
 	let busLinePopoverVisible = false;
-	// @ts-ignore
 	let busStops = [];
 	let route_id;
 	let start_stop_name;
 	let end_stop_name;
 	let number_stops;
+
+	$: {
+		formatBuslineData($currentIndex);
+		onFullMap($currentIndex);
+	}
+
 	// Function to fetch bus line data
 	function formatBuslineData(index) {
 		if (index == -1) return;
 		busLinePopoverVisible = true;
 		busStops = [];
 		isLoading = true;
+
 		let busLine = $allBusLines[index];
+
 		route_id = busLine[0].properties.route_id;
 		start_stop_name = busLine[0].properties.start_stop_name;
 		end_stop_name = busLine[busLine.length - 1].properties.end_stop_name;
@@ -53,10 +45,19 @@
 				});
 			}
 		});
-		if (busStops) number_stops = busStops.length;
-		else number_stops = 0;
 
+		number_stops = busStops.length || 0;
 		isLoading = false; // Set loading flag to false when data is loaded
+	}
+	// @ts-ignore
+	function navigateToSearch() {
+		busLinePopoverVisible = false;
+		currentIndex.set(-1);
+	}
+
+	function onFullMap(index) {
+		if (index !== -1) return;
+		busLinePopoverVisible = false;
 	}
 </script>
 

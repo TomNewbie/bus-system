@@ -21,7 +21,6 @@
 		5: '#B60606' // Congestion level 5
 	};
 
-	let data = [];
 	$: {
 		viewFullMap($allBusLines);
 		drawDetailBusline($allBusLines, $currentIndex);
