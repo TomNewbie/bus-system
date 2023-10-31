@@ -2,36 +2,27 @@
 	// @ts-nocheck
 
 	import BusStopTag from '../BusStopTag.svelte';
-	import {
-		searchPopoverVisible,
-		busLinePopoverVisible,
-		busStopPopoverVisible,
-		currentBusLine,
-		currentBusStop,
-		currentIndex
-	} from '../../stores/stores';
+	import { hehe, currentIndex } from '../../stores/stores';
 
 	// @ts-ignore
 	function navigateToSearch() {
+		busLinePopoverVisible = false;
 		currentIndex.set(-1);
 	}
 
-	// @ts-ignore
-	function navigateToBusStop(stop) {
-		busLinePopoverVisible.update((value) => !value);
-		busStopPopoverVisible.update((value) => !value);
-		currentBusStop.update((value) => stop);
+	function onFullMap(index) {
+		if (index !== -1) return;
+		busLinePopoverVisible = false;
 	}
-
-	let endpoint = ''; // Initialize the endpoint
 
 	let isLoading = true; // Add a loading flag
-	let busLine;
-
+	let allBusLine;
 	$: {
-		formatBuslineData($currentBusLine);
+		allBusLine = $hehe;
+		formatBuslineData($currentIndex);
+		onFullMap($currentIndex);
 	}
-
+	let busLinePopoverVisible = false;
 	// @ts-ignore
 	let busStops = [];
 	let route_id;
@@ -39,10 +30,13 @@
 	let end_stop_name;
 	let number_stops;
 	// Function to fetch bus line data
-	function formatBuslineData(busLine) {
-		if (busLine == 0) return;
+	function formatBuslineData(index) {
+		if (index == -1) return;
+		console.log(allBusLine);
+		busLinePopoverVisible = true;
 		busStops = [];
 		isLoading = true;
+		let busLine = allBusLine[index];
 		route_id = busLine[0].properties.route_id;
 		start_stop_name = busLine[0].properties.start_stop_name;
 		end_stop_name = busLine[busLine.length - 1].properties.end_stop_name;
@@ -70,13 +64,11 @@
 
 <body>
 	<div
-		class:hidden={!$busLinePopoverVisible}
+		class:hidden={!busLinePopoverVisible}
 		class="absolute bottom-0 z-10 w-1/4 mb-0 transition-transform duration-500 transform left-10 bg-white/90 rounded-t-xl h-9/10"
 	>
 		{#if isLoading}
-			<!-- Check if data is loading -->
 			<p>Loading...</p>
-			<!-- Display loading message -->
 		{:else}
 			<div>
 				<div

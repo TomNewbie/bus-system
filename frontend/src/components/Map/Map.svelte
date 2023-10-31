@@ -3,7 +3,7 @@
 
 	import { onMount, onDestroy } from 'svelte';
 	// @ts-ignore
-	import { Map, Marker, Popup, NavigationControl, LngLatBounds } from 'mapbox-gl';
+	import { Map, Marker, Popup, LngLatBounds } from 'mapbox-gl';
 	import '../../../node_modules/mapbox-gl/dist/mapbox-gl.css';
 	import {
 		busLinePopoverVisible,
@@ -12,8 +12,6 @@
 		hehe,
 		searchPopoverVisible
 	} from '../../stores/stores';
-	import { listen } from 'svelte/internal';
-	import { linear } from 'svelte/easing';
 
 	// @ts-ignore
 	let map;
@@ -187,13 +185,12 @@
 			}
 			groupedData[shapeId].push(feature);
 		});
-
+		console.log(groupedData);
 		const fullData = Object.values(groupedData);
 		hehe.set(fullData.slice(0, 70));
 	}
 
 	onMount(async () => {
-		// const unsubscribe = listen(window, 'custom-event', handleDraw);
 		await fetchBusLine();
 
 		map = new Map({
