@@ -5,13 +5,7 @@
 	// @ts-ignore
 	import { Map, Marker, Popup, LngLatBounds } from 'mapbox-gl';
 	import '../../../node_modules/mapbox-gl/dist/mapbox-gl.css';
-	import {
-		busLinePopoverVisible,
-		currentBusLine,
-		currentIndex,
-		hehe,
-		searchPopoverVisible
-	} from '../../stores/stores';
+	import { currentIndex, allBusLines } from '../../stores/stores';
 
 	// @ts-ignore
 	let map;
@@ -29,12 +23,12 @@
 
 	let data = [];
 	$: {
-		viewFullMap(formatedBuslines);
-		drawDetailBusline(formatedBuslines, $currentIndex);
+		viewFullMap($allBusLines);
+		drawDetailBusline($allBusLines, $currentIndex);
 	}
 
 	// Load the JSON data
-	$: formatedBuslines = $hehe;
+	$: formatedBuslines = $allBusLines;
 	var stopsMarker = [];
 	const initialState = { zoom: 11 };
 	let isFilter = false;
@@ -100,8 +94,6 @@
 					map.setLayoutProperty(layerId, 'visibility', 'visible');
 				});
 			});
-			searchPopoverVisible.set(true);
-			busLinePopoverVisible.set(false);
 		}
 		isFilter = false;
 	}
@@ -109,9 +101,6 @@
 	function drawDetailBusline(results, index) {
 		if (results == undefined) return;
 		if (index == -1 || index == undefined) return;
-		searchPopoverVisible.set(false);
-		busLinePopoverVisible.set(true);
-		currentBusLine.set(results[index]);
 		const routeNumber = index;
 		const bounds = new LngLatBounds(
 			results[routeNumber][0].geometry.coordinates[0],
@@ -186,8 +175,7 @@
 			groupedData[shapeId].push(feature);
 		});
 		console.log(groupedData);
-		const fullData = Object.values(groupedData);
-		hehe.set(fullData.slice(0, 70));
+		allBusLines.set(Object.values(groupedData));
 	}
 
 	onMount(async () => {
@@ -200,7 +188,7 @@
 				'pk.eyJ1IjoidGhhbmgzMDAxIiwiYSI6ImNsbjMwMzlsczBlMTQycm5rY3p2cTltdXIifQ.n7uqai-eq-VyjI9-BtJxYg',
 			style: `mapbox://styles/mapbox/streets-v12`,
 			// center: initialState.lngLat,
-			center: getCenterLngLat($hehe),
+			center: getCenterLngLat($allBusLines),
 			zoom: initialState.zoom
 		});
 

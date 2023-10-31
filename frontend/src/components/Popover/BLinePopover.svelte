@@ -2,7 +2,7 @@
 	// @ts-nocheck
 
 	import BusStopTag from '../BusStopTag.svelte';
-	import { hehe, currentIndex } from '../../stores/stores';
+	import { allBusLines, currentIndex } from '../../stores/stores';
 
 	// @ts-ignore
 	function navigateToSearch() {
@@ -16,9 +16,8 @@
 	}
 
 	let isLoading = true; // Add a loading flag
-	let allBusLine;
+
 	$: {
-		allBusLine = $hehe;
 		formatBuslineData($currentIndex);
 		onFullMap($currentIndex);
 	}
@@ -32,11 +31,10 @@
 	// Function to fetch bus line data
 	function formatBuslineData(index) {
 		if (index == -1) return;
-		console.log(allBusLine);
 		busLinePopoverVisible = true;
 		busStops = [];
 		isLoading = true;
-		let busLine = allBusLine[index];
+		let busLine = $allBusLines[index];
 		route_id = busLine[0].properties.route_id;
 		start_stop_name = busLine[0].properties.start_stop_name;
 		end_stop_name = busLine[busLine.length - 1].properties.end_stop_name;

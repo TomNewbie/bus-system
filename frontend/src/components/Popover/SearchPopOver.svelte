@@ -1,8 +1,7 @@
 <script>
 	// @ts-nocheck
 	import BusLineItem from '../BusLineItem.svelte';
-	import { hehe, currentIndex } from '../../stores/stores';
-	import { onMount } from 'svelte';
+	import { allBusLines, currentIndex } from '../../stores/stores';
 
 	let isTransformed = true;
 	let searchPopoverVisible = true;
@@ -24,7 +23,6 @@
 	}`;
 
 	// @ts-ignore
-	$: busLines = $hehe;
 	$: {
 		triggerSearchBar($currentIndex);
 		onCurrentBusline($currentIndex);
@@ -64,7 +62,7 @@
 				class:hidden={!isTransformed}
 				style="height: calc(100vh - 130px); "
 			>
-				{#each busLines as busLine, index}
+				{#each $allBusLines as busLine, index}
 					<BusLineItem
 						bus_id={busLine[0].properties.route_id}
 						bus_start={busLine[0].properties.start_stop_name}
