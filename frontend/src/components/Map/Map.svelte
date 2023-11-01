@@ -3,17 +3,9 @@
 
 	import { onMount, onDestroy } from 'svelte';
 	// @ts-ignore
-	import { Map, Marker, Popup, NavigationControl, LngLatBounds } from 'mapbox-gl';
+	import { Map, Marker, Popup, LngLatBounds } from 'mapbox-gl';
 	import '../../../node_modules/mapbox-gl/dist/mapbox-gl.css';
-	import {
-		busLinePopoverVisible,
-		currentBusLine,
-		currentIndex,
-		hehe,
-		searchPopoverVisible
-	} from '../../stores/stores';
-	import { listen } from 'svelte/internal';
-	import { linear } from 'svelte/easing';
+	import { currentIndex, allBusLines } from '../../stores/stores';
 
 	// @ts-ignore
 	let map;
@@ -22,21 +14,20 @@
 	// @ts-ignore
 	let lng, lat, zoom;
 	const congestionColors = {
-		1: '#B7EB8F', // Congestion level 1
+		1: '#43D224', // Congestion level 1
 		2: '#FFE58F', // Congestion level 2
-		3: '#FFA500', // Congestion level 3
-		4: '#FF0000', // Congestion level 4
+		3: '#FE6240', // Congestion level 3
+		4: '#fc7a7a', // Congestion level 4
 		5: '#B60606' // Congestion level 5
 	};
 
-	let data = [];
 	$: {
-		viewFullMap(formatedBuslines);
-		drawDetailBusline(formatedBuslines, $currentIndex);
+		viewFullMap($allBusLines);
+		drawDetailBusline($allBusLines, $currentIndex);
 	}
 
 	// Load the JSON data
-	$: formatedBuslines = $hehe;
+	$: formatedBuslines = $allBusLines;
 	var stopsMarker = [];
 	const initialState = { zoom: 11 };
 	let isFilter = false;
@@ -102,8 +93,6 @@
 					map.setLayoutProperty(layerId, 'visibility', 'visible');
 				});
 			});
-			searchPopoverVisible.set(true);
-			busLinePopoverVisible.set(false);
 		}
 		isFilter = false;
 	}
@@ -111,9 +100,6 @@
 	function drawDetailBusline(results, index) {
 		if (results == undefined) return;
 		if (index == -1 || index == undefined) return;
-		searchPopoverVisible.set(false);
-		busLinePopoverVisible.set(true);
-		currentBusLine.set(results[index]);
 		const routeNumber = index;
 		const bounds = new LngLatBounds(
 			results[routeNumber][0].geometry.coordinates[0],
@@ -187,13 +173,11 @@
 			}
 			groupedData[shapeId].push(feature);
 		});
-
-		const fullData = Object.values(groupedData);
-		hehe.set(fullData.slice(0, 70));
+		console.log(groupedData);
+		allBusLines.set(Object.values(groupedData));
 	}
 
 	onMount(async () => {
-		// const unsubscribe = listen(window, 'custom-event', handleDraw);
 		await fetchBusLine();
 
 		map = new Map({
@@ -203,7 +187,7 @@
 				'pk.eyJ1IjoidGhhbmgzMDAxIiwiYSI6ImNsbjMwMzlsczBlMTQycm5rY3p2cTltdXIifQ.n7uqai-eq-VyjI9-BtJxYg',
 			style: `mapbox://styles/mapbox/streets-v12`,
 			// center: initialState.lngLat,
-			center: getCenterLngLat($hehe),
+			center: getCenterLngLat($allBusLines),
 			zoom: initialState.zoom
 		});
 
