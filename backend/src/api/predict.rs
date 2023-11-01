@@ -1,5 +1,5 @@
 use actix_web::{
-    get, post,
+    get,
     web::{self, Data, Query, ServiceConfig},
     HttpResponse,
 };
@@ -9,21 +9,19 @@ use futures::TryStreamExt;
 use lazy_static::lazy_static;
 use mongodb::{error::Error, Client, Collection};
 use serde::{Deserialize, Serialize};
-use serde_json::Value;
 use tokio::try_join;
 
-use crate::models::{route_info::RouteInfo, Segment};
+use crate::models::{route_info::{RouteInfo, RouteWithCongestionLevel}, Segment, SegmentWithCongestionLevel};
 
 lazy_static! {
     static ref URL: &'static str = std::env::var("APP_ENVIRONMENT")
-        .map(|_| "tfserving")
+        .map(|_| "predict")
         .unwrap_or("localhost");
 }
 
 pub fn predict_config(cfg: &mut ServiceConfig) {
     cfg.service(
         web::scope("/predict")
-            .service(dummy_predict)
             .service(predict_congestion),
     );
 }
@@ -127,8 +125,6 @@ pub async fn predict_congestion(
             return HttpResponse::InternalServerError().finish();
         }
     };
-    tracing::info!("Len of segments: {}", segments.len());
-    tracing::info!("Len of routes: {}", routes.len());
     let prediction_segments = routes
         .iter()
         .zip(segments.iter())
@@ -137,7 +133,7 @@ pub async fn predict_congestion(
             start_stop_id: route.start_stop_id,
             stop_lat: route.stop_lat,
             stop_lon: route.stop_lon,
-            end_stop_id: route.start_stop_id,
+            end_stop_id: route.end_stop_id,
             next_lat: route.next_lat,
             next_lon: route.next_lon,
         })
@@ -149,49 +145,50 @@ pub async fn predict_congestion(
         arrival_hour: time_for_prediction.hour(),
         arrival_minute: time_for_prediction.minute(),
     };
-    HttpResponse::Ok().json(prediction_route)
-}
-
-// Dummy route to test for connection to tensorflow serving for model deployment
-#[post("dummy")]
-pub async fn dummy_predict() -> HttpResponse {
-    let url = format!("http://{}:8501/v1/models/lstm:predict", URL.clone());
+    let url = format!("http://{}:5000/predict_congestion_lstm", URL.clone());
     let client = reqwest::Client::new();
-    let body = r#"
-      {
-      "instances": [[[ 6.454545e-01,  2.03389831e-01, -5.20189830e+01, -1.05500952e+00,
-        -5.20837128e+01, -1.07696162e+00,  4.482300000e-02,  4.54339964e-02,
-         9.41837409e-01,  0.00000000e+00,  0.00000000e+00]]]
-      }
-    "#;
-    let body: Value = match serde_json::from_str(body) {
-        Ok(body) => body,
-        Err(err) => {
-            tracing::error!("Unable to deserialize json object: {}", err);
-            return HttpResponse::InternalServerError().finish();
-        }
-    };
-    let resp = client.post(url).json(&body).send().await;
-    let resp = match resp {
+    let resp = match client.post(url).json(&prediction_route).send().await {
         Ok(resp) => resp,
         Err(err) => {
-            tracing::error!("Error sending prediction request {}", err);
+            tracing::error!("Error sending prediction request: {}", err);
             return HttpResponse::InternalServerError().finish();
         }
     };
 
     let status = resp.status();
-    let resp: Document = match resp.json().await {
+    if !status.is_success() {
+        tracing::error!("Error sending prediction request, status: {}", status);
+        return HttpResponse::InternalServerError().finish();
+    }
+
+    let resp: Vec<RouteWithCongestionLevel> = match resp.json().await {
         Ok(resp) => resp,
         Err(err) => {
             tracing::error!("Error sending prediction request {}", err);
             return HttpResponse::InternalServerError().finish();
         }
     };
-
-    if !status.is_success() {
-        tracing::error!("Error sending prediction request {}", resp);
-        return HttpResponse::InternalServerError().finish();
+    let mut result: Vec<SegmentWithCongestionLevel> = vec![];
+    for segment in resp {
+        let idx = match segments.iter().position(|ele| ele.properties.segment_id == segment.segment_id) {
+            Some(idx) => idx,
+            None => {
+                tracing::error!("Segment id {} have not been found", segment.segment_id);
+                return HttpResponse::InternalServerError().finish();
+            }
+        };
+        let temp = &segments[idx];
+        let new_segment = SegmentWithCongestionLevel {
+            _id: temp._id.clone(),
+            _type: temp._type.clone(),
+            properties: temp.properties.clone(),
+            geometry: temp.geometry.clone(),
+            congestion_level: segment.congestion_level,
+        };
+        result.push(new_segment);
     }
-    HttpResponse::Ok().json(resp)
+
+    HttpResponse::Ok().json(result)
 }
+
+

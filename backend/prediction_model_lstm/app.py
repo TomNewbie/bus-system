@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, Response
 
 
 from run_model import run_model
@@ -24,8 +24,8 @@ def predict_congestion():
 
     # Convert the result data to JSON
     result_json = result_data.to_json(orient='records')
+    return Response(result_json, mimetype='application/json')
 
-    return jsonify(result_json)
 
 if __name__ == '__main__':
     app.run(debug=True)

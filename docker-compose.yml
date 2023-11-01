@@ -1,15 +1,11 @@
 version: '3.1'
 
 services:
-  tensorflow:
-    container_name: tfserving
-    image: 'tensorflow/serving'
-    volumes:
-      - './models/LSTM_1_model_saved_model:/models/lstm'
+  predict:
+    container_name: predict
+    build: ./backend/prediction_model_lstm
     ports:
-      - '8501:8501'
-    environment:
-      - MODEL_NAME=lstm
+       - 5000
   gmanbus:
     container_name: gmanbus
     build: ./backend
