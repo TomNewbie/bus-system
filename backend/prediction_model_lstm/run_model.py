@@ -7,7 +7,12 @@ from tensorflow import keras
 
 def run_model(data):
     # Load the pre-trained model
-    model = keras.models.load_model("backend/prediction_model_lstm/model/LSTM_1_model_saved_model")
+    env = os.getenv("APP_ENVIRONMENT") 
+    model = None
+    if env == "production":
+        model = keras.models.load_model("model/LSTM_1_model_saved_model")
+    else: 
+        model = keras.models.load_model("backend/prediction_model_lstm/model/LSTM_1_model_saved_model")
 
     df = pd.DataFrame(data)
     df = pd.json_normalize(data, 'segments', meta=['route_id', 'direction_id', 'arrival_hour', 'arrival_minute'])
