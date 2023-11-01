@@ -1,0 +1,12 @@
+conda create --name tf_cpu
+conda activate tf_cpu
+conda install -c anaconda pip
+conda install -c conda-forge tensorflow
+conda install -c anaconda pandas
+conda install -c conda-forge matplotlib
+conda install -c anaconda scikit-learn
+conda install -c anaconda keras-preprocessing
+conda install -c anaconda flask
+conda install -c anaconda requests
+conda install -c conda-forge typing_extensions
+conda install -c conda-forge wrapt

@@ -11,8 +11,7 @@ def run_model(data):
 
     df = pd.DataFrame(data)
     df = pd.json_normalize(data, 'segments', meta=['route_id', 'direction_id', 'arrival_hour', 'arrival_minute'])
-
-
+    df = df[['route_id','direction_id','arrival_hour','arrival_minute','segment_id','start_stop_id',"stop_lat","stop_lon","end_stop_id","next_lat","next_lon"]]
 
     # Ensure the new data is preprocessed in the same way as the training data
     scaler = MinMaxScaler()
@@ -21,7 +20,7 @@ def run_model(data):
 
 
     # Define the sequence length (seq_length) used during training
-    seq_length = 64
+    seq_length = 320
 
     # Generate sequences from the new data
     X_seq_new = []
