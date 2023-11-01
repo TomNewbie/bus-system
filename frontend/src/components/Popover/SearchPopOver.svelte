@@ -1,26 +1,16 @@
 <script>
 	// @ts-nocheck
 	import BusLineItem from '../BusLineItem.svelte';
-	import {
-		searchPopoverVisible,
-		busLinePopoverVisible,
-		busStopPopoverVisible,
-		currentBusLine,
-		hehe,
-		currentIndex
-	} from '../../stores/stores';
-	import { onMount } from 'svelte';
+	import { allBusLines, currentIndex } from '../../stores/stores';
 
-	// Create an event dispatcher
-
-	let isTransformed = $searchPopoverVisible;
-
+	let isTransformed = true;
+	let searchPopoverVisible = true;
 	// @ts-ignore
 	function toggleTransform(source) {
 		if (source === 'cancel') {
-			isTransformed = false; // Clicking "Cancel" sets isTransformed to false
+			isTransformed = false;
 		} else if (source === 'input') {
-			isTransformed = true; // Clicking the input sets isTransformed to true
+			isTransformed = true;
 		}
 	}
 
@@ -33,32 +23,25 @@
 	}`;
 
 	// @ts-ignore
-	$: busLines = $hehe;
+	$: {
+		triggerSearchBar($currentIndex);
+		onCurrentBusline($currentIndex);
+	}
 
-	function triggerSearchBar() {
+	function onCurrentBusline(index) {
+		if (index === -1) return;
+		searchPopoverVisible = false;
+	}
+
+	function triggerSearchBar(index) {
+		if (index !== -1) return;
+		searchPopoverVisible = true;
 		isTransformed = true;
-	}
-	onMount(async function () {
-		console.log($hehe);
-	});
-
-	function navigateToBusLine(busLine) {
-		toggleTransform('cancel');
-		searchPopoverVisible.update((value) => false);
-		busLinePopoverVisible.update((value) => true);
-		currentBusLine.update((value) => busLine);
-	}
-
-	// @ts-ignore
-	function navigateToBusStop() {
-		toggleTransform('cancel');
-		searchPopoverVisible.update((value) => !value);
-		busStopPopoverVisible.update((value) => !value);
 	}
 </script>
 
 <body>
-	<div class={containerClass} class:hidden={!$searchPopoverVisible}>
+	<div class={containerClass} class:hidden={!searchPopoverVisible}>
 		<div class="relative">
 			<div
 				class="sticky top-0 left-0 right-0 flex items-center justify-around px-4 py-4 popover-search bg-white/50 rounded-t-xl"
@@ -79,16 +62,14 @@
 				class:hidden={!isTransformed}
 				style="height: calc(100vh - 130px); "
 			>
-				{#each busLines as busLine, index}
+				{#each $allBusLines as busLine, index}
 					<BusLineItem
 						bus_id={busLine[0].properties.route_id}
 						bus_start={busLine[0].properties.start_stop_name}
 						bus_end={busLine[busLine.length - 1].properties.end_stop_name}
 						handleClick={() => {
 							currentIndex.set(index);
-							searchPopoverVisible.set(false);
-							busLinePopoverVisible.set(true);
-							currentBusLine.set(busLine);
+							searchPopoverVisible = false;
 						}}
 					/>
 				{/each}
