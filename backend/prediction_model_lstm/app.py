@@ -5,7 +5,7 @@ from run_model import run_model
 
 app = Flask(__name__)
 
-@app.route('/predict_congestion', methods=['POST'])
+@app.route('/predict_congestion_lstm', methods=['POST'])
 def predict_congestion():
     # Assuming the data is sent as JSON in the request
     request_data = request.get_json()

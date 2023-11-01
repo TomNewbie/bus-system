@@ -7,10 +7,10 @@ from tensorflow import keras
 
 def run_model(route_id, direction_id, future_time):
     # Load the pre-trained model
-    model = keras.models.load_model(os.path.abspath(os.path.join("model", "LSTM_1_model_saved_model")))
+    model = keras.models.load_model("backend/prediction_model_lstm/model/LSTM_1_model_saved_model")
 
     # Input dataset to model
-    main_data = pd.read_csv(os.path.join("dataset", "pre_processed_data.csv"))
+    main_data = pd.read_csv("backend/prediction_model_lstm/dataset/pre_processed_data.csv")
     filter_by_route = main_data['route_id'] == route_id
     filter_by_direction = main_data['direction_id'] == direction_id
     main_data = main_data[filter_by_direction & filter_by_route]
@@ -71,7 +71,13 @@ def run_model(route_id, direction_id, future_time):
 
     main_data["congestion_level"] = predicted_congestion
 
-    return main_data[['arrival_hour', 'arrival_minute', 'stop_lat', 'stop_lon', 'next_lat', 'next_lon', 'direction_id', 'congestion_level']]
+    def round_and_constrain(value):
+        rounded = round(value)
+        return min(max(rounded, 0), 4)
+    
+    main_data["congestion_level"] = main_data["congestion_level"].apply(round_and_constrain)
+
+    return main_data[['stop_lat','stop_lon','congestion_level']]
 
 
 # run_model(300025, 0, "2023-10-25 23:50:00")

@@ -10,10 +10,10 @@ from tensorflow import keras
 from tensorflow.keras.preprocessing.sequence import pad_sequences
 
 # Load the pre-trained model
-model = keras.models.load_model(os.path.abspath(os.path.join("model", "LSTM_1_model_saved_model")))
+model = keras.models.load_model("backend/prediction_model_lstm/model/LSTM_1_model_saved_model")
 
 # Load the test dataset
-test = pd.read_csv(os.path.join("dataset", "test.csv"))
+test = pd.read_csv("backend/prediction_model_lstm/dataset/pre_processed_data.csv")[0:200]
 
 # Ensure the new data is preprocessed in the same way as the training data
 scaler = MinMaxScaler()
@@ -46,11 +46,18 @@ location = test[
     ['arrival_hour', 'arrival_minute', 'stop_lat', 'stop_lon', 'next_lat', 'next_lon', 'direction_id']]
 location["congestion_level"] = predicted_congestion
 
+def round_and_constrain(value):
+    rounded = round(value)
+    return min(max(rounded, 0), 4)
+
+# Apply the function to the DataFrame to create the new column
+location["congestion_level"] = location["congestion_level"].apply(round_and_constrain)
+print(location.info())
 print(location)
 # Plot the predicted and actual congestion levels
-plt.figure(figsize=(12, 6))
+plt.figure(figsize=(24, 6))
+plt.plot(location['congestion_level'], label="Predict Congestion")
 plt.plot(test['congestion_level'], label="Actual Congestion")
-plt.plot(predicted_congestion, label="Predicted Congestion")
 plt.legend()
 plt.xlabel("Time Steps - Location")
 plt.ylabel("Congestion Level")

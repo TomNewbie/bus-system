@@ -129,13 +129,13 @@ class App(tk.Tk):
             end = location_list[i + 1]
             _, _, color = start  # Extract the congestion level as the color
 
-            if color <= 1:
+            if color == 0:
                 level = CongestionLevel.FREE
-            elif 1 < color <= 2:
+            elif color == 1:
                 level = CongestionLevel.BASICALLY_FREE
-            elif 2 < color <= 3:
+            elif color == 2:
                 level = CongestionLevel.MILD_CONGESTED
-            elif 3 < color <= 4:
+            elif color == 3:
                 level = CongestionLevel.MODERATE_CONGESTED
             else:
                 level = CongestionLevel.HEAVILY_CONGESTED

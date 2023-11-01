@@ -6,7 +6,7 @@ import random
 import pandas as pd
 
 # -- Load file --
-FILE_PATH = os.path.join("dataset", "main_data.csv")
+FILE_PATH = "backend/prediction_model_lstm/dataset/main_data.csv"
 df = pd.read_csv(FILE_PATH)
 
 # -- Choose features --

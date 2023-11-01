@@ -9,13 +9,13 @@ from sklearn.preprocessing import MinMaxScaler
 from tensorflow import keras
 
 # -- Load trained LSTM model --
-model = keras.models.load_model(os.path.join("model", "LSTM_1_model_saved_model"))
+model = keras.models.load_model("backend/prediction_model_lstm/model/LSTM_1_model_saved_model")
 
 # -- Load the MinMaxScaler used during training --
 scaler = MinMaxScaler()
 
 # -- Load the training data --
-training_data = pd.read_csv(os.path.join("dataset", "pre_processed_data.csv"))
+training_data = pd.read_csv("backend/prediction_model_lstm/dataset/pre_processed_data.csv")
 
 # -- Fit the scaler with the training data --
 scaler.fit(training_data[['arrival_hour', 'arrival_minute', 'stop_lat', 'stop_lon', 'next_lat', 'next_lon', 'direction_id']])
