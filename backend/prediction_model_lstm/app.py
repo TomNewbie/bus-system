@@ -11,16 +11,16 @@ def predict_congestion():
     request_data = request.get_json()
 
     # Extract 'route_id', 'direction_id', and 'future_time' from the request
-    route_id = request_data.get('route_id')
-    direction_id = request_data.get('direction_id')
-    future_time = request_data.get('future_time')
+    # route_id = request_data.get('route_id')
+    # direction_id = request_data.get('direction_id')
+    # future_time = request_data.get('future_time')
 
     # Your existing script here
     # ...
 
     # Replace this with your script's logic
     # Load the pre-trained model and process the data
-    result_data = run_model(route_id, direction_id, future_time)
+    result_data = run_model(request_data)
 
     # Convert the result data to JSON
     result_json = result_data.to_json(orient='records')
