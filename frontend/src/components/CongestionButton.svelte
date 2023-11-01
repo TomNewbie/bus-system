@@ -1,7 +1,11 @@
 <script>
 	// @ts-nocheck
+	import { currentIndex, minute } from '../stores/stores';
 
-	let busLinePopoverVisible = true;
+	let busLinePopoverVisible;
+	$: {
+		busLinePopoverVisible = $currentIndex != -1;
+	}
 	// @ts-ignore
 	function toggleFunction(checkbox) {
 		showTraffic = !showTraffic;
@@ -15,10 +19,12 @@
 	let showTraffic = false;
 	let isOpen = false;
 	let items = ['Current', 'Next 10 minutes', 'Next 20 minutes', 'Next 30 minutes'];
+	let times = [0, 10, 20, 30];
 	let time = '';
-
-	function updateTime(choosenTime) {
-		time = choosenTime;
+	let valueToFetch = 0;
+	function updateTime(index) {
+		time = items[index];
+		minute.set(times[index]);
 		isOpen = false;
 	}
 
@@ -76,14 +82,14 @@
 
 			{#if isOpen}
 				<div class="absolute items-center mt-2 bg-white border rounded-lg">
-					{#each items as item}
+					{#each items as item, index}
 						<!-- svelte-ignore a11y-click-events-have-key-events -->
 						<!-- svelte-ignore a11y-no-static-element-interactions -->
 						<div
 							class="block px-4 py-2 text-sm text-gray-800 transition-colors hover:bg-gray-100"
 							style="cursor: pointer;"
 							on:click={() => {
-								updateTime(item);
+								updateTime(index);
 							}}
 						>
 							{item}
