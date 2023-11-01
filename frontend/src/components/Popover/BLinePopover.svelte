@@ -2,47 +2,31 @@
 	// @ts-nocheck
 
 	import BusStopTag from '../BusStopTag.svelte';
-	import {
-		searchPopoverVisible,
-		busLinePopoverVisible,
-		busStopPopoverVisible,
-		currentBusLine,
-		currentBusStop,
-		currentIndex
-	} from '../../stores/stores';
+	import { allBusLines, currentIndex } from '../../stores/stores';
 
 	// @ts-ignore
-	function navigateToSearch() {
-		currentIndex.set(-1);
-	}
-
-	// @ts-ignore
-	function navigateToBusStop(stop) {
-		busLinePopoverVisible.update((value) => !value);
-		busStopPopoverVisible.update((value) => !value);
-		currentBusStop.update((value) => stop);
-	}
-
-	let endpoint = ''; // Initialize the endpoint
-
 	let isLoading = true; // Add a loading flag
-	let busLine;
-
-	$: {
-		formatBuslineData($currentBusLine);
-	}
-
-	// @ts-ignore
+	let busLinePopoverVisible = false;
 	let busStops = [];
 	let route_id;
 	let start_stop_name;
 	let end_stop_name;
 	let number_stops;
+
+	$: {
+		formatBuslineData($currentIndex);
+		onFullMap($currentIndex);
+	}
+
 	// Function to fetch bus line data
-	function formatBuslineData(busLine) {
-		if (busLine == 0) return;
+	function formatBuslineData(index) {
+		if (index == -1) return;
+		busLinePopoverVisible = true;
 		busStops = [];
 		isLoading = true;
+
+		let busLine = $allBusLines[index];
+
 		route_id = busLine[0].properties.route_id;
 		start_stop_name = busLine[0].properties.start_stop_name;
 		end_stop_name = busLine[busLine.length - 1].properties.end_stop_name;
@@ -61,22 +45,29 @@
 				});
 			}
 		});
-		if (busStops) number_stops = busStops.length;
-		else number_stops = 0;
 
+		number_stops = busStops.length || 0;
 		isLoading = false; // Set loading flag to false when data is loaded
+	}
+	// @ts-ignore
+	function navigateToSearch() {
+		busLinePopoverVisible = false;
+		currentIndex.set(-1);
+	}
+
+	function onFullMap(index) {
+		if (index !== -1) return;
+		busLinePopoverVisible = false;
 	}
 </script>
 
 <body>
 	<div
-		class:hidden={!$busLinePopoverVisible}
+		class:hidden={!busLinePopoverVisible}
 		class="absolute bottom-0 z-10 w-1/4 mb-0 transition-transform duration-500 transform left-10 bg-white/90 rounded-t-xl h-9/10"
 	>
 		{#if isLoading}
-			<!-- Check if data is loading -->
 			<p>Loading...</p>
-			<!-- Display loading message -->
 		{:else}
 			<div>
 				<div

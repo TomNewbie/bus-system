@@ -3,16 +3,9 @@
 
 	import { onMount, onDestroy } from 'svelte';
 	// @ts-ignore
-	import { Map, Marker, Popup, NavigationControl, LngLatBounds } from 'mapbox-gl';
+	import { Map, Marker, Popup, LngLatBounds } from 'mapbox-gl';
 	import '../../../node_modules/mapbox-gl/dist/mapbox-gl.css';
-	import {
-		busLinePopoverVisible,
-		currentBusLine,
-		currentIndex,
-		hehe,
-		searchPopoverVisible
-	} from '../../stores/stores';
-	import { listen } from 'svelte/internal';
+	import { currentIndex, allBusLines } from '../../stores/stores';
 
 	// @ts-ignore
 	let map;
@@ -20,18 +13,24 @@
 	let mapContainer;
 	// @ts-ignore
 	let lng, lat, zoom;
+	const congestionColors = {
+		1: '#43D224', // Congestion level 1
+		2: '#FFE58F', // Congestion level 2
+		3: '#FE6240', // Congestion level 3
+		4: '#fc7a7a', // Congestion level 4
+		5: '#B60606' // Congestion level 5
+	};
 
-	let data = [];
 	$: {
-		viewFullMap(formatedBuslines);
-		drawDetailBusline(formatedBuslines, $currentIndex);
+		viewFullMap($allBusLines);
+		drawDetailBusline($allBusLines, $currentIndex);
 	}
 
 	// Load the JSON data
-	$: formatedBuslines = $hehe;
-	let isFilter = false;
+	$: formatedBuslines = $allBusLines;
 	var stopsMarker = [];
 	const initialState = { zoom: 11 };
+	let isFilter = false;
 
 	function getCenterLngLat(formatedBuslines) {
 		let lng = 0;
@@ -61,24 +60,23 @@
 		lat = map.getCenter().lat;
 	}
 
-	function getRainbowColor(index) {
-		const lgbtColorsHex = ['#FF0018', '#FFA52D', '#FFFF41', '#008018', '#0000F9', '#86007D'];
-		return lgbtColorsHex[index % lgbtColorsHex.length];
-	}
-
 	function removeMarker() {
 		stopsMarker.forEach((stopMarker) => stopMarker.remove());
 	}
 
 	function setDisableLayer(results, indexToSkip) {
-		if (!isFilter)
-			results.forEach((result, index) => {
-				console.log(result);
-				if (index !== indexToSkip) {
-					map.setLayoutProperty(`route ${index}`, 'visibility', 'none');
-				}
+		if (!isFilter) {
+			results.forEach((result, routeIndex) => {
+				result.forEach((segment, segmentIndex) => {
+					const layerId = `segment_${segment.properties.segment_id}_route_${segment.properties.route_id}`;
+
+					if (indexToSkip !== routeIndex) {
+						map.setLayoutProperty(layerId, 'visibility', 'none');
+					}
+				});
 			});
-		isFilter = true;
+			isFilter = true;
+		}
 	}
 
 	function viewFullMap(results) {
@@ -89,11 +87,12 @@
 				center: getCenterLngLat(results),
 				zoom: initialState.zoom
 			});
-			results.forEach((result, index) =>
-				map.setLayoutProperty(`route ${index}`, 'visibility', 'visible')
-			);
-			searchPopoverVisible.set(true);
-			busLinePopoverVisible.set(false);
+			formatedBuslines.forEach((result, routeIndex) => {
+				result.forEach((segment, segmentIndex) => {
+					const layerId = `segment_${segment.properties.segment_id}_route_${segment.properties.route_id}`;
+					map.setLayoutProperty(layerId, 'visibility', 'visible');
+				});
+			});
 		}
 		isFilter = false;
 	}
@@ -101,9 +100,6 @@
 	function drawDetailBusline(results, index) {
 		if (results == undefined) return;
 		if (index == -1 || index == undefined) return;
-		searchPopoverVisible.set(false);
-		busLinePopoverVisible.set(true);
-		currentBusLine.set(results[index]);
 		const routeNumber = index;
 		const bounds = new LngLatBounds(
 			results[routeNumber][0].geometry.coordinates[0],
@@ -156,6 +152,11 @@
 				// Process the data and remove the "_id" attribute
 				a = data.map((item) => {
 					const { _id, ...itemWithoutId } = item;
+
+					// Start:Add congestion [DELETE AFTER INTEGRATING MODEL]
+					const randomCongestionLevel = Math.floor(Math.random() * 5) + 1;
+					itemWithoutId.properties.congestion_level = randomCongestionLevel;
+					// End:Add congestion [DELETE AFTER INTEGRATING MODEL]
 					return itemWithoutId;
 				});
 			} else {
@@ -172,13 +173,11 @@
 			}
 			groupedData[shapeId].push(feature);
 		});
-
-		const fullData = Object.values(groupedData);
-		hehe.set(fullData.slice(0, 70));
+		console.log(groupedData);
+		allBusLines.set(Object.values(groupedData));
 	}
 
 	onMount(async () => {
-		// const unsubscribe = listen(window, 'custom-event', handleDraw);
 		await fetchBusLine();
 
 		map = new Map({
@@ -188,49 +187,73 @@
 				'pk.eyJ1IjoidGhhbmgzMDAxIiwiYSI6ImNsbjMwMzlsczBlMTQycm5rY3p2cTltdXIifQ.n7uqai-eq-VyjI9-BtJxYg',
 			style: `mapbox://styles/mapbox/streets-v12`,
 			// center: initialState.lngLat,
-			center: getCenterLngLat($hehe),
+			center: getCenterLngLat($allBusLines),
 			zoom: initialState.zoom
 		});
 
 		map.on('move', () => {
 			updateData();
 		});
-		// map.addControl(new NavigationControl());
 
 		map.on('load', () => {
-			formatedBuslines.forEach((result, index) => {
-				map.addSource(`route ${index}`, {
-					type: 'geojson',
-					data: {
-						type: 'FeatureCollection',
-						features: result
-					}
-				});
+			formatedBuslines.forEach((result, routeIndex) => {
+				result.forEach((segment, segmentIndex) => {
+					// Access the congestion level of the segment
+					const congestionLevel = segment.properties.congestion_level;
 
-				let color = getRainbowColor(index);
+					// Determine the color based on congestion level
+					const color = congestionColors[congestionLevel];
 
-				map.addLayer({
-					id: `route ${index}`,
-					type: 'line',
-					source: `route ${index}`,
-					layout: {
-						'line-join': 'miter',
-						'line-cap': 'round'
-					},
-					paint: {
-						'line-color': color,
-						'line-width': 4
-					}
-				});
-				map.on('click', `route ${index}`, (e) => {
-					if (index == $currentIndex) return;
-					currentIndex.set(index);
-				});
-				map.on('mouseenter', `route ${index}`, () => {
-					map.getCanvas().style.cursor = 'pointer';
-				});
-				map.on('mouseleave', `route ${index}`, () => {
-					map.getCanvas().style.cursor = '';
+					// Create a source and layer for each segment
+					map.addSource(`route_${routeIndex}_segment_${segmentIndex}`, {
+						type: 'geojson',
+						data: {
+							type: 'FeatureCollection',
+							features: [segment]
+						}
+					});
+
+					map.addLayer({
+						id: `segment_${segment.properties.segment_id}_route_${segment.properties.route_id}`,
+						type: 'line',
+						source: `route_${routeIndex}_segment_${segmentIndex}`,
+						layout: {
+							'line-join': 'miter',
+							'line-cap': 'round'
+						},
+						paint: {
+							'line-color': color,
+							'line-width': 4
+						}
+					});
+
+					map.on(
+						'click',
+						`segment_${segment.properties.segment_id}_route_${segment.properties.route_id}`,
+						(e) => {
+							// Handle click event for this segment
+							if (routeIndex === $currentIndex) return;
+							currentIndex.set(routeIndex);
+						}
+					);
+
+					map.on(
+						'mouseenter',
+						`segment_${segment.properties.segment_id}_route_${segment.properties.route_id}`,
+						() => {
+							// Change cursor style on hover
+							map.getCanvas().style.cursor = 'pointer';
+						}
+					);
+
+					map.on(
+						'mouseleave',
+						`segment_${segment.properties.segment_id}_route_${segment.properties.route_id}`,
+						() => {
+							// Restore cursor style on mouse leave
+							map.getCanvas().style.cursor = '';
+						}
+					);
 				});
 			});
 		});

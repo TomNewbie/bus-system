@@ -10,7 +10,9 @@ import pickle
 from sklearn.metrics import accuracy_score
 # Load the pre-trained model
 
-model_path = os.path.join('Random_forest_saved_model', 'model_file.p')
+model_dir = os.path.join("model", "Random_forest_saved_model")
+model_filename = "model_file.p"
+model_path = os.path.join(model_dir, model_filename)
 
 with open(model_path, 'rb') as model_file:
     model = pickle.load(model_file)
