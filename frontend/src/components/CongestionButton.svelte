@@ -4,8 +4,24 @@
 
 	let busLinePopoverVisible;
 	$: {
-		busLinePopoverVisible = $currentIndex != -1;
+		setupButtonState($currentIndex);
 	}
+
+	function setupButtonState(currentIndex) {
+		if (currentIndex != -1) {
+			busLinePopoverVisible = true;
+		} else {
+			setDefaultState();
+		}
+	}
+
+	function setDefaultState() {
+		minute.set(0);
+		busLinePopoverVisible = false;
+		time = '';
+		isOpen = false;
+	}
+
 	// @ts-ignore
 	function toggleFunction(checkbox) {
 		showTraffic = !showTraffic;

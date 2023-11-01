@@ -13,12 +13,14 @@
 	let mapContainer;
 	// @ts-ignore
 	let lng, lat, zoom;
+	let abortController;
+
 	const congestionColors = {
-		1: '#43D224', // Congestion level 1
-		2: '#FFE58F', // Congestion level 2
-		3: '#FE6240', // Congestion level 3
-		4: '#fc7a7a', // Congestion level 4
-		5: '#B60606' // Congestion level 5
+		0: '#43D224', // Congestion level 1
+		1: '#FFE58F', // Congestion level 2
+		2: '#FE6240', // Congestion level 3
+		3: '#fc7a7a', // Congestion level 4
+		4: '#B60606' // Congestion level 5
 	};
 	let previousIndex;
 	$: {
@@ -176,6 +178,10 @@
 
 	function deleteCongestionLevel(currentIndex) {
 		if (currentIndex == -1 || currentIndex == undefined) return;
+		if (abortController) {
+			abortController.abort();
+		}
+
 		if (!map.getLayer(`segment_0`)) {
 			return;
 		}
@@ -192,16 +198,43 @@
 			}
 		});
 	}
-	function fetchCongestionData(currentIndex, minute) {
+
+	async function fetchCongestionData(currentIndex, minute) {
 		deleteCongestionLevel(previousIndex);
 		if (minute == 0) return;
-
 		if (currentIndex == -1 || currentIndex == undefined) return;
+		let properties = $allBusLines[currentIndex][0].properties;
 		// fetch data
-		drawCongestionLevel($allBusLines[currentIndex]);
+		abortController = new AbortController();
+
+		let a;
+		try {
+			const response = await fetch(
+				`http://localhost:8000/predict?route_id=${properties.route_id}&shape_id=${properties.shape_id}&direction_id=${properties.direction_id}`,
+				{
+					signal: abortController.signal
+				}
+			);
+			if (response.ok) {
+				const data = await response.json();
+				// Process the data and remove the "_id" attribute
+				a = data.map((item) => {
+					const { _id, ...itemWithoutId } = item;
+					return itemWithoutId;
+				});
+			} else {
+				alert('Request failed with status: ' + response.status);
+				return;
+			}
+		} catch (error) {
+			alert('Error while fetching data: ' + error);
+			return;
+		}
+		drawCongestionLevel(a);
 	}
 
 	function drawCongestionLevel(currentBusLine) {
+		console.log(currentBusLine);
 		setDisableLayer($allBusLines, -1);
 
 		currentBusLine.forEach((segment, segmentIndex) => {
@@ -209,7 +242,7 @@
 			const congestionLevel = segment.congestion_level;
 
 			// Determine the color based on congestion level
-			const color = congestionColors[1];
+			const color = congestionColors[congestionLevel];
 
 			// Create a source and layer for each segment
 			map.addSource(`segment_${segmentIndex}`, {
