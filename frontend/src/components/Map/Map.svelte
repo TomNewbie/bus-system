@@ -5,7 +5,7 @@
 	// @ts-ignore
 	import { Map, Marker, Popup, LngLatBounds } from 'mapbox-gl';
 	import '../../../node_modules/mapbox-gl/dist/mapbox-gl.css';
-	import { currentIndex, allBusLines } from '../../stores/stores';
+	import { currentIndex, allBusLines, minute } from '../../stores/stores';
 
 	// @ts-ignore
 	let map;
@@ -20,12 +20,14 @@
 		4: '#fc7a7a', // Congestion level 4
 		5: '#B60606' // Congestion level 5
 	};
-
+	let previousIndex;
 	$: {
 		viewFullMap($allBusLines);
 		drawDetailBusline($allBusLines, $currentIndex);
 	}
-
+	$: {
+		fetchCongestionData($currentIndex, $minute);
+	}
 	// Load the JSON data
 	$: formatedBuslines = $allBusLines;
 	var stopsMarker = [];
@@ -68,7 +70,7 @@
 		if (!isFilter) {
 			results.forEach((result, routeIndex) => {
 				result.forEach((segment, segmentIndex) => {
-					const layerId = `segment_${segment.properties.segment_id}_route_${segment.properties.route_id}`;
+					const layerId = `route_${routeIndex}`;
 
 					if (indexToSkip !== routeIndex) {
 						map.setLayoutProperty(layerId, 'visibility', 'none');
@@ -81,6 +83,7 @@
 
 	function viewFullMap(results) {
 		if (results == undefined) return;
+		deleteCongestionLevel(previousIndex);
 		removeMarker();
 		if (isFilter) {
 			map.flyTo({
@@ -88,10 +91,8 @@
 				zoom: initialState.zoom
 			});
 			formatedBuslines.forEach((result, routeIndex) => {
-				result.forEach((segment, segmentIndex) => {
-					const layerId = `segment_${segment.properties.segment_id}_route_${segment.properties.route_id}`;
-					map.setLayoutProperty(layerId, 'visibility', 'visible');
-				});
+				const layerId = `route_${routeIndex}`;
+				map.setLayoutProperty(layerId, 'visibility', 'visible');
 			});
 		}
 		isFilter = false;
@@ -101,6 +102,7 @@
 		if (results == undefined) return;
 		if (index == -1 || index == undefined) return;
 		const routeNumber = index;
+		previousIndex = index;
 		const bounds = new LngLatBounds(
 			results[routeNumber][0].geometry.coordinates[0],
 			results[routeNumber][results[routeNumber].length - 1].geometry.coordinates[
@@ -152,11 +154,6 @@
 				// Process the data and remove the "_id" attribute
 				a = data.map((item) => {
 					const { _id, ...itemWithoutId } = item;
-
-					// Start:Add congestion [DELETE AFTER INTEGRATING MODEL]
-					const randomCongestionLevel = Math.floor(Math.random() * 5) + 1;
-					itemWithoutId.properties.congestion_level = randomCongestionLevel;
-					// End:Add congestion [DELETE AFTER INTEGRATING MODEL]
 					return itemWithoutId;
 				});
 			} else {
@@ -177,6 +174,67 @@
 		allBusLines.set(Object.values(groupedData));
 	}
 
+	function deleteCongestionLevel(currentIndex) {
+		if (currentIndex == -1 || currentIndex == undefined) return;
+		if (!map.getLayer(`segment_0`)) {
+			return;
+		}
+
+		let currentBusLine = $allBusLines[currentIndex];
+		currentBusLine.forEach((segment, segmentIndex) => {
+			const layerId = `segment_${segmentIndex}`;
+			if (map.getLayer(layerId)) {
+				map.removeLayer(layerId);
+			}
+
+			if (map.getSource(layerId)) {
+				map.removeSource(layerId);
+			}
+		});
+	}
+	function fetchCongestionData(currentIndex, minute) {
+		deleteCongestionLevel(previousIndex);
+		if (minute == 0) return;
+
+		if (currentIndex == -1 || currentIndex == undefined) return;
+		// fetch data
+		drawCongestionLevel($allBusLines[currentIndex]);
+	}
+
+	function drawCongestionLevel(currentBusLine) {
+		setDisableLayer($allBusLines, -1);
+
+		currentBusLine.forEach((segment, segmentIndex) => {
+			// Access the congestion level of the segment
+			const congestionLevel = segment.congestion_level;
+
+			// Determine the color based on congestion level
+			const color = congestionColors[1];
+
+			// Create a source and layer for each segment
+			map.addSource(`segment_${segmentIndex}`, {
+				type: 'geojson',
+				data: {
+					type: 'FeatureCollection',
+					features: [segment]
+				}
+			});
+
+			map.addLayer({
+				id: `segment_${segmentIndex}`,
+				type: 'line',
+				source: `segment_${segmentIndex}`,
+				layout: {
+					'line-join': 'miter',
+					'line-cap': 'round'
+				},
+				paint: {
+					'line-color': color,
+					'line-width': 4
+				}
+			});
+		});
+	}
 	onMount(async () => {
 		await fetchBusLine();
 
@@ -197,63 +255,41 @@
 
 		map.on('load', () => {
 			formatedBuslines.forEach((result, routeIndex) => {
-				result.forEach((segment, segmentIndex) => {
-					// Access the congestion level of the segment
-					const congestionLevel = segment.properties.congestion_level;
+				map.addSource(`route_${routeIndex}`, {
+					type: 'geojson',
+					data: {
+						type: 'FeatureCollection',
+						features: result
+					}
+				});
+				map.addLayer({
+					id: `route_${routeIndex}`,
+					type: 'line',
+					source: `route_${routeIndex}`,
+					layout: {
+						'line-join': 'miter',
+						'line-cap': 'round'
+					},
+					paint: {
+						'line-color': '#808080',
+						'line-width': 4
+					}
+				});
 
-					// Determine the color based on congestion level
-					const color = congestionColors[congestionLevel];
+				map.on('click', `route_${routeIndex}`, (e) => {
+					// Handle click event for this segment
+					if (routeIndex === $currentIndex) return;
+					currentIndex.set(routeIndex);
+				});
 
-					// Create a source and layer for each segment
-					map.addSource(`route_${routeIndex}_segment_${segmentIndex}`, {
-						type: 'geojson',
-						data: {
-							type: 'FeatureCollection',
-							features: [segment]
-						}
-					});
+				map.on('mouseenter', `route_${routeIndex}`, () => {
+					// Change cursor style on hover
+					map.getCanvas().style.cursor = 'pointer';
+				});
 
-					map.addLayer({
-						id: `segment_${segment.properties.segment_id}_route_${segment.properties.route_id}`,
-						type: 'line',
-						source: `route_${routeIndex}_segment_${segmentIndex}`,
-						layout: {
-							'line-join': 'miter',
-							'line-cap': 'round'
-						},
-						paint: {
-							'line-color': color,
-							'line-width': 4
-						}
-					});
-
-					map.on(
-						'click',
-						`segment_${segment.properties.segment_id}_route_${segment.properties.route_id}`,
-						(e) => {
-							// Handle click event for this segment
-							if (routeIndex === $currentIndex) return;
-							currentIndex.set(routeIndex);
-						}
-					);
-
-					map.on(
-						'mouseenter',
-						`segment_${segment.properties.segment_id}_route_${segment.properties.route_id}`,
-						() => {
-							// Change cursor style on hover
-							map.getCanvas().style.cursor = 'pointer';
-						}
-					);
-
-					map.on(
-						'mouseleave',
-						`segment_${segment.properties.segment_id}_route_${segment.properties.route_id}`,
-						() => {
-							// Restore cursor style on mouse leave
-							map.getCanvas().style.cursor = '';
-						}
-					);
+				map.on('mouseleave', `route_${routeIndex}`, () => {
+					// Restore cursor style on mouse leave
+					map.getCanvas().style.cursor = '';
 				});
 			});
 		});
