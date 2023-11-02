@@ -210,7 +210,7 @@
 		let a;
 		try {
 			const response = await fetch(
-				`http://localhost:8000/predict?route_id=${properties.route_id}&shape_id=${properties.shape_id}&direction_id=${properties.direction_id}`,
+				`http://localhost:8000/predict?route_id=${properties.route_id}&shape_id=${properties.shape_id}&direction_id=${properties.direction_id}&minute_predict=${minute}`,
 				{
 					signal: abortController.signal
 				}

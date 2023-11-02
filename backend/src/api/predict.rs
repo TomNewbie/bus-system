@@ -11,7 +11,10 @@ use mongodb::{error::Error, Client, Collection};
 use serde::{Deserialize, Serialize};
 use tokio::try_join;
 
-use crate::models::{route_info::{RouteInfo, RouteWithCongestionLevel}, Segment, SegmentWithCongestionLevel};
+use crate::models::{
+    route_info::{RouteInfo, RouteWithCongestionLevel},
+    Segment, SegmentWithCongestionLevel,
+};
 
 lazy_static! {
     static ref URL: &'static str = std::env::var("APP_ENVIRONMENT")
@@ -20,10 +23,7 @@ lazy_static! {
 }
 
 pub fn predict_config(cfg: &mut ServiceConfig) {
-    cfg.service(
-        web::scope("/predict")
-            .service(predict_congestion),
-    );
+    cfg.service(web::scope("/predict").service(predict_congestion));
 }
 
 #[derive(Debug, Deserialize)]
@@ -31,6 +31,7 @@ pub struct SegmentInfo {
     route_id: String,
     shape_id: String,
     direction_id: i64,
+    minute_predict: i64,
 }
 
 async fn fetch_segments(
@@ -100,12 +101,13 @@ pub async fn predict_congestion(
     db_client: Data<Client>,
     segment_info: Query<SegmentInfo>,
 ) -> HttpResponse {
-    let time_for_prediction = (Utc::now() + Duration::minutes(10)).time();
     let SegmentInfo {
         route_id,
         shape_id,
         direction_id,
+        minute_predict,
     } = segment_info.into_inner();
+    let time_for_prediction = (Utc::now() + Duration::minutes(minute_predict)).time();
     tracing::info!("Request Info: Id of route - {route_id}, Id of shape - {shape_id}");
 
     let route_id_i64 = match route_id.parse::<i64>() {
@@ -170,7 +172,10 @@ pub async fn predict_congestion(
     };
     let mut result: Vec<SegmentWithCongestionLevel> = vec![];
     for segment in resp {
-        let idx = match segments.iter().position(|ele| ele.properties.segment_id == segment.segment_id) {
+        let idx = match segments
+            .iter()
+            .position(|ele| ele.properties.segment_id == segment.segment_id)
+        {
             Some(idx) => idx,
             None => {
                 tracing::error!("Segment id {} have not been found", segment.segment_id);
@@ -190,5 +195,3 @@ pub async fn predict_congestion(
 
     HttpResponse::Ok().json(result)
 }
-
-
