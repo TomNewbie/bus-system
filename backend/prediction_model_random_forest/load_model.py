@@ -4,7 +4,7 @@ from sklearn.preprocessing import MinMaxScaler
 import pickle
 
 
-def run_model(data):
+def load_model(data):
     # Load the pre-trained model
     env = os.getenv("APP_ENVIRONMENT") 
     model = None

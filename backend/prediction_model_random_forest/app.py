@@ -6,7 +6,7 @@ import numpy as np
 import pickle
 import joblib
 
-from run_model import run_model
+from load_model import load_model
 
 def load_models():
     file_name = "model/Random_forest_saved_model/model_file.p"
@@ -24,7 +24,7 @@ def predict():
     # Extract input data from the JSON request
     request_data = request.get_json()
     
-    result_data = run_model(request_data)
+    result_data = load_model(request_data)
     
     # Conver the result data to JSON
     result_json = result_data.to_json(orient='records')
