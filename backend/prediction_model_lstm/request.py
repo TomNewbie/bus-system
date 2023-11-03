@@ -7,8 +7,8 @@ url = "http://127.0.0.1:5000/predict_congestion_lstm"
 data = {
     "route_id": 100001,
     "direction_id": 0,
-    "arrival_hour": 11,
-    "arrival_minute": 3,
+    "arrival_hour": 13,
+    "arrival_minute": 59,
     "segments": [
         {
             "segment_id": "702 - 241",
@@ -17,7 +17,8 @@ data = {
             "stop_lon": 7.156225,
             "end_stop_id": 655,
             "next_lat": 50.962497,
-            "next_lon": 7.149525
+            "next_lon": 7.149525,
+            "runtime_sec": 60
         },
         {
             "segment_id": "241 - 261",
@@ -26,7 +27,8 @@ data = {
             "stop_lon": 7.149525,
             "end_stop_id": 666,
             "next_lat": 50.963338,
-            "next_lon": 7.142599
+            "next_lon": 7.142599,
+            "runtime_sec": 120,
         },
         {
             "segment_id": "261 - 830",
@@ -35,7 +37,8 @@ data = {
             "stop_lon": 7.142599,
             "end_stop_id": 667,
             "next_lat": 50.96085,
-            "next_lon": 7.136873
+            "next_lon": 7.136873,
+            "runtime_sec": 60
         },
         {
             "segment_id": "830 - 142",
@@ -44,7 +47,8 @@ data = {
             "stop_lon": 7.136873,
             "end_stop_id": 671,
             "next_lat": 50.956685,
-            "next_lon": 7.129755
+            "next_lon": 7.129755,
+            "runtime_sec": 120
         },
         {
             "segment_id": "142 - 200",
@@ -53,7 +57,8 @@ data = {
             "stop_lon": 7.129755,
             "end_stop_id": 670,
             "next_lat": 50.953963,
-            "next_lon": 7.115585
+            "next_lon": 7.115585,
+            "runtime_sec": 120
         },
         {
             "segment_id": "200 - 187",
@@ -62,7 +67,8 @@ data = {
             "stop_lon": 7.115585,
             "end_stop_id": 669,
             "next_lat": 50.951587,
-            "next_lon": 7.102577
+            "next_lon": 7.102577,
+            "runtime_sec": 60
         },
         {
             "segment_id": "187 - 186",
@@ -71,7 +77,8 @@ data = {
             "stop_lon": 7.102577,
             "end_stop_id": 668,
             "next_lat": 50.94901,
-            "next_lon": 7.079235
+            "next_lon": 7.079235,
+            "runtime_sec": 120
         },
         {
             "segment_id": "186 - 181",
@@ -80,7 +87,8 @@ data = {
             "stop_lon": 7.079235,
             "end_stop_id": 547,
             "next_lat": 50.94765,
-            "next_lon": 7.072644
+            "next_lon": 7.072644,
+            "runtime_sec": 60
         },
         {
             "segment_id": "181 - 180",
@@ -89,7 +97,8 @@ data = {
             "stop_lon": 7.072644,
             "end_stop_id": 546,
             "next_lat": 50.944071,
-            "next_lon": 7.048102
+            "next_lon": 7.048102,
+            "runtime_sec": 60
         },
         {
             "segment_id": "180 - 179",
@@ -98,7 +107,8 @@ data = {
             "stop_lon": 7.048102,
             "end_stop_id": 540,
             "next_lat": 50.942515,
-            "next_lon": 7.042148
+            "next_lon": 7.042148,
+            "runtime_sec": 60
         },
         {
             "segment_id": "179 - 178",
@@ -107,7 +117,8 @@ data = {
             "stop_lon": 7.042148,
             "end_stop_id": 539,
             "next_lat": 50.941749,
-            "next_lon": 7.029212
+            "next_lon": 7.029212,
+            "runtime_sec": 60
         },
         {
             "segment_id": "178 - 144",
@@ -116,7 +127,8 @@ data = {
             "stop_lon": 7.029212,
             "end_stop_id": 518,
             "next_lat": 50.941564,
-            "next_lon": 7.022591
+            "next_lon": 7.022591,
+            "runtime_sec": 60
         },
         {
             "segment_id": "144 - 143",
@@ -125,7 +137,8 @@ data = {
             "stop_lon": 7.022591,
             "end_stop_id": 517,
             "next_lat": 50.938927,
-            "next_lon": 7.008548
+            "next_lon": 7.008548,
+            "runtime_sec": 60
         },
         {
             "segment_id": "143 - 28",
@@ -134,7 +147,8 @@ data = {
             "stop_lon": 7.008548,
             "end_stop_id": 513,
             "next_lat": 50.937512,
-            "next_lon": 6.998488
+            "next_lon": 6.998488,
+            "runtime_sec": 60
         },
         {
             "segment_id": "28 - 27",
@@ -143,7 +157,8 @@ data = {
             "stop_lon": 6.998488,
             "end_stop_id": 512,
             "next_lat": 50.936467,
-            "next_lon": 6.986145
+            "next_lon": 6.986145,
+            "runtime_sec": 60
         },
         {
             "segment_id": "27 - 2",
@@ -152,7 +167,8 @@ data = {
             "stop_lon": 6.986145,
             "end_stop_id": 44,
             "next_lat": 50.939594,
-            "next_lon": 6.978799
+            "next_lon": 6.978799,
+            "runtime_sec": 60
         },
         {
             "segment_id": "2 - 1",
@@ -161,7 +177,8 @@ data = {
             "stop_lon": 6.978799,
             "end_stop_id": 802,
             "next_lat": 50.936662,
-            "next_lon": 6.970358
+            "next_lon": 6.970358,
+            "runtime_sec": 60
         },
         {
             "segment_id": "1 - 39",
@@ -170,7 +187,8 @@ data = {
             "stop_lon": 6.970358,
             "end_stop_id": 39,
             "next_lat": 50.935705,
-            "next_lon": 6.959995
+            "next_lon": 6.959995,
+            "runtime_sec": 60
         },
         {
             "segment_id": "39 - 802",
@@ -179,7 +197,8 @@ data = {
             "stop_lon": 6.959995,
             "end_stop_id": 1,
             "next_lat": 50.93577,
-            "next_lon": 6.947677
+            "next_lon": 6.947677,
+            "runtime_sec": 60
         },
         {
             "segment_id": "802 - 44",
@@ -188,7 +207,8 @@ data = {
             "stop_lon": 6.947677,
             "end_stop_id": 2,
             "next_lat": 50.936343,
-            "next_lon": 6.93901
+            "next_lon": 6.93901,
+            "runtime_sec": 60
         },
         {
             "segment_id": "44 - 512",
@@ -197,7 +217,8 @@ data = {
             "stop_lon": 6.93901,
             "end_stop_id": 27,
             "next_lat": 50.936071,
-            "next_lon": 6.932603
+            "next_lon": 6.932603,
+            "runtime_sec": 60
         },
         {
             "segment_id": "512 - 513",
@@ -206,7 +227,8 @@ data = {
             "stop_lon": 6.932603,
             "end_stop_id": 28,
             "next_lat": 50.936637,
-            "next_lon": 6.924647
+            "next_lon": 6.924647,
+            "runtime_sec": 60
         },
         {
             "segment_id": "513 - 517",
@@ -215,7 +237,8 @@ data = {
             "stop_lon": 6.924647,
             "end_stop_id": 143,
             "next_lat": 50.936745,
-            "next_lon": 6.916711
+            "next_lon": 6.916711,
+            "runtime_sec": 60
         },
         {
             "segment_id": "517 - 518",
@@ -224,7 +247,8 @@ data = {
             "stop_lon": 6.916711,
             "end_stop_id": 144,
             "next_lat": 50.936998,
-            "next_lon": 6.90855
+            "next_lon": 6.90855,
+            "runtime_sec": 60
         },
         {
             "segment_id": "518 - 539",
@@ -233,7 +257,8 @@ data = {
             "stop_lon": 6.90855,
             "end_stop_id": 178,
             "next_lat": 50.937177,
-            "next_lon": 6.899363
+            "next_lon": 6.899363,
+            "runtime_sec": 60
         },
         {
             "segment_id": "539 - 540",
@@ -242,7 +267,8 @@ data = {
             "stop_lon": 6.899363,
             "end_stop_id": 179,
             "next_lat": 50.937314,
-            "next_lon": 6.894315
+            "next_lon": 6.894315,
+            "runtime_sec": 60
         },
         {
             "segment_id": "540 - 546",
@@ -251,7 +277,8 @@ data = {
             "stop_lon": 6.894315,
             "end_stop_id": 180,
             "next_lat": 50.937452,
-            "next_lon": 6.889253
+            "next_lon": 6.889253,
+            "runtime_sec": 60
         },
         {
             "segment_id": "546 - 547",
@@ -260,7 +287,8 @@ data = {
             "stop_lon": 6.889253,
             "end_stop_id": 181,
             "next_lat": 50.937689,
-            "next_lon": 6.881746
+            "next_lon": 6.881746,
+            "runtime_sec": 60
         },
         {
             "segment_id": "547 - 668",
@@ -269,7 +297,8 @@ data = {
             "stop_lon": 6.881746,
             "end_stop_id": 186,
             "next_lat": 50.93759,
-            "next_lon": 6.874588
+            "next_lon": 6.874588,
+            "runtime_sec": 60
         },
         {
             "segment_id": "668 - 669",
@@ -278,7 +307,8 @@ data = {
             "stop_lon": 6.874588,
             "end_stop_id": 187,
             "next_lat": 50.937636,
-            "next_lon": 6.868372
+            "next_lon": 6.868372,
+            "runtime_sec": 60
         },
         {
             "segment_id": "669 - 670",
@@ -287,7 +317,8 @@ data = {
             "stop_lon": 6.868372,
             "end_stop_id": 200,
             "next_lat": 50.937957,
-            "next_lon": 6.855375
+            "next_lon": 6.855375,
+            "runtime_sec": 60
         },
         {
             "segment_id": "670 - 671",
@@ -296,7 +327,8 @@ data = {
             "stop_lon": 6.855375,
             "end_stop_id": 142,
             "next_lat": 50.938112,
-            "next_lon": 6.845191
+            "next_lon": 6.845191,
+            "runtime_sec": 60
         },
         {
             "segment_id": "671 - 667",
@@ -305,7 +337,8 @@ data = {
             "stop_lon": 6.845191,
             "end_stop_id": 830,
             "next_lat": 50.938239,
-            "next_lon": 6.835035
+            "next_lon": 6.835035,
+            "runtime_sec": 60
         },
         {
             "segment_id": "667 - 666",
@@ -314,7 +347,8 @@ data = {
             "stop_lon": 6.835035,
             "end_stop_id": 261,
             "next_lat": 50.938383,
-            "next_lon": 6.828664
+            "next_lon": 6.828664,
+            "runtime_sec": 60
         },
         {
             "segment_id": "666 - 655",
@@ -323,7 +357,8 @@ data = {
             "stop_lon": 6.828664,
             "end_stop_id": 241,
             "next_lat": 50.940897,
-            "next_lon": 6.815136
+            "next_lon": 6.815136,
+            "runtime_sec": 60
         },
         {
             "segment_id": "655 - 665",
@@ -332,10 +367,12 @@ data = {
             "stop_lon": 6.815136,
             "end_stop_id": 702,
             "next_lat": 50.940897,
-            "next_lon": 6.815136
+            "next_lon": 6.815136,
+            "runtime_sec": 60
         }
     ]
 }
+
 
 
 # Send the POST request
