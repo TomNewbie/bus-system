@@ -28,7 +28,7 @@ scaler = MinMaxScaler()
 X = scaler.fit_transform(X)
 
 # -- Define the sequence length --
-seq_length = 320
+seq_length = 64
 
 X_seq, Y_seq = [], []
 

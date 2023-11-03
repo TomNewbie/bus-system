@@ -3,6 +3,7 @@ import pandas as pd
 from keras_preprocessing.sequence import pad_sequences
 from sklearn.preprocessing import MinMaxScaler
 from tensorflow import keras
+import numpy as np
 
 
 def run_model(data):
@@ -16,7 +17,40 @@ def run_model(data):
 
     df = pd.DataFrame(data)
     df = pd.json_normalize(data, 'segments', meta=['route_id', 'direction_id', 'arrival_hour', 'arrival_minute'])
-    df = df[['route_id','direction_id','arrival_hour','arrival_minute','segment_id','start_stop_id',"stop_lat","stop_lon","end_stop_id","next_lat","next_lon"]]
+    df = df[['route_id','direction_id','arrival_hour','arrival_minute','segment_id','start_stop_id',"stop_lat","stop_lon","end_stop_id","next_lat","next_lon", 'runtime_sec']]
+
+
+    # Extract the hour and minute from the first row
+    first_row = df.iloc[0]
+    hour = first_row['arrival_hour']
+    minute = first_row['arrival_minute']
+
+    # Create a datetime64 object for the first row
+    future_time = pd.to_datetime(f"{hour:02d}:{minute:02d}")
+    print(future_time)
+    calculated_arrival_times = []
+
+    for idx in range(len(df)):
+        if idx < 1:
+            # For the first row, we've already updated it, so use the provided future_time
+            calculated_arrival_times.append(pd.to_datetime(future_time))
+        else:
+            # For subsequent rows, calculate the 'arrival_time' based on the two previous rows
+            previous_arrival_time = calculated_arrival_times[idx - 1]
+            previous_runtime = df['runtime_sec'].iloc[idx - 1]
+            new_arrival_time = previous_arrival_time + pd.to_timedelta(previous_runtime, unit='s')
+            calculated_arrival_times.append(new_arrival_time)
+
+        # print(df['arrival_hour'][idx])
+        # print(df['arrival_minute'][idx])
+
+    # Update the 'arrival_time' column with the calculated values
+    df['arrival_time'] = calculated_arrival_times
+    # -- Create 'arrival_hour' and 'arrival_minute' --
+    df['arrival_hour'] = df['arrival_time'].dt.hour
+    df['arrival_minute'] = df['arrival_time'].dt.minute
+
+
 
     # Ensure the new data is preprocessed in the same way as the training data
     scaler = MinMaxScaler()
