@@ -1,3 +1,6 @@
+'''
+    TESTING REQUEST SENT TO SERVER
+'''
 import requests
 from data import data_in
 # Set the URL of your Flask server

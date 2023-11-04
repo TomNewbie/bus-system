@@ -1,3 +1,7 @@
+'''
+    DUMMY DATA FOR model_GUI.py and request.py
+'''
+
 data_in = {
     "route_id": 100001,
     "direction_id": 0,

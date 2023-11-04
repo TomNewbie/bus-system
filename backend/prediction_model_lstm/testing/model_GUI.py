@@ -1,3 +1,6 @@
+'''
+    DEBUGGER GUI for run_model
+'''
 import tkinter as tk
 from enum import Enum
 from time import strftime, localtime
