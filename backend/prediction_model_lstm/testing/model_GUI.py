@@ -2,7 +2,10 @@ import tkinter as tk
 from enum import Enum
 from time import strftime, localtime
 from tkintermapview import TkinterMapView
-from run_model import run_model
+import os, sys
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+# import ../db.py
+import run_model
 
 route_id_option = ["100007"]
 direction_id_option = ["0", "1"]
@@ -424,7 +427,7 @@ class App(tk.Tk):
         # direction_id = int(self.direction_id_value.get())
         # future_time = self.future_time_entry.get()
 
-        df = run_model(data_in)
+        df = run_model.run_model(data_in)
         location_list = list(zip(df['stop_lat'], df['stop_lon'], df['congestion_level']))
         self.marker_list = location_list
 
