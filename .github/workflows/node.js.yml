@@ -12,6 +12,7 @@ jobs:
     defaults:
       run:
         shell: bash
+        working-directory: ./frontend
 
     steps:
       - name: Checkout code
@@ -21,7 +22,7 @@ jobs:
         run: cd frontend
 
       - name: Print working directory
-        run: pwd
+        run: ls
 
       - name: Setup Node.js
         uses: actions/setup-node@v3
