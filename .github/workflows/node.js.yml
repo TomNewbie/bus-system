@@ -2,9 +2,9 @@ name: Node.js CI
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ["main"]
   pull_request:
-    branches: [ "main" ]
+    branches: ["main"]
 
 jobs:
   build:
@@ -14,20 +14,23 @@ jobs:
         shell: bash
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-    - name: Set working directory to frontend
-      run: cd frontend
+      - name: Set working directory to frontend
+        run: cd frontend
 
-    - name: Setup Node.js
-      uses: actions/setup-node@v3
-      with:
-        node-version: 18
-        cache: 'npm'
+      - name: Print working directory
+        run: pwd
 
-    - name: Install dependencies
-      run: npm ci
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: "npm"
 
-    - name: Build and run tests
-      run: npm run dev
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build and run tests
+        run: npm run dev
