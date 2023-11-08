@@ -61,4 +61,3 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           config: .github/reviewers.yml
-          use_local: true
