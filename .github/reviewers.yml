@@ -1,4 +1,15 @@
 reviewers:
   # The default reviewers
-  defaults:
-    - team:default-reviewers # GitHub team
+  groups:
+    gher:
+      - Kimthanh11
+      - NguyenLe1605
+      - vinhDev3006
+      - TomNewbie
+      - MinhTran1506
+
+options:
+  ignore_draft: true
+  ignored_keywords:
+    - DO NOT REVIEW
+  enable_group_assignment: true
