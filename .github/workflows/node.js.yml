@@ -52,14 +52,13 @@ jobs:
       - name: Build and run tests
         run: npm run build
 
-  jobs:
-    auto-request-review:
-      name: Auto Request Review
-      runs-on: ubuntu-latest
-      steps:
-        - name: Request review
-          uses: necojackarc/auto-request-review@v0.12.0
-          with:
-            token: ${{ secrets.GITHUB_TOKEN }}
-            config: .github/reviewers.yml
-            use_local: true
+  auto-request-review:
+    name: Auto Request Review
+    runs-on: ubuntu-latest
+    steps:
+      - name: Request review
+        uses: necojackarc/auto-request-review@v0.12.0
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          config: .github/reviewers.yml
+          use_local: true
