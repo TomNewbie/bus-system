@@ -18,7 +18,6 @@ pub struct RouteInfo {
     pub end_stop_id: i64,
 }
 
-
 #[derive(Debug, Serialize, Deserialize, PartialEq)]
 pub struct RouteWithCongestionLevel {
     pub start_stop_id: i64,
@@ -32,5 +31,5 @@ pub struct RouteWithCongestionLevel {
     pub segment_id: String,
     pub next_lat: f64,
     pub next_lon: f64,
-    pub congestion_level: i64, 
+    pub congestion_level: i64,
 }
