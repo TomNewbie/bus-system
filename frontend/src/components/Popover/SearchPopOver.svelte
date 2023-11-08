@@ -41,11 +41,15 @@
 
 	let searchId = '';
 	let isSearched = false;
+	$: {
+		searchId;
+	}
 	let isLoading = false; // Add a loading flag
 	let isError = false;
 	let searchBus = {};
 
 	function fetchSearchBusLine() {
+		console.log(searchId);
 		const endpoint = 'http://localhost:8000/bus-lines/' + searchId;
 		isLoading = true;
 		isError = false; // Reset the error flag
@@ -64,6 +68,7 @@
 			})
 			.then((data) => {
 				searchBus = data;
+				console.log(searchBus);
 			})
 			.catch((error) => {
 				console.log(error);
@@ -95,18 +100,10 @@
 			>
 				<input
 					on:click={() => toggleTransform('input')}
-					on:input={(e) => {
-						searchId = e.target.value;
-						if (searchId == '') {
-							isSearched = false;
-							isLoading = false;
-							isError = false;
-						} else {
-							isSearched = true;
-							fetchSearchBusLine(searchId);
-						}
+					on:input={(event) => {
+						updateSearchId(event);
 					}}
-					on:input={updateSearchId}
+					bind:this={searchId}
 					placeholder="Search for bus line or bus stop"
 					class={inputClass}
 				/>
