@@ -2,7 +2,8 @@
 
 on:
   pull_request:
-    rypes: [opended, ready_for_review, reopened]
+    types: [opended, ready_for_review, reopened]
+
 jobs:
   auto-request-review:
     name: Auto Request Review
