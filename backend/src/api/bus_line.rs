@@ -3,11 +3,11 @@ use actix_web::{
     web::{self, Data, Path, ServiceConfig},
     HttpResponse,
 };
-use bson::{doc, Bson};
+use bson::{doc, Document};
 use futures::TryStreamExt;
 use mongodb::{Client, Collection};
 
-use crate::models::{BusLineWithStop, BusLineWithoutStop};
+use crate::models::BusLineWithoutStop;
 
 pub fn bus_line_config(cfg: &mut ServiceConfig) {
     cfg.service(
@@ -48,29 +48,27 @@ async fn get_bus_line_by_id(db_client: Data<Client>, path: Path<String>) -> Http
         return HttpResponse::BadRequest().body("invalid ID");
     }
 
-    let id: usize = match id.parse() {
-        Ok(id) => id,
+    let col: Collection<Document> = db_client.database("bus").collection("segments");
+    let filter = doc! {"properties.route_id": id.clone()};
+    let cursor = match col.find(filter, None).await {
+        Ok(cursor) => cursor,
         Err(err) => {
-            tracing::error!("Failed to parse the ID: {:?}", err);
-            return HttpResponse::BadRequest().body("invalid ID");
+            tracing::error!("Failed to execute the query: {:?}", err);
+            return HttpResponse::InternalServerError().finish();
         }
     };
-
-    let col: Collection<BusLineWithStop> = db_client.database("bus").collection("lines");
-    let filter = doc! {"route_id": Bson::Int64(id as i64)};
-    let bus_line = match col.find_one(filter, None).await {
-        Ok(opt) => match opt {
-            Some(bus_line) => bus_line,
-            None => {
-                tracing::error!("route_id: {} not found", id);
-                return HttpResponse::NotFound().body("ID not found");
-            }
-        },
+    let lines: Vec<Document> = match cursor.try_collect().await {
+        Ok(lines) => lines,
         Err(err) => {
             tracing::error!("Failed to execute the query: {:?}", err);
             return HttpResponse::InternalServerError().finish();
         }
     };
 
-    HttpResponse::Ok().json(bus_line)
+    if lines.is_empty() {
+        tracing::error!("route_id: {} not found", id);
+        return HttpResponse::NotFound().body("ID not found");
+    }
+
+    HttpResponse::Ok().json(lines)
 }
