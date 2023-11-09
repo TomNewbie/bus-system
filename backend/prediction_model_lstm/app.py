@@ -1,7 +1,7 @@
 from flask import Flask, request, Response
 
 
-from run_model import run_model
+from data_transform import transform_data
 
 app = Flask(__name__)
 
@@ -9,7 +9,7 @@ app = Flask(__name__)
 def predict_congestion():
     # Assuming the data is sent as JSON in the request
     request_data = request.get_json()
-    result_data = run_model(request_data)
+    result_data = transform_data(request_data)
 
     # Convert the result data to JSON
     result_json = result_data.to_json(orient='records')
