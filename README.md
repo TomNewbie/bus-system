@@ -2,7 +2,7 @@
 
 ## Project Descriptions
 
-Build a project to predict the bus congestion
+Build a project to predict the bus congestion.
 
 ## Architecture
 
