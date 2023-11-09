@@ -36,6 +36,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.THO_GITHUB_TOKEN }}
 
       - name: Print working directory
         run: pwd
