@@ -6,8 +6,8 @@ Build a project to predict the bus congestion and suggest rerouting.
 
 ## Architecture
 
-![Use Case Diagram](/use_case_diagram.png)
-![Architecture](/architecture.png)
+![Use Case Diagram](/documentation/images/use_case_diagram.png)
+![Architecture](/documentation/images/architecture.png)
 ![Data flow for prediction](https://github.com/TomNewbie/bus-system/assets/84883483/706de93c-f563-4143-9d23-2b4091e04427)
 
 ## Doc
