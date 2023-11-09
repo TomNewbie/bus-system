@@ -6,7 +6,12 @@ import pandas as pd
 from keras_preprocessing.sequence import pad_sequences
 from sklearn.preprocessing import MinMaxScaler
 from tensorflow import keras
-import numpy as np
+import tensorflow as tf
+
+
+tf.config.threading.set_inter_op_parallelism_threads(
+    1
+)
 
 
 def run_model(data):
