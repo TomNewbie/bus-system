@@ -5,6 +5,8 @@ on:
     branches: ["main"]
   pull_request:
     branches: ["main"]
+permissions:
+  contents: write
 
 jobs:
   # JOB to run change detection
@@ -17,10 +19,11 @@ jobs:
     outputs:
       frontend: ${{ steps.filter.outputs.frontend }}
     steps:
+      - name: Check out code
+        uses: actions/checkout@v3
       - uses: dorny/paths-filter@v2
         id: filter
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
           filters: |
             frontend:
               - 'frontend/**'
