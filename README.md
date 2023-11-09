@@ -6,9 +6,9 @@ Build a project to predict the bus congestion and suggest rerouting.
 
 ## Architecture
 
+![Use Case Diagram](/use_case_diagram.png)
 ![Architecture](/architecture.png)
 ![Data flow for prediction](https://github.com/TomNewbie/bus-system/assets/84883483/706de93c-f563-4143-9d23-2b4091e04427)
-
 
 ## Doc
 
@@ -23,13 +23,13 @@ Build a project to predict the bus congestion and suggest rerouting.
 
 ## Team Members
 
-| Name                 | Description    | ID    |
-| -------------------- | -------------- | ----- | 
-| Nguyễn Ngọc Vĩnh     | Title          | 18691 |
-| Phan Chí Thọ         | Text           | 17232 |
-| Lê Hoàng Đăng Nguyên | defenestration | 17028 |
-| Lê Hoàng Kim Thanh   | Front end      | 18047 |
-| Trần Quang Minh      | Data           | 17061 |     
+| Name                 | Description | ID    |
+| -------------------- | ----------- | ----- |
+| Nguyễn Ngọc Vĩnh     | Data        | 18691 |
+| Phan Chí Thọ         | Front-end   | 17232 |
+| Lê Hoàng Đăng Nguyên | Back-end    | 17028 |
+| Lê Hoàng Kim Thanh   | Front-end   | 18047 |
+| Trần Quang Minh      | Data        | 17061 |
 
 ## Installation
 
@@ -44,4 +44,3 @@ These guidelines are for installation on a windows machine.
 
 - Notes: The set up is still stupid so one step missing will cause the server to behave incorrectly.
 - Start the server with: `docker compose up`
-
