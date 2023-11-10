@@ -3,9 +3,9 @@ version: '3.1'
 services:
   predict:
     container_name: predict
-    build: ./backend/prediction_model_lstm
+    build: ./backend/prediction
     ports:
-       - 5000
+      - 5000
   gmanbus:
     container_name: gmanbus
     build: ./backend
