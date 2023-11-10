@@ -13,3 +13,4 @@ speeds_data.csv
 stop_freq.csv
 segment_data.csv
 configuration/base.yaml
+**/venv

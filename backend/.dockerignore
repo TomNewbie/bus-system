@@ -2,4 +2,4 @@
 /tests
 Dockerfile
 .dockerignore
-/prediction_model_lstm
+/prediction

@@ -1,6 +1,6 @@
 use actix_web::{
     get,
-    web::{self, Data, Query, ServiceConfig},
+    web::{self, Data, Path, Query, ServiceConfig},
     HttpResponse,
 };
 use bson::{doc, Bson, Document};
@@ -9,11 +9,12 @@ use futures::TryStreamExt;
 use lazy_static::lazy_static;
 use mongodb::{error::Error, Client, Collection};
 use serde::{Deserialize, Serialize};
+use serde_json::json;
 use tokio::try_join;
 
 use crate::models::{
-    route_info::{RouteInfo, RouteWithCongestionLevel},
-    Segment, SegmentWithCongestionLevel,
+    route_info::RouteInfo, PredictedRouteInfo, PredictionRoute, PredictionSegment, Segment,
+    SegmentWithCongestionLevel,
 };
 
 lazy_static! {
@@ -26,7 +27,7 @@ pub fn predict_config(cfg: &mut ServiceConfig) {
     cfg.service(web::scope("/predict").service(predict_congestion));
 }
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Serialize, Deserialize)]
 pub struct SegmentInfo {
     route_id: String,
     shape_id: String,
@@ -76,31 +77,24 @@ async fn fetch_route_info(
     Ok(routes)
 }
 
-#[derive(Debug, Serialize, Deserialize, Clone)]
-struct PredictionSegment {
-    segment_id: String,
-    start_stop_id: i64,
-    stop_lat: f64,
-    stop_lon: f64,
-    end_stop_id: i64,
-    next_lat: f64,
-    next_lon: f64,
-}
-
-#[derive(Debug, Serialize, Deserialize, Clone)]
-struct PredictionRoute {
-    route_id: i64,
-    direction_id: i64,
-    arrival_hour: u32,
-    arrival_minute: u32,
-    segments: Vec<PredictionSegment>,
-}
-
-#[get("")]
+#[get("/{model}")]
 pub async fn predict_congestion(
     db_client: Data<Client>,
+    path: Path<String>,
     segment_info: Query<SegmentInfo>,
 ) -> HttpResponse {
+    let model = path.into_inner();
+    match model.as_str() {
+        "lstm" | "random-forest" => {}
+        path => {
+            let msg = format!("Model {} not supported", path);
+            tracing::error!(msg);
+            let resp = json!({
+                "error": msg,
+            });
+            return HttpResponse::NotFound().json(resp);
+        }
+    };
     let SegmentInfo {
         route_id,
         shape_id,
@@ -108,7 +102,6 @@ pub async fn predict_congestion(
         minute_predict,
     } = segment_info.into_inner();
     let time_for_prediction = (Utc::now() + Duration::minutes(minute_predict)).time();
-    tracing::info!("Request Info: Id of route - {route_id}, Id of shape - {shape_id}");
 
     let route_id_i64 = match route_id.parse::<i64>() {
         Ok(route_id) => route_id,
@@ -138,6 +131,7 @@ pub async fn predict_congestion(
             end_stop_id: route.end_stop_id,
             next_lat: route.next_lat,
             next_lon: route.next_lon,
+            runtime_sec: route.runtime_sec,
         })
         .collect::<Vec<_>>();
     let prediction_route = PredictionRoute {
@@ -147,7 +141,7 @@ pub async fn predict_congestion(
         arrival_hour: time_for_prediction.hour(),
         arrival_minute: time_for_prediction.minute(),
     };
-    let url = format!("http://{}:5000/predict_congestion_lstm", URL.clone());
+    let url = format!("http://{}:5000/{}", URL.clone(), model);
     let client = reqwest::Client::new();
     let resp = match client.post(url).json(&prediction_route).send().await {
         Ok(resp) => resp,
@@ -163,7 +157,7 @@ pub async fn predict_congestion(
         return HttpResponse::InternalServerError().finish();
     }
 
-    let resp: Vec<RouteWithCongestionLevel> = match resp.json().await {
+    let resp: Vec<PredictedRouteInfo> = match resp.json().await {
         Ok(resp) => resp,
         Err(err) => {
             tracing::error!("Error sending prediction request {}", err);
