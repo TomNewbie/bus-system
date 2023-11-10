@@ -1,4 +1,4 @@
-name: Node.js CI
+name: Front-end CI
 
 on:
   pull_request:
