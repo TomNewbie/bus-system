@@ -38,6 +38,58 @@
 		searchPopoverVisible = true;
 		isTransformed = true;
 	}
+
+	let searchId = '';
+	let isSearched = false;
+	$: {
+		searchId;
+	}
+	let isLoading = false; // Add a loading flag
+	let isError = false;
+	let searchBus = {};
+
+	function fetchSearchBusLine() {
+		console.log(searchId);
+		const endpoint = 'http://localhost:8000/bus-lines/' + searchId;
+		isLoading = true;
+		isError = false; // Reset the error flag
+
+		fetch(endpoint)
+			.then((response) => {
+				if (response.status === 200) {
+					return response.json();
+				} else if (response.status === 404) {
+					isError = true; // Set error flag
+					return Promise.reject('Resource not found');
+				} else {
+					isError = true; // Set error flag
+					return Promise.reject(`API request failed with status code ${response.status}`);
+				}
+			})
+			.then((data) => {
+				searchBus = data;
+				console.log(searchBus);
+			})
+			.catch((error) => {
+				console.log(error);
+			})
+			.finally(() => {
+				isLoading = false; // Set isLoading to false after the request completes
+			});
+	}
+
+	// Custom event handler to update searchId
+	function updateSearchId(event) {
+		searchId = event.target.value;
+		if (searchId == '') {
+			isSearched = false;
+			isLoading = false;
+			isError = false;
+		} else {
+			isSearched = true;
+			fetchSearchBusLine(searchId);
+		}
+	}
 </script>
 
 <body>
@@ -48,6 +100,10 @@
 			>
 				<input
 					on:click={() => toggleTransform('input')}
+					on:input={(event) => {
+						updateSearchId(event);
+					}}
+					bind:this={searchId}
 					placeholder="Search for bus line or bus stop"
 					class={inputClass}
 				/>
@@ -62,17 +118,33 @@
 				class:hidden={!isTransformed}
 				style="height: calc(100vh - 130px); "
 			>
-				{#each $allBusLines as busLine, index}
+				{#if isLoading}
+					<div>Loading</div>
+				{:else if isSearched && !isLoading && isError}
+					<div>Not Found</div>
+				{:else if isSearched}
 					<BusLineItem
-						bus_id={busLine[0].properties.route_id}
-						bus_start={busLine[0].properties.start_stop_name}
-						bus_end={busLine[busLine.length - 1].properties.end_stop_name}
+						bus_id={searchBus.route_id}
+						bus_start={searchBus.start_stop_name}
+						bus_end={searchBus.end_stop_name}
 						handleClick={() => {
-							currentIndex.set(index);
+							currentIndex.set(Number(searchBus.route_id));
 							searchPopoverVisible = false;
 						}}
 					/>
-				{/each}
+				{:else}
+					{#each $allBusLines as busLine, index}
+						<BusLineItem
+							bus_id={busLine[0].properties.route_id}
+							bus_start={busLine[0].properties.start_stop_name}
+							bus_end={busLine[busLine.length - 1].properties.end_stop_name}
+							handleClick={() => {
+								currentIndex.set(index);
+								searchPopoverVisible = false;
+							}}
+						/>
+					{/each}
+				{/if}
 			</div>
 		</div>
 	</div>
