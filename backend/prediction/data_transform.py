@@ -6,7 +6,7 @@ import pandas as pd
 from keras_preprocessing.sequence import pad_sequences
 from sklearn.preprocessing import MinMaxScaler
 from tensorflow import keras
-from run_model import run_model
+from lstm import run_model
 
 
 def transform_data(data):
@@ -22,7 +22,6 @@ def transform_data(data):
     minute = first_row['arrival_minute']
 
     future_time = pd.to_datetime(f"{hour:02d}:{minute:02d}")
-    print(future_time)
     calculated_arrival_times = []
 
     for idx in range(len(df)):

@@ -14,6 +14,6 @@ USER gmanbus
 WORKDIR /home/gmanbus/app
 
 RUN pip install --upgrade pip \
-    && pip install Flask pandas Keras-Preprocessing tensorflow scikit-learn
+    && pip install --default-timeout=100 Flask pandas Keras-Preprocessing tensorflow scikit-learn
 ENV APP_ENVIRONMENT production
 CMD [ "python3", "-m" , "flask", "run", "--host=0.0.0.0"]
