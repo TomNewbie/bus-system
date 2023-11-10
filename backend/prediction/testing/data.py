@@ -5,7 +5,7 @@
 data_in = {
     "route_id": 100001,
     "direction_id": 0,
-    "arrival_hour": 23,
+    "arrival_hour": 13,
     "arrival_minute": 7,
     "segments": [
         {
