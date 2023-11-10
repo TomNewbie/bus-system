@@ -7,9 +7,9 @@ from time import strftime, localtime
 from tkintermapview import TkinterMapView
 import os, sys
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-import run_model
 from data import data_in
 from data_transform import transform_data
+from random_forest import run_model
 
 
 class CongestionLevel(Enum):
@@ -53,7 +53,7 @@ class App(tk.Tk):
         self.map_widget.delete_all_marker()
         self.map_widget.delete_all_path()
         
-        df = transform_data(data=data_in)
+        df = run_model(data=data_in)
         location_list = list(zip(df['stop_lat'], df['stop_lon'], df['congestion_level']))
         self.marker_list = location_list
 
