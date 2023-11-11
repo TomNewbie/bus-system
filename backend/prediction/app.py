@@ -1,29 +1,26 @@
 import os
 from flask import Flask, request, Response
-from data_transform import transform_data
+from run_model import run_model
 import random_forest
 app = Flask(__name__)
 
+# LSTM
 @app.route('/lstm', methods=['POST'])
 def predict_congestion_lstm():
     # Assuming the data is sent as JSON in the request
     request_data = request.get_json()
-    result_data = transform_data(request_data)
+    result_data = run_model(request_data, "lstm")
 
     # Convert the result data to JSON
     result_json = result_data.to_json(orient='records')
     return Response(result_json, mimetype='application/json')
 
+# RANDOM FOREST
 @app.route('/random-forest', methods=['POST'])
 def predict_random_forest():
-    # Load the machine learning model and the scaler
-    
-    # Extract input data from the JSON request
     request_data = request.get_json()
     
-    result_data = random_forest.run_model(request_data)
-    
-    # Conver the result data to JSON
+    result_data = run_model(request_data, "random_forest")
     result_json = result_data.to_json(orient='records')
     return Response(result_json, mimetype='application/json')
 

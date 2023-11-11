@@ -8,9 +8,13 @@ from tkintermapview import TkinterMapView
 import os, sys
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from data import data_in
-from data_transform import transform_data
-from random_forest import run_model
+from run_model import run_model
 
+
+model_options = [
+    "lstm",
+    "random_forest"
+]
 
 class CongestionLevel(Enum):
     FREE = "gray"
@@ -38,6 +42,13 @@ class App(tk.Tk):
         # Create a frame for input fields
         input_frame = tk.Frame(self)
         input_frame.pack(padx=10, pady=10)
+        
+        # Input fields and labels
+        tk.Label(input_frame).grid(row=0, column=0, sticky="w")
+        self.model_field_value = tk.StringVar(input_frame)
+        self.model_field_value.set("Select ML Model")
+        self.model_field_entry = tk.OptionMenu(input_frame, self.model_field_value, *model_options)
+        self.model_field_entry.grid(row=0, column=1)
 
         # Run Model button
         run_button = tk.Button(input_frame, text="Run Model", command=self.run_model_from_gui)
@@ -53,7 +64,9 @@ class App(tk.Tk):
         self.map_widget.delete_all_marker()
         self.map_widget.delete_all_path()
         
-        df = run_model(data=data_in)
+        model_option = self.model_field_value.get()
+        
+        df = run_model(data=data_in, type=model_option)
         location_list = list(zip(df['stop_lat'], df['stop_lon'], df['congestion_level']))
         self.marker_list = location_list
 
