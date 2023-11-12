@@ -1,13 +1,13 @@
 <script>
 	import Map from '../components/Map/Map.svelte';
-	import SearchPopOver from '../components/Popover/ListPopOver.svelte';
+	import ListPopover from '../components/Popover/ListPopover.svelte';
 	import BLinePopover from '../components/Popover/BLinePopover.svelte';
 	import CongestionButton from '../components/CongestionButton.svelte';
 </script>
 
 <body>
 	<Map>
-		<SearchPopOver />
+		<ListPopover />
 		<BLinePopover />
 		<CongestionButton />
 	</Map>
