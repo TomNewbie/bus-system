@@ -1,28 +1,28 @@
-<script>
-	// @ts-nocheck
-
+<script lang="ts">
+	// @ts-nocheack
 	import { onMount, onDestroy } from 'svelte';
 	// @ts-ignore
 	import { Map, Marker, Popup, LngLatBounds } from 'mapbox-gl';
 	import '../../../node_modules/mapbox-gl/dist/mapbox-gl.css';
 	import { currentIndex, allBusLines, minute } from '../../stores/stores';
 
-	// @ts-ignore
-	let map;
-	// @ts-ignore
-	let mapContainer;
-	// @ts-ignore
-	let lng, lat, zoom;
-	let abortController;
+	let map: Map;
 
-	const congestionColors = {
+	let mapContainer: Map;
+
+	let lng, lat, zoom;
+	let abortController: AbortController;
+
+	const congestionColors: {
+		[key: number]: string;
+	} = {
 		0: '#43D224', // Congestion level 1
 		1: '#FFE58F', // Congestion level 2
 		2: '#FE6240', // Congestion level 3
 		3: '#fc7a7a', // Congestion level 4
 		4: '#B60606' // Congestion level 5
 	};
-	let previousIndex;
+	let previousIndex: number;
 	$: {
 		viewFullMap($allBusLines);
 		drawDetailBusline($allBusLines, $currentIndex);
@@ -32,11 +32,11 @@
 	}
 	// Load the JSON data
 	$: formatedBuslines = $allBusLines;
-	var stopsMarker = [];
-	const initialState = { zoom: 11 };
+	var stopsMarker: Marker[] = [];
+	const initialState: MapState = { zoom: 11 };
 	let isFilter = false;
 
-	function getCenterLngLat(formatedBuslines) {
+	function getCenterLngLat(formatedBuslines: AllBusLines) {
 		let lng = 0;
 		let lat = 0;
 		let length = 0;
@@ -68,7 +68,7 @@
 		stopsMarker.forEach((stopMarker) => stopMarker.remove());
 	}
 
-	function setDisableLayer(results, indexToSkip) {
+	function setDisableLayer(results: AllBusLines, indexToSkip: number) {
 		if (!isFilter) {
 			results.forEach((result, routeIndex) => {
 				result.forEach((segment, segmentIndex) => {
@@ -83,7 +83,7 @@
 		}
 	}
 
-	function viewFullMap(results) {
+	function viewFullMap(results: AllBusLines) {
 		if (results == undefined) return;
 		deleteCongestionLevel(previousIndex);
 		removeMarker();
@@ -92,7 +92,7 @@
 				center: getCenterLngLat(results),
 				zoom: initialState.zoom
 			});
-			formatedBuslines.forEach((result, routeIndex) => {
+			results.forEach((result, routeIndex) => {
 				const layerId = `route_${routeIndex}`;
 				map.setLayoutProperty(layerId, 'visibility', 'visible');
 			});
@@ -100,7 +100,7 @@
 		isFilter = false;
 	}
 
-	function drawDetailBusline(results, index) {
+	function drawDetailBusline(results: AllBusLines, index: number) {
 		if (results == undefined) return;
 		if (index == -1 || index == undefined) return;
 		const routeNumber = index;
@@ -117,7 +117,7 @@
 			let startStopLabel = segment['properties']['start_stop_name'];
 			let startStopLngLat = segment['geometry']['coordinates'][0];
 			let popup = new Popup({ offset: 25 }).setText(startStopLabel);
-			const marker = new Marker().setLngLat(startStopLngLat).setPopup(popup).addTo(map);
+			const marker: Marker = new Marker().setLngLat(startStopLngLat).setPopup(popup).addTo(map);
 			stopsMarker.push(marker);
 			bounds.extend(segment['geometry']['coordinates'][0]);
 		});
@@ -152,9 +152,10 @@
 		try {
 			const response = await fetch('http://localhost:8000/segments');
 			if (response.ok) {
-				const data = await response.json();
+				const data: GeoJsonWithId[] = await response.json();
+				console.log(data);
 				// Process the data and remove the "_id" attribute
-				a = data.map((item) => {
+				a = data.map((item: any) => {
 					const { _id, ...itemWithoutId } = item;
 					return itemWithoutId;
 				});
@@ -164,7 +165,7 @@
 		} catch (error) {
 			alert('Error while fetching data: ' + error);
 		}
-		const groupedData = {};
+		const groupedData: GeoJsonGroupByShapeId = {};
 		a.forEach((feature) => {
 			const shapeId = feature.properties.shape_id;
 			if (!groupedData[shapeId]) {
@@ -172,11 +173,11 @@
 			}
 			groupedData[shapeId].push(feature);
 		});
-		console.log(groupedData);
+		console.log(Object.values(groupedData));
 		allBusLines.set(Object.values(groupedData));
 	}
 
-	function deleteCongestionLevel(currentIndex) {
+	function deleteCongestionLevel(currentIndex: number) {
 		if (currentIndex == -1 || currentIndex == undefined) return;
 		if (abortController) {
 			abortController.abort();
@@ -199,7 +200,7 @@
 		});
 	}
 
-	async function fetchCongestionData(currentIndex, minute) {
+	async function fetchCongestionData(currentIndex: number, minute: number) {
 		deleteCongestionLevel(previousIndex);
 		if (minute == 0) return;
 		if (currentIndex == -1 || currentIndex == undefined) return;
@@ -210,7 +211,7 @@
 		let a;
 		try {
 			const response = await fetch(
-				`http://localhost:8000/predict?route_id=${properties.route_id}&shape_id=${properties.shape_id}&direction_id=${properties.direction_id}&minute_predict=${minute}`,
+				`http://localhost:8000/predict/random-forest?route_id=${properties.route_id}&shape_id=${properties.shape_id}&direction_id=${properties.direction_id}&minute_predict=${minute}`,
 				{
 					signal: abortController.signal
 				}
@@ -233,7 +234,7 @@
 		drawCongestionLevel(a);
 	}
 
-	function drawCongestionLevel(currentBusLine) {
+	function drawCongestionLevel(currentBusLine: BusLineWithCongestionLevel) {
 		console.log(currentBusLine);
 		setDisableLayer($allBusLines, -1);
 
@@ -309,7 +310,7 @@
 					}
 				});
 
-				map.on('click', `route_${routeIndex}`, (e) => {
+				map.on('click', `route_${routeIndex}`, () => {
 					// Handle click event for this segment
 					if (routeIndex === $currentIndex) return;
 					currentIndex.set(routeIndex);
@@ -327,7 +328,7 @@
 			});
 		});
 
-		map.on('contextmenu', (e) => {
+		map.on('contextmenu', (e: any) => {
 			currentIndex.set(-1);
 		});
 	});
