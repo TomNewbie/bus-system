@@ -4,7 +4,7 @@
 	import { allBusLines, currentIndex } from '../../stores/stores';
 
 	let isTransformed = true;
-	let searchPopoverVisible = true;
+	let listPopOver = true;
 	// @ts-ignore
 	function toggleTransform(source) {
 		if (source === 'cancel') {
@@ -30,12 +30,12 @@
 
 	function onCurrentBusline(index) {
 		if (index === -1) return;
-		searchPopoverVisible = false;
+		listPopOver = false;
 	}
 
 	function triggerSearchBar(index) {
 		if (index !== -1) return;
-		searchPopoverVisible = true;
+		listPopOver = true;
 		isTransformed = true;
 	}
 
@@ -93,25 +93,24 @@
 </script>
 
 <body>
-	<div class={containerClass} class:hidden={!searchPopoverVisible}>
+	<div class={containerClass} class:hidden={!listPopOver}>
 		<div class="relative">
 			<div
 				class="sticky top-0 left-0 right-0 flex items-center justify-around px-4 py-4 popover-search bg-white/50 rounded-t-xl"
 			>
-				<input
-					on:click={() => toggleTransform('input')}
-					on:input={(event) => {
-						updateSearchId(event);
-					}}
-					bind:this={searchId}
-					placeholder="Search for bus line or bus stop"
-					class={inputClass}
-				/>
-				<button
+				<button on:click={() => toggleTransform('input')} class="text-base text-black font-regular"
+					>List of bus lines</button
+				>
+				<!-- svelte-ignore a11y-click-events-have-key-events -->
+				<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
+				<img
+					src="./times.svg"
+					alt="times-icon"
+					class="absolute w-8 h-8 rounded-full bg-slate-200/60 right-2"
 					class:hidden={!isTransformed}
 					on:click={() => toggleTransform('cancel')}
-					class="text-base">Cancel</button
-				>
+					style="cursor: pointer;"
+				/>
 			</div>
 			<div
 				class="flex flex-col flex-grow gap-4 overflow-y-auto popover-scroll last:border-b-2 last:border-t-0 last:pb-4"
@@ -129,7 +128,7 @@
 						bus_end={searchBus.end_stop_name}
 						handleClick={() => {
 							currentIndex.set(Number(searchBus.route_id));
-							searchPopoverVisible = false;
+							listPopOver = false;
 						}}
 					/>
 				{:else}
@@ -140,7 +139,7 @@
 							bus_end={busLine[busLine.length - 1].properties.end_stop_name}
 							handleClick={() => {
 								currentIndex.set(index);
-								searchPopoverVisible = false;
+								listPopOver = false;
 							}}
 						/>
 					{/each}
@@ -149,17 +148,3 @@
 		</div>
 	</div>
 </body>
-
-<style>
-	/* Add margin to the input's placeholder */
-	input::placeholder {
-		margin-left: 10px;
-		@apply text-base;
-	}
-
-	/* Add padding to the input to create spacing when text is entered */
-	input {
-		padding-left: 10px;
-		@apply text-base;
-	}
-</style>
