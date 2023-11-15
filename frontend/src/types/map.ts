@@ -46,5 +46,5 @@ interface MapState {
 
 type Segment = GeoJson;
 type BusLine = GeoJson[];
-type AllBusLines = BusLine[];
+type BusNetwork = BusLine[];
 type BusLineWithCongestionLevel = GeoJsonWithCongestionLevel[];
