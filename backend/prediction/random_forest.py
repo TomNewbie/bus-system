@@ -9,7 +9,7 @@ def run_random_forest_model(transformed_data):
     env = os.getenv("APP_ENVIRONMENT") 
     model = None
 
-    file_name = "model/Random_forest_saved_model/model_file.p"
+    file_name = "backend\prediction\model\Random_forest_saved_model\model_file.p"
     with open(file_name, 'rb') as pickled:
         model = pickle.load(pickled)
 

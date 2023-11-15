@@ -7,7 +7,7 @@ from sklearn.preprocessing import MinMaxScaler
 from tensorflow import keras
 from random_forest import run_random_forest_model
 from lstm import run_lstm_model
-
+from xg_boost import run_xgboost_model
 
 def run_model(data, type):
     # CONVERT data INTO DATAFRAME FORMAT
@@ -22,6 +22,14 @@ def run_model(data, type):
         X_new = df[['arrival_hour', 'arrival_minute', 'stop_lat', 'stop_lon', 'next_lat', 'next_lon', 'direction_id']]
         X_new = scaler.fit_transform(X_new)
         df["congestion_level"] = run_random_forest_model(X_new)
+    
+    elif type == "xgboost":
+        df = df[['route_id','direction_id','arrival_hour','arrival_minute','segment_id','start_stop_id',"stop_lat","stop_lon","end_stop_id","next_lat","next_lon"]]
+        scaler = MinMaxScaler()
+        X_new = df[['arrival_hour', 'arrival_minute', 'stop_lat', 'stop_lon', 'next_lat', 'next_lon', 'direction_id']]
+        X_new = scaler.fit_transform(X_new)
+        df["congestion_level"] = run_xgboost_model(X_new)
+        
         
     elif type == "lstm":
         first_row = df.iloc[0]

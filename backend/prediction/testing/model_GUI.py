@@ -13,7 +13,8 @@ from run_model import run_model
 
 model_options = [
     "lstm",
-    "random_forest"
+    "random_forest",
+    "xgboost"
 ]
 
 class CongestionLevel(Enum):
