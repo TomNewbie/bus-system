@@ -12,7 +12,7 @@ const { By, Builder, until } = require("selenium-webdriver");
 
     // Choose one bus
     let busLineButton = await driver.wait(
-      until.elementLocated(By.css(".bus-100005")),
+      until.elementLocated(By.css(".bus-1600286")),
       500000 // Adjust the timeout as needed (in milliseconds)
     );
 
