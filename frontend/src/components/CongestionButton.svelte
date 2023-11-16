@@ -56,7 +56,7 @@
 <body class="relative flex justify-end mt-3 mr-3" class:hidden={!busLinePopoverVisible}>
 	<div class="absolute flex justify-center p-4 bg-white rounded-lg">
 		<!-- Start: TOGGLE -->
-		<label class="relative items-center mt-2 mr-4 cursor-pointer">
+		<label class="relative items-center mt-2 mr-4 cursor-pointer enable-button">
 			<input
 				type="checkbox"
 				value=""
@@ -73,7 +73,7 @@
 		<div class="mr-4">
 			<button
 				on:click={() => (isOpen = !isOpen)}
-				class="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border rounded-lg shadow-sm cursor-pointer"
+				class="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border rounded-lg shadow-sm cursor-pointer dropdown"
 				disabled={!showTraffic}
 				style="opacity: {!showTraffic ? '0.5' : '1'}; pointer-events: {!showTraffic
 					? 'none'
@@ -102,7 +102,7 @@
 						<!-- svelte-ignore a11y-click-events-have-key-events -->
 						<!-- svelte-ignore a11y-no-static-element-interactions -->
 						<div
-							class="block px-4 py-2 text-sm text-gray-800 transition-colors hover:bg-gray-100"
+							class="block px-4 py-2 text-sm text-gray-800 transition-colors hover:bg-gray-100 dropdown-item"
 							style="cursor: pointer;"
 							on:click={() => {
 								updateTime(index);

@@ -32,7 +32,7 @@
 		<button
 			on:click={() => toggleButton(randomForestModel)}
 			class:activeButton={$model === randomForestModel}
-			class="px-3 py-2 bg-white rounded-lg active:bg-[#43D224] hover:bg-[#43D224] focus:outline-none"
+			class="px-3 py-2 bg-white rounded-lg active:bg-[#43D224] hover:bg-[#43D224] focus:outline-none random-forest"
 		>
 			Random Forest
 		</button>

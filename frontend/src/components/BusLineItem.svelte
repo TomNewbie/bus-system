@@ -6,13 +6,14 @@
 	export let bus_start;
 	export let bus_end;
 	export let handleClick;
+	$: busClass = `bus-${bus_id}`;
 </script>
 
 <body>
 	<!-- svelte-ignore a11y-click-events-have-key-events -->
 	<!-- svelte-ignore a11y-no-static-element-interactions -->
 	<div
-		class="flex items-center h-full pt-3 border-t-2 border-solid gap-x-1 justify-left"
+		class="flex items-center h-full pt-3 border-t-2 border-solid gap-x-1 justify-left {busClass}"
 		on:click={() => handleClick(bus_id)}
 		style="cursor: pointer;"
 	>
