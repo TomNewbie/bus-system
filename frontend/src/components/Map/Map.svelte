@@ -5,7 +5,7 @@
 	// @ts-ignore
 	import { Map, Marker, Popup, LngLatBounds } from 'mapbox-gl';
 	import '../../../node_modules/mapbox-gl/dist/mapbox-gl.css';
-	import { currentIndex, allBusLines, minute } from '../../stores/stores';
+	import { currentIndex, allBusLines, minute, model } from '../../stores/stores';
 
 	// @ts-ignore
 	let map;
@@ -210,7 +210,7 @@
 		let a;
 		try {
 			const response = await fetch(
-				`http://localhost:8000/predict?route_id=${properties.route_id}&shape_id=${properties.shape_id}&direction_id=${properties.direction_id}&minute_predict=${minute}`,
+				`http://localhost:8000/predict/${$model}?route_id=${properties.route_id}&shape_id=${properties.shape_id}&direction_id=${properties.direction_id}&minute_predict=${minute}`,
 				{
 					signal: abortController.signal
 				}

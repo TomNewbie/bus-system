@@ -16,6 +16,6 @@ tf.config.threading.set_inter_op_parallelism_threads(
 
 def run_lstm_model(transformed_data):
     # LOAD PRE-TRAINED MODEL
-    model = keras.models.load_model("backend\prediction\model\LSTM_1_model_saved_model")
+    model = keras.models.load_model("model/LSTM_1_model_saved_model")
     predicted_congestion = model.predict(transformed_data)
     return predicted_congestion

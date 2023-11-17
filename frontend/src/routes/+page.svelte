@@ -1,14 +1,16 @@
 <script>
 	import Map from '../components/Map/Map.svelte';
-	import SearchPopOver from '../components/Popover/SearchPopOver.svelte';
+	import BusListPopover from '../components/Popover/BusListPopover.svelte';
 	import BLinePopover from '../components/Popover/BLinePopover.svelte';
 	import CongestionButton from '../components/CongestionButton.svelte';
+	import ChooseModelButton from '../components/ChooseModelButton.svelte';
 </script>
 
 <body>
 	<Map>
-		<SearchPopOver />
+		<BusListPopover />
 		<BLinePopover />
 		<CongestionButton />
+		<ChooseModelButton />
 	</Map>
 </body>
