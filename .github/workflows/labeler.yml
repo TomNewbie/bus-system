@@ -1,0 +1,20 @@
+name: "Pull Request Labeler"
+on:
+  - pull_request_target
+
+jobs:
+  triage:
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/labeler@v4.3.0
+        with:
+          configuration-path: ".github/labeler_tag.yml"
+          sync-labels: "true"
+          repo-token: ${{ secrets.THO_GITHUB_TOKEN }}
+
+  team-labeler:
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: JulienKode/team-labeler-action@v1.1.0
+        with:
+          repo-token: "${{ secrets.THO_GITHUB_TOKEN }}"

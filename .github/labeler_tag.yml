@@ -1,0 +1,22 @@
+Docs:
+  - documentation/**/*
+
+Backend:
+  - backend/**/*
+
+Webapp:
+  - frontend/**/*
+
+Data:
+  - Data/**/*
+  - scripts/**/*
+
+Misselaneous:
+  - archive/**/*
+
+Workflows:
+  - .github/**/*
+  - "*.yml"
+  - "*.yaml"
+  - "*.sh"
+  - "*.md"

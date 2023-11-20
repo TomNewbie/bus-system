@@ -1,0 +1,32 @@
+name: Change detection
+
+on:
+  workflow_call:
+    outputs:
+      webapp:
+        description: "Detect file change in the frontend folder"
+        value: ${{ jobs.changes.outputs.frontend }}
+      backend:
+        description: "Detect file change in backend folder"
+        value: ${{ jobs.changes.outputs.backend }}
+
+jobs:
+  # JOB to run change detection
+  changes:
+    runs-on: ubuntu-20.04
+    outputs:
+      backend: ${{ steps.filter.outputs.backend}}
+      frontend: ${{ steps.filter.outputs.frontend }}
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 20
+      - uses: dorny/paths-filter@v2
+        id: filter
+        with:
+          filters: |
+            backend:
+              - 'backend/**'
+              - 'docker-compose.yaml'
+            frontend:
+              - 'frontend/**'
