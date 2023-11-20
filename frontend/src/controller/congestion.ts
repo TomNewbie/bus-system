@@ -84,7 +84,7 @@ export async function fetchCongestionData(
 
 export function deleteCongestionLevel(busNetwork: BusNetwork, map: Map) {
 	if (previousIndex == -1 || previousIndex == undefined) return;
-	console.log('hehehe');
+
 	console.log(previousIndex);
 	if (abortController) {
 		abortController.abort();
