@@ -10,7 +10,7 @@ jobs:
         with:
           configuration-path: ".github/labeler_tag.yml"
           sync-labels: "true"
-          repo-token: ${{ secrets.THO_GITHUB_TOKEN }}
+          repo-token: ${{ github.token }}
 
   team-labeler:
     runs-on: ubuntu-20.04

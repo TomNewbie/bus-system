@@ -21,5 +21,4 @@ jobs:
     if: ${{ needs.changes.outputs.frontend == 'true' }}
     uses: ./.github/workflows/frontend.yml
     secrets:
-      github-token: ${{ secrets.GIT_HUB_TOKEN }}
-      sonar-token: ${{ secrets.SONAR_TOKEN }}
+      github-token: ${{ secrets.THO_GITHUB_TOKEN }}
