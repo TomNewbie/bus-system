@@ -78,7 +78,7 @@ export async function fetchCongestionData(
 		minute,
 		abortController
 	);
-
+	console.log('asdsa');
 	drawCongestionLevel(busNetwork, result, map);
 }
 
