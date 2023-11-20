@@ -3,7 +3,7 @@ name: Change detection
 on:
   workflow_call:
     outputs:
-      webapp:
+      frontend:
         description: "Detect file change in the frontend folder"
         value: ${{ jobs.changes.outputs.frontend }}
       backend:
