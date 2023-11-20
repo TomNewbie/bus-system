@@ -2,7 +2,7 @@
 	// @ts-nocheck
 
 	import BusStopTag from '../BusStopTag.svelte';
-	import { allBusLines, currentIndex } from '../../stores/stores';
+	import { busNetwork, currentIndex } from '../../stores/stores';
 
 	// @ts-ignore
 	let isLoading = true; // Add a loading flag
@@ -25,7 +25,7 @@
 		busStops = [];
 		isLoading = true;
 
-		let busLine = $allBusLines[index];
+		let busLine = $busNetwork[index];
 
 		route_id = busLine[0].properties.route_id;
 		start_stop_name = busLine[0].properties.start_stop_name;
