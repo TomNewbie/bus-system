@@ -89,7 +89,7 @@
 						<img
 							src="./times.svg"
 							alt="times-icon"
-							class="absolute w-8 h-8 rounded-full bg-slate-200/60 right-2"
+							class="absolute w-8 h-8 rounded-full exit-button-busline bg-slate-200/60 right-2"
 							on:click={() => navigateToSearch()}
 							style="cursor: pointer;"
 						/>
