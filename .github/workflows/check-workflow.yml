@@ -1,4 +1,4 @@
-name: Quality Katalon Healthcare
+name: Check changes
 
 on:
   workflow_dispatch:
@@ -20,5 +20,3 @@ jobs:
     needs: changes
     if: ${{ needs.changes.outputs.frontend == 'true' }}
     uses: ./.github/workflows/frontend.yml
-    secrets:
-      github-token: ${{ secrets.THO_GITHUB_TOKEN }}
