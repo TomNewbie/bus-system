@@ -1,7 +1,7 @@
 <script>
 	// @ts-nocheck
 	import BusLineItem from '../BusLineItem.svelte';
-	import { allBusLines, currentIndex } from '../../stores/stores';
+	import { busNetwork, currentIndex } from '../../stores/stores';
 
 	let isTransformed = true;
 	let listPopOver = true;
@@ -66,7 +66,7 @@
 				class:hidden={!isTransformed}
 				style="height: calc(100vh - 130px); "
 			>
-				{#each $allBusLines as busLine, index}
+				{#each $busNetwork as busLine, index}
 					<BusLineItem
 						bus_id={busLine[0].properties.route_id}
 						bus_start={busLine[0].properties.start_stop_name}

@@ -4,7 +4,7 @@
 	// @ts-ignore
 	import { Map } from 'mapbox-gl';
 	import '../../../node_modules/mapbox-gl/dist/mapbox-gl.css';
-	import { currentIndex, busNetwork, minute } from '../../stores/stores';
+	import { currentIndex, busNetwork, minute, model } from '../../stores/stores';
 	import { getCenterLngLat } from '../../utils/map';
 	import { fetchBusLine } from '../../services/map';
 	import { drawDetailBusline, viewFullMap } from '../../controller/visualization';
@@ -20,7 +20,7 @@
 		drawDetailBusline($busNetwork, $currentIndex, map);
 	}
 	$: {
-		fetchCongestionData($busNetwork, $currentIndex, $minute, map);
+		fetchCongestionData($busNetwork, $currentIndex, $minute, map, $model);
 	}
 	// Load the JSON data
 	$: formatedBuslines = $busNetwork;

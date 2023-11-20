@@ -59,7 +59,8 @@ export async function fetchCongestionData(
 	busNetwork: BusNetwork,
 	currentIndex: number,
 	minute: number,
-	map: Map
+	map: Map,
+	model: string
 ) {
 	deleteCongestionLevel(busNetwork, map);
 	if (minute == 0) return;
@@ -70,7 +71,7 @@ export async function fetchCongestionData(
 	abortController = new AbortController();
 
 	let result = await fetchCongestionDataByBusline(
-		'lstm',
+		model,
 		properties.route_id,
 		properties.shape_id,
 		properties.direction_id,
