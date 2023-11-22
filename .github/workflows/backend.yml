@@ -14,7 +14,9 @@ jobs:
       - name: Print working directory
         run: pwd
       - name: move to backend folder
-        run: cd backend
+        run: ls -lah ..
+      - name: ls
+        run: ls -lah .
       - uses: actions/checkout@v2
       - uses: actions-rs/toolchain@v1
         with:
