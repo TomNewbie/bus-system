@@ -24,6 +24,8 @@ jobs:
               - 'frontend/**'
   build:
     runs-on: ubuntu-latest
+    needs: changes
+    if: ${{ needs.changes.outputs.frontend == 'true' }}
     defaults:
       run:
         shell: bash
