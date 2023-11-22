@@ -34,35 +34,35 @@ const { By, Builder, until } = require("selenium-webdriver");
     console.log("Choose LSTM");
     await delay(500);
 
-    // Click on the button to open the dropdown
-    let dropdownButton = await driver.wait(
-      until.elementLocated(By.css(".dropdown")),
-      500000 // Adjust the timeout as needed (in milliseconds)
-    );
+    // // Click on the button to open the dropdown
+    // let dropdownButton = await driver.wait(
+    //   until.elementLocated(By.css(".dropdown")),
+    //   500000 // Adjust the timeout as needed (in milliseconds)
+    // );
 
-    await driver.wait(until.elementIsVisible(dropdownButton), 1000);
-    await dropdownButton.click();
-    console.log("Click dropdown");
-    await delay(500);
+    // await driver.wait(until.elementIsVisible(dropdownButton), 1000);
+    // await dropdownButton.click();
+    // console.log("Click dropdown");
+    // await delay(500);
 
     // Find all elements representing the items in the dropdown
     const dropdownItems = await driver.findElements(By.css(".dropdown-item"));
 
-    //10 minutes
+    // //10 minutes
 
-    await dropdownItems[1].click();
-    console.log("Click ", 1);
-    await delay(5000);
-    //20 minutes
-    await dropdownButton.click();
-    await dropdownItems[2].click();
-    console.log("Click ", 2);
-    await delay(5000);
-    //30 minuts
-    await dropdownButton.click();
-    await dropdownItems[3].click();
-    console.log("Click ", 3);
-    await delay(5000);
+    // await dropdownItems[1].click();
+    // console.log("Click ", 1);
+    // await delay(5000);
+    // //20 minutes
+    // await dropdownButton.click();
+    // await dropdownItems[2].click();
+    // console.log("Click ", 2);
+    // await delay(5000);
+    // //30 minuts
+    // await dropdownButton.click();
+    // await dropdownItems[3].click();
+    // console.log("Click ", 3);
+    // await delay(5000);
 
     //Choose Random Forest
     let randomForestButton = await driver.wait(
