@@ -15,14 +15,16 @@ jobs:
 
       - name: Print working directory
         run: pwd
-      - name: move to backend folder
-        run: ls -lah ..
-      - name: ls
-        run: ls -lah .
 
       - uses: actions-rs/toolchain@v1
         with:
           toolchain: stable
+      - name: Print working directory
+        run: pwd
+      - name: move to backend
+        run: cd backend
+      - name: Print working directory
+        run: pwd
       - uses: actions-rs/cargo@v1
         with:
           command: build
