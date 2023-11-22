@@ -4,6 +4,7 @@
 	import BLinePopover from '../components/Popover/BLinePopover.svelte';
 	import CongestionButton from '../components/CongestionButton.svelte';
 	import ChooseModelButton from '../components/ChooseModelButton.svelte';
+	import Toast from '../components/Toast.svelte';
 </script>
 
 <body>
@@ -12,5 +13,6 @@
 		<BLinePopover />
 		<CongestionButton />
 		<ChooseModelButton />
+		<Toast />
 	</Map>
 </body>

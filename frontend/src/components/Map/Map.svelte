@@ -9,6 +9,7 @@
 	import { fetchBusLine } from '../../services/map';
 	import { drawDetailBusline, viewFullMap } from '../../controller/visualization';
 	import { fetchCongestionData } from '../../controller/congestion';
+	import LoadingScreen from '../LoadingScreen.svelte';
 
 	let map: Map;
 	let mapContainer: Map;
@@ -31,6 +32,7 @@
 		lat = map.getCenter().lat;
 	}
 
+	let isMapLoading = true;
 	onMount(async () => {
 		busNetwork.set(await fetchBusLine());
 
@@ -47,6 +49,7 @@
 			updateData();
 		});
 
+		isMapLoading = false;
 		map.on('load', () => {
 			formatedBuslines.forEach((busLine, routeIndex) => {
 				map.addSource(`route_${routeIndex}`, {
@@ -103,6 +106,10 @@
 
 <div>
 	<div class="relative min-h-screen min-w-screen">
+		{#if isMapLoading}
+			<!-- Show loading UI while the map is loading -->
+			<LoadingScreen />
+		{/if}
 		<div bind:this={mapContainer} class="map">
 			{#if map}
 				<div on:custom-event={doSomething} />
@@ -113,6 +120,22 @@
 </div>
 
 <style>
+	/* Define spinner styles or use a loading animation */
+	.spinner {
+		border: 4px solid rgba(0, 0, 0, 0.1);
+		border-left-color: #7984ff;
+		border-radius: 50%;
+		width: 50px;
+		height: 50px;
+		animation: spin 1s linear infinite;
+	}
+
+	@keyframes spin {
+		to {
+			transform: rotate(360deg);
+		}
+	}
+
 	.map {
 		position: absolute;
 		width: 100%;
