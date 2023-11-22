@@ -1,6 +1,7 @@
 import type { Map } from 'mapbox-gl';
 import { setDisableLayer } from './visualization';
 import { fetchCongestionDataByBusline } from '../services/map';
+import { isToastShowed} from '../stores/stores';
 
 let abortController: AbortController;
 let previousIndex = -1;
@@ -78,6 +79,8 @@ export async function fetchCongestionData(
 		minute,
 		abortController
 	);
+	//toast
+	isToastShowed.set(true);
 	console.log('asdsa');
 	drawCongestionLevel(busNetwork, result, map);
 }
