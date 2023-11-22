@@ -2,15 +2,15 @@ on: [push]
 
 name: CI
 
-defaults:
-  run:
-    shell: bash
-    working-directory: backend
-
 jobs:
   build_and_test:
     name: Rust project
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+        working-directory: ./backend
+
     steps:
       - name: Print working directory
         run: pwd
