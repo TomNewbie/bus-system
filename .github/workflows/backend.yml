@@ -16,12 +16,6 @@ jobs:
       - name: Print working directory
         run: pwd
 
-      - uses: actions-rs/toolchain@v1
-        with:
-          toolchain: stable
-      - name: Print working directory
-        run: pwd
-      - uses: actions-rs/cargo@v1
-        with:
-          command: build
-          args: --release --all-features
+      - uses: dtolnay/rust-toolchain@stable
+      - name: Run tests
+        run: cargo test
