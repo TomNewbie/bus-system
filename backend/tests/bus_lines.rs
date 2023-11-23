@@ -23,7 +23,7 @@ async fn get_bus_lines_by_id_return_valid_object() {
         .get(&format!("{}/bus-lines/100009", &address))
         .send()
         .await
-        .expect("Failed to execute requestt");
+        .expect("Failed to execute request");
 
     assert!(response.status().is_success());
 }
