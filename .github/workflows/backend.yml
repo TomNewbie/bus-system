@@ -1,22 +1,26 @@
-on:
-  workflow_dispatch:
+name: Backend CI
 
-name: CI
+on:
+  workflow_call:
 
 jobs:
   build_and_test:
     name: Rust project
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: backend
+    services:
+      docker:
+        image: docker:20.10.7
+        options: --privileged
     steps:
       - name: checkout code
         uses: actions/checkout@v3
 
       - name: Print working directory
         run: pwd
-
+      - name: Build and run Predict service
+        run: |
+          docker-compose -f docker-compose.yml up -d predict
+          docker-compose -f docker-compose.yml ps
       - uses: dtolnay/rust-toolchain@stable
       - name: Run tests
-        run: cargo test
+        run: cd backend && cargo test

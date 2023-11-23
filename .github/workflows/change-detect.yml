@@ -1,20 +1,5 @@
 name: Change detection
 
-# on:
-#   workflow_call:
-#     outputs:
-#       healthcare-svc:
-#         description: "Detect file change in the healthcare-svc service"
-#         value: ${{ jobs.changes.outputs.healthcare-svc }}
-#       webapp:
-#         description: "Detect file change in the webapp"
-#         value: ${{ jobs.changes.outputs.webapp }}
-#       liquibase:
-#         description: "Detect liquibase changed"
-#         value: ${{ jobs.changes.outputs.liquibase }}
-#       mobile:
-#         description: "Detect file change in the mobile"
-#         value: ${{ jobs.changes.outputs.mobile }}
 on:
   workflow_dispatch:
   pull_request:
@@ -32,10 +17,8 @@ jobs:
   changes:
     runs-on: ubuntu-20.04
     outputs:
-      healthcare-svc: ${{ steps.filter.outputs.healthcare-svc }}
-      webapp: ${{ steps.filter.outputs.webapp }}
-      liquibase: ${{ steps.filter.outputs.liquibase }}
-      mobile: ${{ steps.filter.outputs.mobile }}
+      backend: ${{ steps.filter.outputs.backend }}
+      frontend: ${{ steps.filter.outputs.frontend }}
     steps:
       - uses: actions/checkout@v3
         with:
@@ -53,3 +36,11 @@ jobs:
               - 'archive/**'
             test:
               - 'test/**'
+  backend:
+    needs: changes
+    if: ${{ needs.changes.outputs.backend== 'true' }}
+    uses: ./.github/workflows/backend.yml
+  frontend:
+    needs: changes
+    if: ${{ needs.changes.outputs.frontend== 'true' }}
+    uses: ./.github/workflows/frontend.yml
