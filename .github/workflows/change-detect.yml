@@ -1,0 +1,55 @@
+name: Change detection
+
+# on:
+#   workflow_call:
+#     outputs:
+#       healthcare-svc:
+#         description: "Detect file change in the healthcare-svc service"
+#         value: ${{ jobs.changes.outputs.healthcare-svc }}
+#       webapp:
+#         description: "Detect file change in the webapp"
+#         value: ${{ jobs.changes.outputs.webapp }}
+#       liquibase:
+#         description: "Detect liquibase changed"
+#         value: ${{ jobs.changes.outputs.liquibase }}
+#       mobile:
+#         description: "Detect file change in the mobile"
+#         value: ${{ jobs.changes.outputs.mobile }}
+on:
+  workflow_dispatch:
+  pull_request:
+  push:
+    branches:
+      - main
+      - release
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref || github.head_ref ||  github.run_id }}
+  cancel-in-progress: true
+
+jobs:
+  # JOB to run change detection
+  changes:
+    runs-on: ubuntu-20.04
+    outputs:
+      healthcare-svc: ${{ steps.filter.outputs.healthcare-svc }}
+      webapp: ${{ steps.filter.outputs.webapp }}
+      liquibase: ${{ steps.filter.outputs.liquibase }}
+      mobile: ${{ steps.filter.outputs.mobile }}
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 20
+      - uses: dorny/paths-filter@v2
+        id: filter
+        with:
+          filters: |
+            backend:
+              - 'backend/**'
+            frontend:
+              - 'frontend/**'
+            data:
+              - 'Data/**'
+              - 'archive/**'
+            test:
+              - 'test/**'
