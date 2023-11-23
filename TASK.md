@@ -1,3 +1,8 @@
+23.11.23
+- 
+
+
+22.11.23
 - trip join routes at "route_id"
 - trip join calendar_date at "service_id"
 - trip join stop_time at "trip_id"
