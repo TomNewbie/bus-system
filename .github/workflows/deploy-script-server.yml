@@ -9,7 +9,7 @@ jobs:
       - name: executing remote ssh commands using password
         uses: appleboy/ssh-action@v1.0.0
         with:
-          host: ${{ secrets.HOST_SANDBOX }}
+          host: 143.198.95.160
           username: ${{ secrets.USERNAME_SANDBOX }}
           password: ${{ secrets.KEY_SANDBOX }}
           port: ${{ secrets.PORT_SANDBOX }}
