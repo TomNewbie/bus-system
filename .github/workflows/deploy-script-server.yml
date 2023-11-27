@@ -1,5 +1,6 @@
 name: remote ssh command
-on: [push]
+on:
+  workflow_dispatch:
 jobs:
   build:
     name: Build
@@ -12,4 +13,5 @@ jobs:
           username: ${{ secrets.USERNAME_SANDBOX }}
           password: ${{ secrets.KEY_SANDBOX }}
           port: ${{ secrets.PORT_SANDBOX }}
+          passphrase: ${{secrets.PASSPHRASE_SANDBOX}}
           script: whoami
