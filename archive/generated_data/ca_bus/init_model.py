@@ -16,7 +16,7 @@ from sklearn.neighbors import KNeighborsClassifier
 from sklearn.metrics import accuracy_score
 from sklearn.preprocessing import LabelEncoder
 
-from joblib import dump, load
+from joblib import dump
 
 # Read the dataset
 df = pd.read_csv('archive/generated_data/ca_bus/part_1.csv')
@@ -57,8 +57,8 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.6, random_
 
 # Create models
 # clf = DecisionTreeClassifier()
-# clf = RandomForestClassifier(n_estimators=100, random_state=42)
-clf = SVC(kernel='rbf', C=1.0, gamma='scale', random_state=42)
+clf = RandomForestClassifier(n_estimators=100, random_state=42)
+# clf = SVC(kernel='rbf', C=1.0, gamma='scale', random_state=42)
 # clf = KNeighborsClassifier(n_neighbors=5)
 
 # clf = SVR(kernel='rbf') 
@@ -68,7 +68,6 @@ clf.fit(X_train, y_train)
 
 # Make predictions on the test set
 y_pred = clf.predict(X_test)
-
 # Evaluate the model
 accuracy = accuracy_score(y_test, y_pred)
 print(f"Accuracy: {accuracy}")

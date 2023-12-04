@@ -1,13 +1,10 @@
 import pandas as pd
-from sklearn.model_selection import train_test_split
-
 from sklearn.metrics import accuracy_score
 from sklearn.preprocessing import LabelEncoder
-
 from joblib import dump, load
 
 # Simulate new incoming data
-df_new_data = pd.read_csv('archive/generated_data/ca_bus/part_4.csv')
+df_new_data = pd.read_csv('archive/generated_data/ca_bus/part_2.csv')
 
 clf = load('archive\generated_data\ca_bus\model.joblib')
 
