@@ -1,9 +1,14 @@
 import pandas as pd
 from pymongo import MongoClient
+from pymongo.server_api import ServerApi
+
 
 # Connect to MongoDB
-mongo_client = MongoClient('mongodb://localhost:27017')
-db = mongo_client['gtfs_rt'] # Replace 'your_database' with your actual database name
+# mongo_client = MongoClient('mongodb://localhost:27017')
+uri = "mongodb+srv://gmanbus:VB2yZttIT1rrgtSG@cluster0.q89eazg.mongodb.net/?retryWrites=true&w=majority"
+# # Create a new client and connect to the server
+mongo_client = MongoClient(uri, server_api=ServerApi('1'))
+db = mongo_client['gtfs_rt_ca'] # Replace 'your_database' with your actual database name
 collection = db['vehicle_positions'] # Replace 'your_collection' with your actual collection name
 
 # Fetch data from MongoDB
