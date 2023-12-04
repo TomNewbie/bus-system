@@ -2,20 +2,29 @@ import requests
 from google.protobuf.json_format import MessageToJson
 from google.transit import gtfs_realtime_pb2
 from pymongo import MongoClient
+from pymongo.server_api import ServerApi
+
 import logging
 import time
 import json
 
-test_url = "https://gtfsrt.api.translink.com.au/api/realtime/CNS/VehiclePositions"
+# test_url = "https://gtfsrt.api.translink.com.au/api/realtime/CNS/VehiclePositions"
 vehicle_positions_url = "http://www.myridebarrie.ca/gtfs/GTFS_VehiclePositions.pb"
+# vehicle_positions_url ="http://www.myridebarrie.ca/gtfs/GTFS_ServiceAlerts.pb"
+# vehicle_positions_url="http://gtfs.ovapi.nl/nl/vehiclePositions.pb"
 alerts_url = "http://www.myridebarrie.ca/gtfs/GTFS_ServiceAlerts.pb"
 trip_update_url = "http://www.myridebarrie.ca/gtfs/GTFS_TripUpdates.pb"
-
+# vehicle_positions_url = trip_update_url
 # MongoDB
-mongo_client = MongoClient('mongodb://localhost:27017')
-db = mongo_client['gtfs_rt']
-collection = db['vehicle_positions']
+# connect local
+# mongo_client = MongoClient('mongodb://localhost:27017')
 
+# connect in cloud
+uri = "mongodb+srv://gmanbus:VB2yZttIT1rrgtSG@cluster0.q89eazg.mongodb.net/?retryWrites=true&w=majority"
+# # Create a new client and connect to the server
+mongo_client = MongoClient(uri, server_api=ServerApi('1'))
+db = mongo_client['gtfs_rt_ca']
+collection = db['vehicle_positions']
 
 def get_data():
     res = requests.get(vehicle_positions_url)
@@ -29,30 +38,67 @@ def get_data():
 
 
 def format_data(res):
-    data = []
 
-    for entity in res.entity:
-        data1 = MessageToJson(entity)
-        data1_dict = json.loads(data1)
-        print(data1_dict)
-        data.append(data1)
+    json_data = MessageToJson(res)
 
-    return data1_dict
+    print(json_data)
+    data = json.loads(json_data)
+    # Extract data for CSV formatting with handling missing fields
+    id_value = extract_value(data, ["id"])
+    trip_id = extract_value(data, ["vehicle", "trip", "tripId"])
+    schedule_relationship = extract_value(data, ["vehicle", "trip", "scheduleRelationship"])
+    route_id = extract_value(data, ["vehicle", "trip", "routeId"])
+    direction_id = extract_value(data, ["vehicle", "trip", "directionId"])
+    latitude = extract_value(data, ["vehicle", "position", "latitude"])
+    longitude = extract_value(data, ["vehicle", "position", "longitude"])
+    odometer = extract_value(data, ["vehicle", "position", "odometer"])
+    speed = extract_value(data, ["vehicle", "position", "speed"])
+    current_stop_sequence = extract_value(data, ["vehicle", "currentStopSequence"])
+    current_status = extract_value(data, ["vehicle", "currentStatus"])
+    timestamp = extract_value(data, ["vehicle", "timestamp"])
+    stop_id = extract_value(data, ["vehicle", "stopId"])
+    vehicle_label = extract_value(data, ["vehicle", "vehicle", "label"])
 
+    csv_string = f"{id_value},{trip_id},{schedule_relationship},{route_id},{direction_id},{latitude},{longitude},{odometer},{speed}{current_stop_sequence},{current_status},{timestamp},{stop_id},{vehicle_label}"
+    csv_data = dict(zip(["id", "trip_id", "schedule_relationship", "route_id", "direction_id", "latitude", "longitude", "odometer", "speed", "current_stop_sequence", "current_status", "timestamp", "stop_id", "vehicle_label"], csv_string.split(',')))
+
+
+    return csv_data
+
+def extract_value(data, keys, default=""):
+    """
+    Recursively extract a value from nested dictionaries.
+    Return the value if present, otherwise return the default value.
+    """
+    current_data = data
+    for key in keys:
+        if current_data is None:
+            return default
+        current_data = current_data.get(key)
+    return current_data if current_data else default
+
+
+
+def add_data_to_mongodb(data):
+    for entity in data.entity:
+        formated_data = format_data(entity)
+        collection.insert_one(formated_data)
 
 def stream_data_to_mongodb():
     while True:
+        print('====================================')
+
         try:
             res = get_data()
-            if res:
-                formatted_data = format_data(res)
-                collection.insert_one(formatted_data)
+            # print(f"res: {res}")
+            # if res:
+            add_data_to_mongodb(res)               
 
         except Exception as e:
             logging.error(f'An error occurred: {e}')
 
         # Sleep for 5 seconds before stream again
-        time.sleep(5)
+        time.sleep(30)
 
 
 if __name__ == "__main__":
