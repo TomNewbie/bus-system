@@ -8,16 +8,13 @@ import logging
 import time
 import json
 
-# test_url = "https://gtfsrt.api.translink.com.au/api/realtime/CNS/VehiclePositions"
+HOUR_TO_RUN = 10
+HOUR_TO_SECOND = 3600
+INTERVAL = 30
+
 vehicle_positions_url = "http://www.myridebarrie.ca/gtfs/GTFS_VehiclePositions.pb"
-# vehicle_positions_url ="http://www.myridebarrie.ca/gtfs/GTFS_ServiceAlerts.pb"
-# vehicle_positions_url="http://gtfs.ovapi.nl/nl/vehiclePositions.pb"
 alerts_url = "http://www.myridebarrie.ca/gtfs/GTFS_ServiceAlerts.pb"
 trip_update_url = "http://www.myridebarrie.ca/gtfs/GTFS_TripUpdates.pb"
-# vehicle_positions_url = trip_update_url
-# MongoDB
-# connect local
-# mongo_client = MongoClient('mongodb://localhost:27017')
 
 # connect in cloud
 uri = "mongodb+srv://gmanbus:VB2yZttIT1rrgtSG@cluster0.q89eazg.mongodb.net/?retryWrites=true&w=majority"
@@ -59,7 +56,7 @@ def format_data(res):
     stop_id = extract_value(data, ["vehicle", "stopId"])
     vehicle_label = extract_value(data, ["vehicle", "vehicle", "label"])
 
-    csv_string = f"{id_value},{trip_id},{schedule_relationship},{route_id},{direction_id},{latitude},{longitude},{odometer},{speed}{current_stop_sequence},{current_status},{timestamp},{stop_id},{vehicle_label}"
+    csv_string = f"{id_value},{trip_id},{schedule_relationship},{route_id},{direction_id},{latitude},{longitude},{odometer},{speed},{current_stop_sequence},{current_status},{timestamp},{stop_id},{vehicle_label}"
     csv_data = dict(zip(["id", "trip_id", "schedule_relationship", "route_id", "direction_id", "latitude", "longitude", "odometer", "speed", "current_stop_sequence", "current_status", "timestamp", "stop_id", "vehicle_label"], csv_string.split(',')))
 
 
@@ -85,20 +82,23 @@ def add_data_to_mongodb(data):
         collection.insert_one(formated_data)
 
 def stream_data_to_mongodb():
-    while True:
+    total_amount_run = HOUR_TO_RUN * HOUR_TO_SECOND / INTERVAL
+    count = 0
+    while count < total_amount_run:
         print('====================================')
 
         try:
             res = get_data()
-            # print(f"res: {res}")
-            # if res:
-            add_data_to_mongodb(res)               
+            if res:
+                add_data_to_mongodb(res)               
 
         except Exception as e:
             logging.error(f'An error occurred: {e}')
 
-        # Sleep for 5 seconds before stream again
-        time.sleep(30)
+        # Sleep for interval amount seconds before stream again
+        time.sleep(INTERVAL)
+        count = count + 1
+    print('done')
 
 
 if __name__ == "__main__":
