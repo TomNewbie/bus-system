@@ -17,7 +17,8 @@ jobs:
   changes:
     runs-on: ubuntu-20.04
     outputs:
-      backend: ${{ steps.filter.outputs.backend }}
+      rust-server: ${{ steps.filter.outputs.rust-server }}
+      streaming-server: ${{ steps.filter.outputs.streaming-server }}
       frontend: ${{ steps.filter.outputs.frontend }}
     steps:
       - uses: actions/checkout@v3
@@ -27,19 +28,27 @@ jobs:
         id: filter
         with:
           filters: |
-            backend:
-              - 'backend/**'
+            rust-server:
+              - 'backend/src/**'
             frontend:
               - 'frontend/**'
+            prediction-server:
+              - 'backend/prediction/**'
+            streaming-server:
+              - 'backend/streaming/**'
             data:
               - 'Data/**'
               - 'archive/**'
             test:
               - 'test/**'
-  backend:
-    needs: changes
-    if: ${{ needs.changes.outputs.backend== 'true' }}
-    uses: ./.github/workflows/backend.yml
+  # backend:
+  #   needs: changes
+  #   if: ${{ needs.changes.outputs.rust-server== 'true' }}
+  #   uses: ./.github/workflows/backend.yml
+  # streaming-server:
+  #   needs: changes
+  #   if: ${{ needs.changes.outputs.streaming-server== 'true' }}
+  #   uses: ./.github/workflows/streaming-server.yml
   frontend:
     needs: changes
     if: ${{ needs.changes.outputs.frontend== 'true' }}

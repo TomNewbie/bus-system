@@ -96,6 +96,7 @@ def stream_data_to_mongodb():
 
         try:
             res = get_data()
+            print(res)
             if res:
                 add_data_to_mongodb(res)               
 
