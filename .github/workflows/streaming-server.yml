@@ -1,9 +1,10 @@
 name: Deploy to Streaming Server
 
 on:
-  push:
-    branches:
-      - main
+  #   push:
+  #     branches:
+  #       - main
+  pull_request:
 
 jobs:
   deploy:
