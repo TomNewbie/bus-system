@@ -5,8 +5,8 @@
 	import { Map } from 'mapbox-gl';
 	import '../../../node_modules/mapbox-gl/dist/mapbox-gl.css';
 	import { currentIndex, busNetwork, minute, model } from '../../stores/stores';
-	import { getCenterLngLat } from '../../utils/map';
-	import { fetchBusLine } from '../../services/map';
+	import { getCenterLngLat } from '../../utils/mapUtils';
+	import { fetchBusLine } from '../../services/mapServices';
 	import { drawDetailBusline, viewFullMap } from '../../controller/visualization';
 	import { fetchCongestionData } from '../../controller/congestion';
 	import LoadingScreen from '../LoadingScreen.svelte';
@@ -96,12 +96,8 @@
 		});
 	});
 	onDestroy(() => {
-		// @ts-ignore
 		if (map) map.remove();
 	});
-	function doSomething() {
-		console.log('asdasd');
-	}
 </script>
 
 <div>
@@ -112,7 +108,6 @@
 		{/if}
 		<div bind:this={mapContainer} class="map">
 			{#if map}
-				<div on:custom-event={doSomething} />
 				<slot />
 			{/if}
 		</div>
