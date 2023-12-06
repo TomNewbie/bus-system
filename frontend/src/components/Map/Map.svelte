@@ -120,22 +120,6 @@
 </div>
 
 <style>
-	/* Define spinner styles or use a loading animation */
-	.spinner {
-		border: 4px solid rgba(0, 0, 0, 0.1);
-		border-left-color: #7984ff;
-		border-radius: 50%;
-		width: 50px;
-		height: 50px;
-		animation: spin 1s linear infinite;
-	}
-
-	@keyframes spin {
-		to {
-			transform: rotate(360deg);
-		}
-	}
-
 	.map {
 		position: absolute;
 		width: 100%;

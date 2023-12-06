@@ -1,5 +1,5 @@
 import { Map, Marker, Popup, LngLatBounds } from 'mapbox-gl';
-import { getCenterLngLat } from '../utils/map';
+import { getCenterLngLat } from '../utils/mapUtils';
 import { deleteCongestionLevel } from './congestion';
 
 var stopsMarker: Marker[] = [];

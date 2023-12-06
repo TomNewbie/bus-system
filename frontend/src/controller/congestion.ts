@@ -1,6 +1,6 @@
 import type { Map } from 'mapbox-gl';
 import { setDisableLayer } from './visualization';
-import { fetchCongestionDataByBusline } from '../services/map';
+import { fetchCongestionDataByBusline } from '../services/mapServices';
 import { isToastShowed} from '../stores/stores';
 
 let abortController: AbortController;
