@@ -9,10 +9,12 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend/streaming
 
     env:
       DOCKER_IMAGE_NAME: streaming-server
-
     steps:
       - name: Checkout
         uses: actions/checkout@v4
