@@ -1,5 +1,6 @@
 **/target
 *.txt
+!requirements.txt
 agency.csv
 routes.csv
 shapes.csv

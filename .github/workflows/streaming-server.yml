@@ -15,6 +15,7 @@ jobs:
 
     env:
       DOCKER_IMAGE_NAME: streaming-server
+      DOCKER_IMAGE_VERSION: ${{ github.run_number }}-${{ github.sha }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -29,8 +30,8 @@ jobs:
         run: |
           docker buildx create --use
           docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
-          docker buildx build --platform linux/amd64,linux/arm64 -t ${{ secrets.DOCKER_USERNAME }}/your-image-name:latest -f Dockerfile .
-          docker push ${{ secrets.DOCKER_USERNAME }}/your-image-name:${{ github.run_number }}-${{ github.sha }}
+          docker buildx build --platform linux/amd64,linux/arm64 -t ${{ secrets.DOCKER_USERNAME }}/${{ env.DOCKER_IMAGE_NAME }}:${{ env.DOCKER_IMAGE_VERSION }} -f Dockerfile .
+          docker push ${{ secrets.DOCKER_USERNAME }}/${{ env.DOCKER_IMAGE_NAME }}:${{ env.DOCKER_IMAGE_VERSION }}
 
       - name: SSH into Remote Server and Deploy
         uses: appleboy/ssh-action@v1.0.0
@@ -39,5 +40,5 @@ jobs:
           key: ${{ secrets.STREAMING_SERVER_KEY }}
           script: |
             docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
-            docker pull ${{ secrets.DOCKER_USERNAME }}/your-image-name:latest
-            docker run -d --name your-container-name -p 8080:80 ${{ secrets.DOCKER_USERNAME }}/your-image-name:latest
+            docker pull ${{ secrets.DOCKER_USERNAME }}/${{ env.DOCKER_IMAGE_NAME }}:${{ env.DOCKER_IMAGE_VERSION }}
+            docker run -d --name your-container-name -p 8080:80 ${{ secrets.DOCKER_USERNAME }}/${{ env.DOCKER_IMAGE_NAME }}:${{ env.DOCKER_IMAGE_VERSION }}

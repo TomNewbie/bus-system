@@ -17,8 +17,8 @@ jobs:
   changes:
     runs-on: ubuntu-20.04
     outputs:
-      rust-server: ${{ steps.filter.outputs.rust-server }}
-      streaming-server: ${{ steps.filter.outputs.streaming-server }}
+      # rust-server: ${{ steps.filter.outputs.rust-server }}
+      # streaming-server: ${{ steps.filter.outputs.streaming-server }}
       frontend: ${{ steps.filter.outputs.frontend }}
     steps:
       - uses: actions/checkout@v3
