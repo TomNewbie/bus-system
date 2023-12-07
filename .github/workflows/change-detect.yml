@@ -45,10 +45,6 @@ jobs:
     needs: changes
     if: ${{ needs.changes.outputs.rust-server== 'true' }}
     uses: ./.github/workflows/backend.yml
-  streaming-server:
-    needs: changes
-    if: ${{ needs.changes.outputs.streaming-server== 'true' }}
-    uses: ./.github/workflows/streaming-server.yml
   frontend:
     needs: changes
     if: ${{ needs.changes.outputs.frontend== 'true' }}

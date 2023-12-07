@@ -34,14 +34,17 @@ jobs:
           docker buildx build --platform linux/amd64,linux/arm64 \
             -t ${{ secrets.DOCKER_USERNAME }}/${{ env.DOCKER_IMAGE_NAME }}:${{ env.DOCKER_IMAGE_VERSION }} \
             -f Dockerfile .
-          docker push ${{ secrets.DOCKER_USERNAME }}/${{ env.DOCKER_IMAGE_NAME }}:${{ env.DOCKER_IMAGE_VERSION }}
+      - name: print all docker image
+        run: docker image ls
 
-      - name: SSH into Remote Server and Deploy
-        uses: appleboy/ssh-action@v1.0.0
-        with:
-          host: ${{ secrets.STREAMING_SERVER_HOST }}
-          key: ${{ secrets.STREAMING_SERVER_KEY }}
-          script: |
-            docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
-            docker pull ${{ secrets.DOCKER_USERNAME }}/${{ env.DOCKER_IMAGE_NAME }}:${{ env.DOCKER_IMAGE_VERSION }}
-            docker run -d --name your-container-name -p 8080:80 ${{ secrets.DOCKER_USERNAME }}/${{ env.DOCKER_IMAGE_NAME }}:${{ env.DOCKER_IMAGE_VERSION }}
+        #   docker push ${{ secrets.DOCKER_USERNAME }}/${{ env.DOCKER_IMAGE_NAME }}:${{ env.DOCKER_IMAGE_VERSION }}
+
+    #   - name: SSH into Remote Server and Deploy
+    #     uses: appleboy/ssh-action@v1.0.0
+    #     with:
+    #       host: ${{ secrets.STREAMING_SERVER_HOST }}
+    #       key: ${{ secrets.STREAMING_SERVER_KEY }}
+    #       script: |
+    #         docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+    #         docker pull ${{ secrets.DOCKER_USERNAME }}/${{ env.DOCKER_IMAGE_NAME }}:${{ env.DOCKER_IMAGE_VERSION }}
+    #         docker run -d --name your-container-name -p 8080:80 ${{ secrets.DOCKER_USERNAME }}/${{ env.DOCKER_IMAGE_NAME }}:${{ env.DOCKER_IMAGE_VERSION }}
