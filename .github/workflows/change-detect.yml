@@ -17,8 +17,6 @@ jobs:
   changes:
     runs-on: ubuntu-20.04
     outputs:
-      rust-server: ${{ steps.filter.outputs.rust-server }}
-      streaming-server: ${{ steps.filter.outputs.streaming-server }}
       frontend: ${{ steps.filter.outputs.frontend }}
     steps:
       - uses: actions/checkout@v3
@@ -41,10 +39,6 @@ jobs:
               - 'archive/**'
             test:
               - 'test/**'
-  rust-server:
-    needs: changes
-    if: ${{ needs.changes.outputs.rust-server== 'true' }}
-    uses: ./.github/workflows/backend.yml
   frontend:
     needs: changes
     if: ${{ needs.changes.outputs.frontend== 'true' }}
