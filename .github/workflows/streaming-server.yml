@@ -40,7 +40,7 @@ jobs:
       - name: SSH into Remote Server and Deploy
         uses: appleboy/ssh-action@v1.0.0
         with:
-          host: ${{ secrets.STREAMING_SERVER_HOST }}
+          host: 192.168.0.1
           key: ${{ secrets.SSH_KEY }}
           passphrase: ${{ secrets.PASSPHRASE }}
           script: |
