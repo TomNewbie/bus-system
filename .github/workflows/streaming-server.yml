@@ -16,6 +16,7 @@ jobs:
     env:
       DOCKER_IMAGE_NAME: streaming-server
       DOCKER_IMAGE_VERSION: ${{ github.run_number }}-${{ github.sha }}
+      CONTAINER_NAME: streaming
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -47,4 +48,5 @@ jobs:
           script: |
             docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
             docker pull ${{ secrets.DOCKER_USERNAME }}/${{ env.DOCKER_IMAGE_NAME }}:${{ env.DOCKER_IMAGE_VERSION }}
-            docker run -d --name your-container-name ${{ secrets.DOCKER_USERNAME }}/${{ env.DOCKER_IMAGE_NAME }}:${{ env.DOCKER_IMAGE_VERSION }}
+            docker rm -f your-container-name || true
+            docker run -d --name ${{ env.CONTAINER_NAME }} ${{ secrets.DOCKER_USERNAME }}/${{ env.DOCKER_IMAGE_NAME }}:${{ env.DOCKER_IMAGE_VERSION }}
