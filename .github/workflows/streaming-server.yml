@@ -32,13 +32,10 @@ jobs:
           docker buildx create --use
           docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
           docker buildx build \
-            --output type=docker \
-            -t ${{ secrets.DOCKER_USERNAME }}/${{ env.DOCKER_IMAGE_NAME }}:${{ env.DOCKER_IMAGE_VERSION }} \
-            -f Dockerfile .
-      - name: print all docker image
-        run: docker image ls
-
-        #   docker push ${{ secrets.DOCKER_USERNAME }}/${{ env.DOCKER_IMAGE_NAME }}:${{ env.DOCKER_IMAGE_VERSION }}
+          --output type=docker \
+          -t ${{ secrets.DOCKER_USERNAME }}/${{ env.DOCKER_IMAGE_NAME }}:${{ env.DOCKER_IMAGE_VERSION }} \
+          -f Dockerfile .
+          docker push ${{ secrets.DOCKER_USERNAME }}/${{ env.DOCKER_IMAGE_NAME }}:${{ env.DOCKER_IMAGE_VERSION }}
 
       - name: SSH into Remote Server and Deploy
         uses: appleboy/ssh-action@v1.0.0
