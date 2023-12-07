@@ -19,7 +19,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
+      - name: print env
+        run: echo ${{ env.DOCKER_IMAGE_VERSION }}
         # Add support for more platforms with QEMU (optional)
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
@@ -30,7 +31,9 @@ jobs:
         run: |
           docker buildx create --use
           docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
-          docker buildx build --platform linux/amd64,linux/arm64 -t ${{ secrets.DOCKER_USERNAME }}/${{ env.DOCKER_IMAGE_NAME }}:${{ env.DOCKER_IMAGE_VERSION }} -f Dockerfile .
+          docker buildx build --platform linux/amd64,linux/arm64 \
+            -t ${{ secrets.DOCKER_USERNAME }}/${{ env.DOCKER_IMAGE_NAME }}:${{ env.DOCKER_IMAGE_VERSION }} \
+            -f Dockerfile .
           docker push ${{ secrets.DOCKER_USERNAME }}/${{ env.DOCKER_IMAGE_NAME }}:${{ env.DOCKER_IMAGE_VERSION }}
 
       - name: SSH into Remote Server and Deploy
