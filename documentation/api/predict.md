@@ -26,7 +26,7 @@ This endpoint enables the prediction of route data using the selected model (eit
 
 - **`shape_id`** (query parameter)
 
-  - Type: Integer
+  - Type: String
   - Description: Represents the shape identifier for the route.
 
 - **`direction_id`** (query parameter)

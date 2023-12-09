@@ -21,7 +21,7 @@ async fn fetch_route_infos(db: &Database, nroutes: i64) -> Result<Vec<String>, E
     let mut result = Vec::new();
     while let Some(doc) = cursor.try_next().await? {
         let route: RouteInfo = bson::from_document(doc)?;
-        let id = route.route_id.to_string();
+        let id = route.route_id;
         result.push(id);
     }
     Ok(result)
@@ -46,7 +46,7 @@ async fn get_segments(req: HttpRequest, db_client: Data<Client>) -> HttpResponse
             return HttpResponse::InternalServerError().finish();
         }
     };
-    let col: Collection<Document> = db_client.database("bus").collection("segments");
+    let col: Collection<Document> = db.collection("segments");
     let cond = doc! {
         "properties.route_id": {
             "$in": routes,

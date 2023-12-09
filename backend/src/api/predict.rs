@@ -62,12 +62,12 @@ async fn fetch_segments(
 
 async fn fetch_route_info(
     db: &Database,
-    route_id: i64,
+    route_id: String,
     direction_id: i64,
 ) -> Result<Vec<RouteInfo>, Error> {
     let col: Collection<Document> = db.collection("route_info");
     let filter = doc! {
-        "route_id": Bson::Int64(route_id),
+        "route_id": route_id.clone(),
         "direction_id": Bson::Int64(direction_id),
     };
     let mut cursor = col.find(filter, None).await?;
@@ -86,7 +86,6 @@ pub async fn predict_congestion(
     db_client: Data<Client>,
     segment_info: Query<SegmentInfo>,
 ) -> HttpResponse {
-    let model = req.match_info().get("model").unwrap();
     let country = req.match_info().get("country").unwrap();
     let db_name = match country_to_db_name(&country) {
         Some(name) => name,
@@ -94,18 +93,22 @@ pub async fn predict_congestion(
             return HttpResponse::NotFound().finish();
         }
     };
-    let db = db_client.database(&db_name);
-    match model {
-        "lstm" | "random-forest" => {}
-        path => {
-            let msg = format!("Model {} not supported", path);
-            tracing::error!(msg);
-            let resp = json!({
-                "error": msg,
-            });
-            return HttpResponse::NotFound().json(resp);
-        }
+    let model = match req.match_info().get("model") {
+        None => return HttpResponse::BadRequest().finish(),
+        Some(model) => match model {
+            "lstm" | "random-forest" => model,
+            path => {
+                let msg = format!("Model {} not supported", path);
+                tracing::error!(msg);
+                let resp = json!({
+                    "error": msg,
+                });
+                return HttpResponse::NotFound().json(resp);
+            }
+        },
     };
+
+    let db = db_client.database(&db_name);
     let SegmentInfo {
         route_id,
         shape_id,
@@ -114,15 +117,7 @@ pub async fn predict_congestion(
     } = segment_info.into_inner();
     let time_for_prediction = (Utc::now() + Duration::minutes(minute_predict)).time();
 
-    let route_id_i64 = match route_id.parse::<i64>() {
-        Ok(route_id) => route_id,
-        Err(err) => {
-            tracing::error!("Failed to execute parsing number: {}", err);
-            return HttpResponse::BadRequest().finish();
-        }
-    };
-
-    let routes = fetch_route_info(&db, route_id_i64, direction_id);
+    let routes = fetch_route_info(&db, route_id.clone(), direction_id);
     let segments = fetch_segments(&db, &shape_id, &route_id, direction_id);
     let joined_stream = try_join!(routes, segments);
     let (routes, segments) = match joined_stream {
@@ -137,10 +132,10 @@ pub async fn predict_congestion(
         .zip(segments.iter())
         .map(|(route, segment)| PredictionSegment {
             segment_id: segment.properties.segment_id.clone(),
-            start_stop_id: route.start_stop_id,
+            start_stop_id: route.start_stop_id.clone(),
             stop_lat: route.stop_lat,
             stop_lon: route.stop_lon,
-            end_stop_id: route.end_stop_id,
+            end_stop_id: route.end_stop_id.clone(),
             next_lat: route.next_lat,
             next_lon: route.next_lon,
             runtime_sec: route.runtime_sec,
@@ -148,7 +143,7 @@ pub async fn predict_congestion(
         .collect::<Vec<_>>();
     let prediction_route = PredictionRoute {
         segments: prediction_segments,
-        route_id: route_id_i64,
+        route_id: route_id.clone(),
         direction_id,
         arrival_hour: time_for_prediction.hour(),
         arrival_minute: time_for_prediction.minute(),
