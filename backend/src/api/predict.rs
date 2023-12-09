@@ -1,20 +1,23 @@
 use actix_web::{
     get,
-    web::{self, Data, Path, Query, ServiceConfig},
-    HttpResponse,
+    web::{self, Data, Query, ServiceConfig},
+    HttpRequest, HttpResponse,
 };
 use bson::{doc, Bson, Document};
 use chrono::{Duration, Timelike, Utc};
 use futures::TryStreamExt;
 use lazy_static::lazy_static;
-use mongodb::{error::Error, Client, Collection};
+use mongodb::{error::Error, Client, Collection, Database};
 use serde::{Deserialize, Serialize};
 use serde_json::json;
 use tokio::try_join;
 
-use crate::models::{
-    route_info::RouteInfo, PredictedRouteInfo, PredictionRoute, PredictionSegment, Segment,
-    SegmentWithCongestionLevel,
+use crate::{
+    models::{
+        route_info::RouteInfo, PredictedRouteInfo, PredictionRoute, PredictionSegment, Segment,
+        SegmentWithCongestionLevel,
+    },
+    utils::country_to_db_name,
 };
 
 lazy_static! {
@@ -36,12 +39,12 @@ pub struct SegmentInfo {
 }
 
 async fn fetch_segments(
-    db_client: &Data<Client>,
+    db: &Database,
     shape_id: &String,
     route_id: &String,
     direction_id: i64,
 ) -> Result<Vec<Segment>, Error> {
-    let col: Collection<Document> = db_client.database("bus").collection("segments");
+    let col: Collection<Document> = db.collection("segments");
     let filter = doc! {
         "properties.shape_id": shape_id,
         "properties.route_id": route_id,
@@ -58,11 +61,11 @@ async fn fetch_segments(
 }
 
 async fn fetch_route_info(
-    db_client: &Data<Client>,
+    db: &Database,
     route_id: i64,
     direction_id: i64,
 ) -> Result<Vec<RouteInfo>, Error> {
-    let col: Collection<Document> = db_client.database("bus").collection("route_info");
+    let col: Collection<Document> = db.collection("route_info");
     let filter = doc! {
         "route_id": Bson::Int64(route_id),
         "direction_id": Bson::Int64(direction_id),
@@ -79,12 +82,20 @@ async fn fetch_route_info(
 
 #[get("/{model}")]
 pub async fn predict_congestion(
+    req: HttpRequest,
     db_client: Data<Client>,
-    path: Path<String>,
     segment_info: Query<SegmentInfo>,
 ) -> HttpResponse {
-    let model = path.into_inner();
-    match model.as_str() {
+    let model = req.match_info().get("model").unwrap();
+    let country = req.match_info().get("country").unwrap();
+    let db_name = match country_to_db_name(&country) {
+        Some(name) => name,
+        None => {
+            return HttpResponse::NotFound().finish();
+        }
+    };
+    let db = db_client.database(&db_name);
+    match model {
         "lstm" | "random-forest" => {}
         path => {
             let msg = format!("Model {} not supported", path);
@@ -110,8 +121,9 @@ pub async fn predict_congestion(
             return HttpResponse::BadRequest().finish();
         }
     };
-    let routes = fetch_route_info(&db_client, route_id_i64, direction_id);
-    let segments = fetch_segments(&db_client, &shape_id, &route_id, direction_id);
+
+    let routes = fetch_route_info(&db, route_id_i64, direction_id);
+    let segments = fetch_segments(&db, &shape_id, &route_id, direction_id);
     let joined_stream = try_join!(routes, segments);
     let (routes, segments) = match joined_stream {
         Ok(joined_output) => joined_output,

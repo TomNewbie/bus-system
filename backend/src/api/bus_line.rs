@@ -1,13 +1,13 @@
 use actix_web::{
     get, routes,
     web::{self, Data, Path, ServiceConfig},
-    HttpResponse,
+    HttpRequest, HttpResponse,
 };
 use bson::{doc, Document};
 use futures::TryStreamExt;
 use mongodb::{Client, Collection};
 
-use crate::models::BusLineWithoutStop;
+use crate::{models::BusLineWithoutStop, utils::country_to_db_name};
 
 pub fn bus_line_config(cfg: &mut ServiceConfig) {
     cfg.service(
@@ -20,8 +20,15 @@ pub fn bus_line_config(cfg: &mut ServiceConfig) {
 #[routes]
 #[get("")]
 #[get("/")]
-async fn get_all_bus_lines(db_client: Data<Client>) -> HttpResponse {
-    let col: Collection<BusLineWithoutStop> = db_client.database("bus").collection("lines");
+async fn get_all_bus_lines(req: HttpRequest, db_client: Data<Client>) -> HttpResponse {
+    let country = req.match_info().get("country").unwrap();
+    let db_name = match country_to_db_name(&country) {
+        Some(name) => name,
+        None => {
+            return HttpResponse::NotFound().finish();
+        }
+    };
+    let col: Collection<BusLineWithoutStop> = db_client.database(&db_name).collection("lines");
     let cursor = match col.find(doc! {}, None).await {
         Ok(cursor) => cursor,
         Err(err) => {
@@ -41,14 +48,21 @@ async fn get_all_bus_lines(db_client: Data<Client>) -> HttpResponse {
 }
 
 #[get("/{id}")]
-async fn get_bus_line_by_id(db_client: Data<Client>, path: Path<String>) -> HttpResponse {
-    let id = path.into_inner();
+async fn get_bus_line_by_id(db_client: Data<Client>, path: Path<(String, String)>) -> HttpResponse {
+    let (country, id) = path.into_inner();
 
-    if id.is_empty() {
+    if id.is_empty() || country.is_empty() {
         return HttpResponse::BadRequest().body("invalid ID");
     }
 
-    let col: Collection<Document> = db_client.database("bus").collection("segments");
+    let db_name = match country_to_db_name(&country) {
+        Some(name) => name,
+        None => {
+            return HttpResponse::NotFound().finish();
+        }
+    };
+
+    let col: Collection<Document> = db_client.database(&db_name).collection("segments");
     let filter = doc! {"properties.route_id": id.clone()};
     let cursor = match col.find(filter, None).await {
         Ok(cursor) => cursor,
