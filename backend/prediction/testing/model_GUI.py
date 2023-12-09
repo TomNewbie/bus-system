@@ -13,6 +13,7 @@ from run_model import run_model
 
 model_options = [
     "lstm",
+    "lstm2",
     "random_forest"
 ]
 
