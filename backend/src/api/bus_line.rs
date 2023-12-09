@@ -32,7 +32,7 @@ async fn get_all_bus_lines(req: HttpRequest, db_client: Data<Client>) -> HttpRes
     let cursor = match col.find(doc! {}, None).await {
         Ok(cursor) => cursor,
         Err(err) => {
-            tracing::error!("Failed to execute the querya: {:?}", err);
+            tracing::error!("Failed to execute the queryab: {:?}", err);
             return HttpResponse::InternalServerError().finish();
         }
     };
