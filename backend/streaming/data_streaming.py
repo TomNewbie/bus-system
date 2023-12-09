@@ -14,7 +14,7 @@ current_date = datetime.now()
 
 # Extract and print the current date
 formatted_date = current_date.strftime("%d-%m-%Y")
-print("Current Date:", formatted_date)
+
 HOUR_TO_RUN = 10
 HOUR_TO_SECOND = 3600
 INTERVAL = 30
@@ -45,7 +45,6 @@ def format_data(res):
 
     json_data = MessageToJson(res)
 
-    print(json_data)
     data = json.loads(json_data)
     # Extract data for CSV formatting with handling missing fields
     id_value = extract_value(data, ["id"])
@@ -65,7 +64,6 @@ def format_data(res):
 
     csv_string = f"{id_value},{trip_id},{schedule_relationship},{route_id},{direction_id},{latitude},{longitude},{odometer},{speed},{current_stop_sequence},{current_status},{timestamp},{stop_id},{vehicle_label}"
     csv_data = dict(zip(["id", "trip_id", "schedule_relationship", "route_id", "direction_id", "latitude", "longitude", "odometer", "speed", "current_stop_sequence", "current_status", "timestamp", "stop_id", "vehicle_label"], csv_string.split(',')))
-
 
     return csv_data
 
@@ -93,10 +91,12 @@ def stream_data_to_mongodb():
     count = 0
     while count < total_amount_run:
         print('====================================')
-
+        current_time = datetime.now()
+        formatted_time = current_time.strftime("%Y-%m-%d %H:%M:%S")
+        print("Current Time:", formatted_time)
+        print("count: ", count)
         try:
             res = get_data()
-            print(res)
             if res:
                 add_data_to_mongodb(res)               
 
