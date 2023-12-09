@@ -15,6 +15,18 @@ def predict_congestion_lstm():
     result_json = result_data.to_json(orient='records')
     return Response(result_json, mimetype='application/json')
 
+# LSTM2
+@app.route('/lstm-2', methods=['POST'])
+def predict_congestion_lstm_2():
+    # Assuming the data is sent as JSON in the request
+    request_data = request.get_json()
+    result_data = run_model(request_data, "lstm2")
+
+    # Convert the result data to JSON
+    result_json = result_data.to_json(orient='records')
+    return Response(result_json, mimetype='application/json')
+
+
 # RANDOM FOREST
 @app.route('/random-forest', methods=['POST'])
 def predict_random_forest():

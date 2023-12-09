@@ -7,21 +7,26 @@ from pymongo.server_api import ServerApi
 import logging
 import time
 import json
+from datetime import datetime
+
+# Get the current date and time
+current_date = datetime.now()
+
+# Extract and print the current date
+formatted_date = current_date.strftime("%d-%m-%Y")
 
 HOUR_TO_RUN = 10
 HOUR_TO_SECOND = 3600
 INTERVAL = 30
 
 vehicle_positions_url = "http://www.myridebarrie.ca/gtfs/GTFS_VehiclePositions.pb"
-alerts_url = "http://www.myridebarrie.ca/gtfs/GTFS_ServiceAlerts.pb"
-trip_update_url = "http://www.myridebarrie.ca/gtfs/GTFS_TripUpdates.pb"
 
 # connect in cloud
 uri = "mongodb+srv://gmanbus:VB2yZttIT1rrgtSG@cluster0.q89eazg.mongodb.net/?retryWrites=true&w=majority"
 # # Create a new client and connect to the server
 mongo_client = MongoClient(uri, server_api=ServerApi('1'))
 db = mongo_client['gtfs_rt_ca']
-collection = db['vehicle_positions']
+collection = db[formatted_date]
 
 def get_data():
     res = requests.get(vehicle_positions_url)
@@ -38,7 +43,6 @@ def format_data(res):
 
     json_data = MessageToJson(res)
 
-    print(json_data)
     data = json.loads(json_data)
     # Extract data for CSV formatting with handling missing fields
     id_value = extract_value(data, ["id"])
@@ -58,7 +62,6 @@ def format_data(res):
 
     csv_string = f"{id_value},{trip_id},{schedule_relationship},{route_id},{direction_id},{latitude},{longitude},{odometer},{speed},{current_stop_sequence},{current_status},{timestamp},{stop_id},{vehicle_label}"
     csv_data = dict(zip(["id", "trip_id", "schedule_relationship", "route_id", "direction_id", "latitude", "longitude", "odometer", "speed", "current_stop_sequence", "current_status", "timestamp", "stop_id", "vehicle_label"], csv_string.split(',')))
-
 
     return csv_data
 
@@ -86,7 +89,10 @@ def stream_data_to_mongodb():
     count = 0
     while count < total_amount_run:
         print('====================================')
-
+        current_time = datetime.now()
+        formatted_time = current_time.strftime("%Y-%m-%d %H:%M:%S")
+        print("Current Time:", formatted_time)
+        print("count: ", count)
         try:
             res = get_data()
             if res:

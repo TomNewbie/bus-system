@@ -1,0 +1,2 @@
+# The crontab is stupid enough that it cant find the python exec
+0 12 * * *  /usr/local/bin/python /app/data_streaming.py >> /var/log/cron.log 2>&1
