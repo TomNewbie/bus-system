@@ -19,6 +19,17 @@ on:
       HOST_SERVER:
         required: true
         description: IP address of the server
+      DOCKER_USERNAME:
+        required: true
+        description: Docker username
+      DOCKER_PASSWORD:
+        required: true
+      SSH_USERNAME:
+        required: true
+      SSH_KEY:
+        required: true
+      PASSPHRASE:
+        required: true
 
 jobs:
   deploy:

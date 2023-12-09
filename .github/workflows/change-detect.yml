@@ -53,3 +53,8 @@ jobs:
       working-directory: backend/streaming
     secrets:
       HOST_SERVER: ${{ secrets.STREAMING_SERVER_HOST }}
+      DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+      DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+      SSH_USERNAME: ${{ secrets.SSH_USERNAME }}
+      SSH_KEY: ${{ secrets.SSH_KEY }}
+      PASSPHRASE: ${{ secrets.PASSPHRASE }}
