@@ -141,7 +141,7 @@ pub async fn predict_congestion(
         arrival_hour: time_for_prediction.hour(),
         arrival_minute: time_for_prediction.minute(),
     };
-    let url = format!("http://{}:5000/{}", URL.clone(), model);
+    let url = format!("http://{}:5000/{}", "206.189.95.117", model);
     let client = reqwest::Client::new();
     let resp = match client.post(url).json(&prediction_route).send().await {
         Ok(resp) => resp,

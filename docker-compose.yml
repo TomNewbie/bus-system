@@ -5,7 +5,7 @@ services:
     container_name: predict
     build: ./backend/prediction
     ports:
-      - 5000
+      - '5000:5000'
   gmanbus:
     container_name: gmanbus
     build: ./backend

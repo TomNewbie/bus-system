@@ -1,6 +1,7 @@
 name: Change detection
 
 on:
+  pull_request:
   push:
     branches:
       - main
@@ -17,6 +18,7 @@ jobs:
     outputs:
       frontend: ${{ steps.filter.outputs.frontend }}
       streaming-server: ${{ steps.filter.outputs.streaming-server }}
+      rust-server: ${{ steps.filter.outputs.rust-server }}
     steps:
       - uses: actions/checkout@v3
         with:
@@ -45,8 +47,8 @@ jobs:
     uses: ./.github/workflows/frontend.yml
   streaming-server:
     needs: changes
-    if: ${{ needs.changes.outputs.streaming-server== 'true' }}
-    uses: ./.github/workflows/streaming-server.yml
+    if: ${{ needs.changes.outputs.streaming-server== 'true' && github.ref == 'refs/heads/main' }}
+    uses: ./.github/workflows/deployment.yml
     with:
       DOCKER_IMAGE_NAME: streaming-server
       CONTAINER_NAME: streaming
@@ -58,3 +60,7 @@ jobs:
       SSH_USERNAME: ${{ secrets.SSH_USERNAME }}
       SSH_KEY: ${{ secrets.SSH_KEY }}
       PASSPHRASE: ${{ secrets.PASSPHRASE }}
+  rust-server:
+    needs: changes
+    if: ${{ needs.changes.outputs.rust-server== 'true' }}
+    uses: ./.github/workflows/rust-server.yml
