@@ -71,5 +71,5 @@ jobs:
           script: |
             docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
             docker pull ${{ secrets.DOCKER_USERNAME }}/${{ inputs.DOCKER_IMAGE_NAME }}:${{ env.DOCKER_IMAGE_VERSION }}
-            docker rm -f ${{ inputs.DOCKER_IMAGE_NAME }} || true
+            docker rm -f ${{ inputs.CONTAINER_NAME }} || true
             docker run -d --name ${{ inputs.CONTAINER_NAME }} ${{ secrets.DOCKER_USERNAME }}/${{ inputs.DOCKER_IMAGE_NAME }}:${{ env.DOCKER_IMAGE_VERSION }}

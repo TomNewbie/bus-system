@@ -20,8 +20,6 @@ HOUR_TO_SECOND = 3600
 INTERVAL = 30
 
 vehicle_positions_url = "http://www.myridebarrie.ca/gtfs/GTFS_VehiclePositions.pb"
-alerts_url = "http://www.myridebarrie.ca/gtfs/GTFS_ServiceAlerts.pb"
-trip_update_url = "http://www.myridebarrie.ca/gtfs/GTFS_TripUpdates.pb"
 
 # connect in cloud
 uri = "mongodb+srv://gmanbus:VB2yZttIT1rrgtSG@cluster0.q89eazg.mongodb.net/?retryWrites=true&w=majority"
