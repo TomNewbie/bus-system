@@ -1,8 +1,6 @@
 name: Change detection
 
 on:
-  workflow_dispatch:
-  pull_request:
   push:
     branches:
       - main
@@ -17,8 +15,8 @@ jobs:
   changes:
     runs-on: ubuntu-20.04
     outputs:
-      backend: ${{ steps.filter.outputs.backend }}
       frontend: ${{ steps.filter.outputs.frontend }}
+      streaming-server: ${{ steps.filter.outputs.streaming-server }}
     steps:
       - uses: actions/checkout@v3
         with:
@@ -27,20 +25,31 @@ jobs:
         id: filter
         with:
           filters: |
-            backend:
-              - 'backend/**'
+            rust-server:
+              - 'backend/src/**'
             frontend:
               - 'frontend/**'
+            prediction-server:
+              - 'backend/prediction/**'
+            streaming-server:
+              - 'backend/streaming/**'
             data:
               - 'Data/**'
               - 'archive/**'
             test:
               - 'test/**'
-  backend:
-    needs: changes
-    if: ${{ needs.changes.outputs.backend== 'true' }}
-    uses: ./.github/workflows/backend.yml
+          token: ${{ secrets.ACTION_TOKEN }}
   frontend:
     needs: changes
     if: ${{ needs.changes.outputs.frontend== 'true' }}
     uses: ./.github/workflows/frontend.yml
+  streaming-server:
+    needs: changes
+    if: ${{ needs.changes.outputs.streaming-server== 'true' }}
+    uses: ./.github/workflows/streaming-server.yml
+    with:
+      DOCKER_IMAGE_NAME: streaming-server
+      CONTAINER_NAME: streaming
+      working-directory: backend/streaming
+    secrets:
+      HOST_SERVER: ${{ secrets.STREAMING_SERVER_HOST }}

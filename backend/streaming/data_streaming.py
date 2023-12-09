@@ -7,7 +7,14 @@ from pymongo.server_api import ServerApi
 import logging
 import time
 import json
+from datetime import datetime
 
+# Get the current date and time
+current_date = datetime.now()
+
+# Extract and print the current date
+formatted_date = current_date.strftime("%d-%m-%Y")
+print("Current Date:", formatted_date)
 HOUR_TO_RUN = 10
 HOUR_TO_SECOND = 3600
 INTERVAL = 30
@@ -21,7 +28,7 @@ uri = "mongodb+srv://gmanbus:VB2yZttIT1rrgtSG@cluster0.q89eazg.mongodb.net/?retr
 # # Create a new client and connect to the server
 mongo_client = MongoClient(uri, server_api=ServerApi('1'))
 db = mongo_client['gtfs_rt_ca']
-collection = db['vehicle_positions']
+collection = db[formatted_date]
 
 def get_data():
     res = requests.get(vehicle_positions_url)
@@ -89,6 +96,7 @@ def stream_data_to_mongodb():
 
         try:
             res = get_data()
+            print(res)
             if res:
                 add_data_to_mongodb(res)               
 
