@@ -24,3 +24,17 @@ jobs:
       - uses: dtolnay/rust-toolchain@stable
       - name: Run tests
         run: cd backend && cargo test
+  deployment:
+    needs: build_and_test
+    uses: ./.github/workflows/deployment.yml
+    with:
+      DOCKER_IMAGE_NAME: api-server
+      CONTAINER_NAME: api-server
+      working-directory: backend
+    secrets:
+      HOST_SERVER: ${{ secrets.API_SERVER_HOST }}
+      DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+      DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+      SSH_USERNAME: ${{ secrets.SSH_USERNAME }}
+      SSH_KEY: ${{ secrets.SSH_KEY }}
+      PASSPHRASE: ${{ secrets.PASSPHRASE }}
