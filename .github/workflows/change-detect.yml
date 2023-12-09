@@ -41,11 +41,13 @@ jobs:
             test:
               - 'test/**'
           token: ${{ secrets.ACTION_TOKEN }}
+
   frontend:
     needs: changes
     if: ${{ needs.changes.outputs.frontend== 'true' }}
     uses: ./.github/workflows/frontend.yml
-  streaming-server:
+
+  cd-streaming-server:
     needs: changes
     if: ${{ needs.changes.outputs.streaming-server== 'true' && github.ref == 'refs/heads/main' }}
     uses: ./.github/workflows/deployment.yml
@@ -60,7 +62,24 @@ jobs:
       SSH_USERNAME: ${{ secrets.SSH_USERNAME }}
       SSH_KEY: ${{ secrets.SSH_KEY }}
       PASSPHRASE: ${{ secrets.PASSPHRASE }}
-  rust-server:
+
+  ci-rust-server:
     needs: changes
     if: ${{ needs.changes.outputs.rust-server== 'true' }}
     uses: ./.github/workflows/rust-server.yml
+
+  cd-rust-server:
+    needs: ci-rust-server
+    if: github.ref == 'refs/heads/main'
+    uses: ./.github/workflows/deployment.yml
+    with:
+      DOCKER_IMAGE_NAME: api-server
+      CONTAINER_NAME: api-server
+      working-directory: backend
+    secrets:
+      HOST_SERVER: ${{ secrets.API_SERVER_HOST }}
+      DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+      DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+      SSH_USERNAME: ${{ secrets.SSH_USERNAME }}
+      SSH_KEY: ${{ secrets.SSH_KEY }}
+      PASSPHRASE: ${{ secrets.PASSPHRASE }}

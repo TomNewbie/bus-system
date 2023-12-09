@@ -3,6 +3,10 @@ name: Backend CI
 on:
   workflow_call:
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref || github.head_ref ||  github.run_id }}
+  cancel-in-progress: true
+
 jobs:
   build_and_test:
     name: Rust project
@@ -24,19 +28,3 @@ jobs:
       - uses: dtolnay/rust-toolchain@stable
       - name: Run tests
         run: cd backend && cargo test RUST_BACKTRACE=1
-
-  deployment:
-    needs: build_and_test
-    if: github.ref == 'refs/heads/main'
-    uses: ./.github/workflows/deployment.yml
-    with:
-      DOCKER_IMAGE_NAME: api-server
-      CONTAINER_NAME: api-server
-      working-directory: backend
-    secrets:
-      HOST_SERVER: ${{ secrets.API_SERVER_HOST }}
-      DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-      DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-      SSH_USERNAME: ${{ secrets.SSH_USERNAME }}
-      SSH_KEY: ${{ secrets.SSH_KEY }}
-      PASSPHRASE: ${{ secrets.PASSPHRASE }}
