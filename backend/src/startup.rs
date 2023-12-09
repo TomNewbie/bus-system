@@ -1,7 +1,7 @@
 use std::net::TcpListener;
 
 use actix_cors::Cors;
-use actix_web::{dev::Server, web::Data, App, HttpServer};
+use actix_web::{dev::Server, web, web::Data, App, HttpServer};
 use mongodb::Client;
 use tracing_actix_web::TracingLogger;
 
@@ -10,7 +10,6 @@ use crate::api::{
     segments::segments_config,
 };
 
-// TODO: Refactor the bus api after the get data
 pub fn run(listener: TcpListener, client: Client) -> Result<Server, std::io::Error> {
     let client = Data::new(client);
     let server = HttpServer::new(move || {
@@ -19,11 +18,14 @@ pub fn run(listener: TcpListener, client: Client) -> Result<Server, std::io::Err
             .wrap(TracingLogger::default())
             .wrap(cors)
             .service(health_check)
-            .configure(bus_line_config)
-            .configure(bus_stop_config)
-            .configure(segments_config)
-            .configure(predict_config)
-            .app_data(client.clone())
+            .service(
+                web::scope("/{country}")
+                    .configure(bus_line_config)
+                    .configure(bus_stop_config)
+                    .configure(segments_config)
+                    .configure(predict_config)
+                    .app_data(client.clone()),
+            )
     })
     .listen(listener)?
     .run();

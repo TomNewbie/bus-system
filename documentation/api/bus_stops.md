@@ -20,7 +20,7 @@ Retrieve a list of all bus stops.
 ```json
 [
   {
-    "stop_id": number,
+    "stop_id": "string",
     "stop_name": "string",
     "stop_lat": double,
     "stop_lon": double,
@@ -33,19 +33,19 @@ Retrieve a list of all bus stops.
 ```json
 [
   {
-    "stop_id": 43,
+    "stop_id": "43",
     "stop_name": "Bonn Propsthof Nord",
     "stop_lat": 50.739096,
     "stop_lon": 7.073507
   },
   {
-    "stop_id": 735,
+    "stop_id": "735",
     "stop_name": "Brühl Mitte",
     "stop_lat": 50.828921,
     "stop_lon": 6.899026
   },
   {
-    "stop_id": 1110,
+    "stop_id": "1110",
     "stop_name": "Bonn Wilhelmsplatz",
     "stop_lat": 50.740145,
     "stop_lon": 7.098919
@@ -78,13 +78,13 @@ Retrieve information about a specific bus stop using its ID.
 
 ```json
   {
-    "stop_id": number,
+    "stop_id": "string",
     "stop_name": "string",
     "stop_lat": double,
     "stop_lon": double,
     "routes": [
             {
-                "route_id": number,
+                "route_id": "string",
                 "shape_id": "string",
                 "start_stop_name": "string",
                 "end_stop_name": "string",
@@ -98,14 +98,14 @@ Retrieve information about a specific bus stop using its ID.
 
 ```json
 {
-  "stop_id": 43,
+  "stop_id": "43",
   "stop_name": "Bonn Propsthof Nord",
   "stop_lat": 50.739096,
   "stop_lon": 7.073507,
   "routes": [
     {
-      "route_id": 600633,
-      "shape_id": 3124,
+      "route_id": "600633",
+      "shape_id": "3124",
       "start_stop_name": "Bonn Gerhart-Hauptmann-Str.",
       "end_stop_name": "Bonn Endenich Nord Bf",
       "agency_name": "SWB Stadtwerke Bonn Verkehrs GmbH"
