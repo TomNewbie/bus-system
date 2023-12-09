@@ -39,6 +39,7 @@ jobs:
               - 'archive/**'
             test:
               - 'test/**'
+          token: ${{ secrets.ACTION_TOKEN }}
   frontend:
     needs: changes
     if: ${{ needs.changes.outputs.frontend== 'true' }}
