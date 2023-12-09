@@ -1,21 +1,34 @@
 name: Deploy to Streaming Server
 
 on:
-  push:
-    branches:
-      - main
+  workflow_call:
+    inputs:
+      DOCKER_IMAGE_NAME:
+        description: docker image name
+        required: true
+        type: string
+      CONTAINER_NAME:
+        description: container name when start the container
+        required: true
+        type: string
+      working-directory:
+        description: directory to build and deploy
+        required: true
+        type: string
+    secrets:
+      HOST_SERVER:
+        required: true
+        description: IP address of the server
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: backend/streaming
+        working-directory: ${{ inputs.working-directory }}
 
     env:
-      DOCKER_IMAGE_NAME: streaming-server
       DOCKER_IMAGE_VERSION: ${{ github.run_number }}-${{ github.sha }}
-      CONTAINER_NAME: streaming
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -33,19 +46,19 @@ jobs:
           docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
           docker buildx build \
           --output type=docker \
-          -t ${{ secrets.DOCKER_USERNAME }}/${{ env.DOCKER_IMAGE_NAME }}:${{ env.DOCKER_IMAGE_VERSION }} \
+          -t ${{ secrets.DOCKER_USERNAME }}/${{ inputs.DOCKER_IMAGE_NAME }}:${{ env.DOCKER_IMAGE_VERSION }} \
           -f Dockerfile .
-          docker push ${{ secrets.DOCKER_USERNAME }}/${{ env.DOCKER_IMAGE_NAME }}:${{ env.DOCKER_IMAGE_VERSION }}
+          docker push ${{ secrets.DOCKER_USERNAME }}/${{ inputs.DOCKER_IMAGE_NAME }}:${{ env.DOCKER_IMAGE_VERSION }}
 
       - name: SSH into Remote Server and Deploy
         uses: appleboy/ssh-action@v1.0.0
         with:
-          host: ${{ secrets.STREAMING_SERVER_HOST }}
+          host: ${{ secrets.HOST_SERVER }}
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_KEY }}
           passphrase: ${{ secrets.PASSPHRASE }}
           script: |
             docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
-            docker pull ${{ secrets.DOCKER_USERNAME }}/${{ env.DOCKER_IMAGE_NAME }}:${{ env.DOCKER_IMAGE_VERSION }}
-            docker rm -f ${{ env.DOCKER_IMAGE_NAME }} || true
-            docker run -d --name ${{ env.CONTAINER_NAME }} ${{ secrets.DOCKER_USERNAME }}/${{ env.DOCKER_IMAGE_NAME }}:${{ env.DOCKER_IMAGE_VERSION }}
+            docker pull ${{ secrets.DOCKER_USERNAME }}/${{ inputs.DOCKER_IMAGE_NAME }}:${{ env.DOCKER_IMAGE_VERSION }}
+            docker rm -f ${{ inputs.DOCKER_IMAGE_NAME }} || true
+            docker run -d --name ${{ inputs.CONTAINER_NAME }} ${{ secrets.DOCKER_USERNAME }}/${{ inputs.DOCKER_IMAGE_NAME }}:${{ env.DOCKER_IMAGE_VERSION }}
