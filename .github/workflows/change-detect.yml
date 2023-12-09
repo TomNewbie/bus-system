@@ -47,7 +47,7 @@ jobs:
     uses: ./.github/workflows/frontend.yml
   streaming-server:
     needs: changes
-    if: ${{ needs.changes.outputs.streaming-server== 'true' }} && github.ref == 'refs/heads/main'
+    if: ${{ needs.changes.outputs.streaming-server== 'true' && github.ref == 'refs/heads/main' }}
     uses: ./.github/workflows/deployment.yml
     with:
       DOCKER_IMAGE_NAME: streaming-server
