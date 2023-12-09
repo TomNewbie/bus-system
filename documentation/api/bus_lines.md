@@ -20,7 +20,7 @@ Retrieve a list of all bus lines.
 ```json
 [
   {
-    "route_id": number,
+    "route_id": string,
     "shape_id": "string",
     "start_stop_name": "string",
     "end_stop_name": "string",
@@ -34,19 +34,19 @@ Retrieve a list of all bus lines.
 ```json
 [
   {
-    "route_id": 100104,
+    "route_id": "100104",
     "start_stop_name": "Köln Leuchterstr.",
     "end_stop_name": "Köln Am Emberg",
     "agency_name": "KVB Kölner Verkehrs-Betriebe AG"
   },
   {
-    "route_id": 100124,
+    "route_id": "100124",
     "start_stop_name": "Köln Breslauer Platz/Hbf",
     "end_stop_name": "Köln Amsterdamer Str./Gürtel",
     "agency_name": "KVB Kölner Verkehrs-Betriebe AG"
   },
   {
-    "route_id": 300020,
+    "route_id": "300020",
     "start_stop_name": "Leverkusen Forellental",
     "end_stop_name": "Leverkusen Schöne Aussicht",
     "agency_name": "wupsi wupsi GmbH"

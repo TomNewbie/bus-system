@@ -20,3 +20,11 @@ pub async fn spawn_app() -> String {
     // We return the application address to the caller!
     format!("http://127.0.0.1:{}", port)
 }
+
+pub fn country_to_db_name(country: &str) -> Option<String> {
+    match country {
+        "de" => Some("bus".to_owned()),
+        "ca" => Some("ca-bus".to_owned()),
+        _other => None,
+    }
+}
