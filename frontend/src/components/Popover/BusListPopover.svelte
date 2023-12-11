@@ -53,6 +53,7 @@
 					class="w-5/6 border border-gray-300 rounded-xl px-8 py-2 focus:border-black"
 					bind:value={searchTerm}
 					placeholder="Search..."
+					on:click={() => toggleTransform('input')}
 				/>
 
 				<!-- svelte-ignore a11y-click-events-have-key-events -->
