@@ -2,6 +2,8 @@ application:
   port: 8000
 database:
   host: cluster0.q89eazg.mongodb.net
-  username: 'gmanbus'
-  password: 'VB2yZttIT1rrgtSG'
-  database_name: 'bus'
+  username: "gmanbus"
+  password: "VB2yZttIT1rrgtSG"
+  database_name: "bus"
+dontusethis:
+  hehe: abc

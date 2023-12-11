@@ -1,7 +1,9 @@
 export async function fetchBusLine() {
 	let a = [];
 	try {
-		const response = await fetch('http://localhost:8000/de/segments');
+		const response = await fetch('http://188.166.180.176:8000/de/segments');
+		// const response = await fetch('http://localhost:8000/segments');
+
 		if (response.ok) {
 			const data: GeoJsonWithId[] = await response.json();
 			console.log(data);
@@ -41,7 +43,7 @@ export async function fetchCongestionDataByBusline(
 	let abortSignal = abortController.signal;
 	try {
 		const response = await fetch(
-			`http://localhost:8000/predict/${model}?route_id=${route_id}&shape_id=${shape_id}&direction_id=${direction_id}&minute_predict=${minute}`,
+			`http://188.166.180.176:8000/de/predict/${model}?route_id=${route_id}&shape_id=${shape_id}&direction_id=${direction_id}&minute_predict=${minute}`,
 			{ signal: abortSignal }
 		);
 		if (response.ok) {
