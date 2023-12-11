@@ -1,7 +1,7 @@
 <script>
 	// @ts-nocheck
 
-	import BusLineTag from '../BusLineTag.svelte';
+	import BusLineTag from '../UI/BusLineTag.svelte';
 	import {
 		busLinePopoverVisible,
 		busStopPopoverVisible,

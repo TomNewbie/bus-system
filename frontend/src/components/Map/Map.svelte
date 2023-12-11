@@ -9,12 +9,13 @@
 	import { fetchBusLine } from '../../services/mapServices';
 	import { drawDetailBusline, viewFullMap } from '../../controller/visualization';
 	import { fetchCongestionData } from '../../controller/congestion';
-	import LoadingScreen from '../LoadingScreen.svelte';
+	import LoadingScreen from '../UI/LoadingScreen.svelte';
 
 	let map: Map;
 	let mapContainer: Map;
 	let lng, lat, zoom;
 	const mapConfig: MapState = { zoom: 11 };
+	export let api = '';
 
 	$: {
 		viewFullMap($busNetwork, map, mapConfig);
@@ -34,7 +35,7 @@
 
 	let isMapLoading = true;
 	onMount(async () => {
-		busNetwork.set(await fetchBusLine());
+		busNetwork.set(await fetchBusLine(api));
 
 		map = new Map({
 			container: mapContainer,

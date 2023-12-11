@@ -1,7 +1,7 @@
-export async function fetchBusLine() {
+export async function fetchBusLine(api: any) {
 	let a = [];
 	try {
-		const response = await fetch('http://localhost:8000/de/segments');
+		const response = await fetch(api);
 		if (response.ok) {
 			const data: GeoJsonWithId[] = await response.json();
 			console.log(data);

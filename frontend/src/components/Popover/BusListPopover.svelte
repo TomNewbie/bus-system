@@ -1,6 +1,6 @@
 <script>
 	// @ts-nocheck
-	import BusLineItem from '../BusLineItem.svelte';
+	import BusLineItem from '../UI/BusLineItem.svelte';
 	import { busNetwork, currentIndex } from '../../stores/stores';
 
 	let isTransformed = true;

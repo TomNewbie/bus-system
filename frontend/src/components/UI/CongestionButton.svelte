@@ -1,6 +1,6 @@
 <script>
 	// @ts-nocheck
-	import { currentIndex, minute } from '../stores/stores';
+	import { currentIndex, minute } from '../../stores/stores';
 
 	let busLinePopoverVisible;
 	$: {

@@ -1,7 +1,7 @@
 <script>
 	// @ts-nocheck
-	import { currentIndex, minute, model } from '../stores/stores';
-	import { lstmModel, randomForestModel } from '../utils/constants';
+	import { currentIndex, minute, model } from '../../stores/stores';
+	import { lstmModel, randomForestModel } from '../../utils/constants';
 
 	let busLinePopoverVisible;
 	$: {

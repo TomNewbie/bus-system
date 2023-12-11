@@ -1,7 +1,7 @@
 <script>
 	// @ts-nocheck
 
-	import BusStopTag from '../BusStopTag.svelte';
+	import BusStopTag from '../UI/BusStopTag.svelte';
 	import { busNetwork, currentIndex } from '../../stores/stores';
 
 	// @ts-ignore

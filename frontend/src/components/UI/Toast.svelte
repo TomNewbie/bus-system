@@ -1,5 +1,5 @@
 <script>
-	import { isToastShowed } from '../stores/stores';
+	import { isToastShowed } from '../../stores/stores';
 	import { fly } from 'svelte/transition';
 	function closeToast() {
 		$isToastShowed = false;
