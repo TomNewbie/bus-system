@@ -50,17 +50,18 @@
 			>
 				<input
 					type="text"
-					class="w-5/6 border border-gray-300 rounded-xl px-8 py-2 focus:border-black"
+					class="w-5/6 px-8 py-2 border border-gray-300 rounded-xl focus:border-black"
 					bind:value={searchTerm}
 					placeholder="Search..."
 					on:click={() => toggleTransform('input')}
+				/>
 
 				<!-- svelte-ignore a11y-click-events-have-key-events -->
 				<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
 				<img
 					src="./times.svg"
 					alt="times-icon"
-					class="absolute ml-2 w-8 h-8 rounded-full exit-button bg-slate-200/60 right-2"
+					class="absolute w-8 h-8 ml-2 rounded-full exit-button bg-slate-200/60 right-2"
 					class:hidden={!isTransformed}
 					on:click={() => toggleTransform('cancel')}
 					style="cursor: pointer;"
