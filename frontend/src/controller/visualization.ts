@@ -16,9 +16,13 @@ export function drawDetailBusline(busNetwork: BusNetwork, index: number, map: Ma
 			busNetwork[routeNumber][busNetwork[routeNumber].length - 1].geometry.coordinates.length - 1
 		]
 	);
-
+	let busLine = busNetwork[routeNumber];
+	console.log(busLine);
+	busLine.sort((busStopA, busStopB) => busStopA.properties.stop_sequence - busStopB.properties.stop_sequence)
+	console.log(busLine);
 	// Create marker and add Bound to fit line
-	busNetwork[routeNumber].forEach((segment) => {
+	busLine.forEach((segment) => {
+		
 		let startStopLabel = segment['properties']['start_stop_name'];
 		let startStopLngLat = segment['geometry']['coordinates'][0];
 		let popup = new Popup({ offset: 25 }).setText(startStopLabel);
@@ -27,21 +31,20 @@ export function drawDetailBusline(busNetwork: BusNetwork, index: number, map: Ma
 		bounds.extend(segment['geometry']['coordinates'][0]);
 	});
 
-	let result = busNetwork[routeNumber];
-	let endStopLabel = result[result.length - 1]['properties']['end_stop_name'];
+	let endStopLabel = busLine[busLine.length - 1]['properties']['end_stop_name'];
 
 	let popup = new Popup({ offset: 25 }).setText(endStopLabel);
 	const marker = new Marker()
 		.setPopup(popup)
 		.setLngLat(
-			result[result.length - 1]['geometry']['coordinates'][
-				result[result.length - 1]['geometry']['coordinates'].length - 1
+			busLine[busLine.length - 1]['geometry']['coordinates'][
+				busLine[busLine.length - 1]['geometry']['coordinates'].length - 1
 			]
 		)
 		.addTo(map);
 	bounds.extend(
-		result[result.length - 1]['geometry']['coordinates'][
-			result[result.length - 1]['geometry']['coordinates'].length - 1
+		busLine[busLine.length - 1]['geometry']['coordinates'][
+			busLine[busLine.length - 1]['geometry']['coordinates'].length - 1
 		]
 	);
 

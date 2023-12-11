@@ -38,24 +38,30 @@
 		listPopOver = true;
 		isTransformed = true;
 	}
+
+	let searchTerm = '';
 </script>
 
 <body>
 	<div class={containerClass} class:hidden={!listPopOver}>
 		<div class="relative">
 			<div
-				class="sticky top-0 left-0 right-0 flex items-center justify-around px-4 py-4 popover-search bg-white/50 rounded-t-xl"
+				class="sticky top-0 left-0 right-0 flex px-4 py-8 popover-search bg-white/50 rounded-t-xl"
 			>
-				<button
+				<input
+					type="text"
+					class="w-5/6 border border-gray-300 rounded-xl px-8 py-2 focus:border-black"
+					bind:value={searchTerm}
+					placeholder="Search..."
 					on:click={() => toggleTransform('input')}
-					class="text-base text-black font-regular open-button">List of bus lines</button
-				>
+				/>
+
 				<!-- svelte-ignore a11y-click-events-have-key-events -->
 				<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
 				<img
 					src="./times.svg"
 					alt="times-icon"
-					class="absolute w-8 h-8 rounded-full exit-button bg-slate-200/60 right-2"
+					class="absolute ml-2 w-8 h-8 rounded-full exit-button bg-slate-200/60 right-2"
 					class:hidden={!isTransformed}
 					on:click={() => toggleTransform('cancel')}
 					style="cursor: pointer;"
@@ -67,15 +73,21 @@
 				style="height: calc(100vh - 130px); "
 			>
 				{#each $busNetwork as busLine, index}
-					<BusLineItem
-						bus_id={busLine[0].properties.route_id}
-						bus_start={busLine[0].properties.start_stop_name}
-						bus_end={busLine[busLine.length - 1].properties.end_stop_name}
-						handleClick={() => {
-							currentIndex.set(index);
-							listPopOver = false;
-						}}
-					/>
+					{#if busLine[0].properties.route_id.includes(searchTerm) || searchTerm == '' || busLine[0].properties.start_stop_name
+							.toLowerCase()
+							.includes(searchTerm.toLowerCase()) || busLine[busLine.length - 1].properties.end_stop_name
+							.toLowerCase()
+							.includes(searchTerm.toLowerCase())}
+						<BusLineItem
+							bus_id={busLine[0].properties.route_id}
+							bus_start={busLine[0].properties.start_stop_name}
+							bus_end={busLine[busLine.length - 1].properties.end_stop_name}
+							handleClick={() => {
+								currentIndex.set(index);
+								listPopOver = false;
+							}}
+						/>
+					{/if}
 				{/each}
 			</div>
 		</div>
