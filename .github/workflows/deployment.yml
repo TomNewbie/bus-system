@@ -15,6 +15,10 @@ on:
         description: directory to build and deploy
         required: true
         type: string
+      port:
+        description: map the port from the host to container
+        required: false
+        type: string
     secrets:
       HOST_SERVER:
         required: true
@@ -72,4 +76,8 @@ jobs:
             docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
             docker pull ${{ secrets.DOCKER_USERNAME }}/${{ inputs.DOCKER_IMAGE_NAME }}:${{ env.DOCKER_IMAGE_VERSION }}
             docker rm -f ${{ inputs.CONTAINER_NAME }} || true
+            if [ -n "${{ inputs.port }}" ]; then
+            docker run -d --name ${{ inputs.CONTAINER_NAME }} -p ${{ inputs.port }} ${{ secrets.DOCKER_USERNAME }}/${{ inputs.DOCKER_IMAGE_NAME }}:${{ env.DOCKER_IMAGE_VERSION }}
+            else
             docker run -d --name ${{ inputs.CONTAINER_NAME }} ${{ secrets.DOCKER_USERNAME }}/${{ inputs.DOCKER_IMAGE_NAME }}:${{ env.DOCKER_IMAGE_VERSION }}
+            fi

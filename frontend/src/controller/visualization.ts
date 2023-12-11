@@ -1,8 +1,9 @@
-import { Map, Marker, Popup, LngLatBounds } from 'mapbox-gl';
+import pkg from 'mapbox-gl';
+const { LngLatBounds, Popup, Marker } = pkg;
 import { getCenterLngLat } from '../utils/mapUtils';
 import { deleteCongestionLevel } from './congestion';
 
-var stopsMarker: Marker[] = [];
+var stopsMarker: any[] = [];
 
 export function drawDetailBusline(busNetwork: BusNetwork, index: number, map: Map) {
 	if (busNetwork == undefined) return;
