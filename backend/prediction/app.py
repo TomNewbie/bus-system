@@ -36,6 +36,11 @@ def predict_random_forest():
     result_json = result_data.to_json(orient='records')
     return Response(result_json, mimetype='application/json')
 
+# default route
+@app.route('/')
+def default_route():
+    return 'Hello, this is the default route!'
+
 if __name__ == '__main__':
     env = os.getenv("APP_ENVIRONMENT") 
     if env == "production":
