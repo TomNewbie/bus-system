@@ -39,7 +39,7 @@ def predict_random_forest():
 # default route
 @app.route('/')
 def default_route():
-    return 'Hello, this is the default route!'
+    return 'Hello, this is the default route!!'
 
 if __name__ == '__main__':
     env = os.getenv("APP_ENVIRONMENT") 

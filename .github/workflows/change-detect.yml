@@ -30,7 +30,6 @@ jobs:
               - 'backend/src/**'
               - 'backend/tests/**'
               - 'backend/configuration/**'
-            model-server:'
             frontend:
               - 'frontend/**'
             prediction-server:
