@@ -18,7 +18,7 @@
 {#if $isToastShowed}
 	<div
 		transition:fly={{ x: '100%' }}
-		class="absolute bottom-0 right-0 flex items-center justify-center mb-8 mr-2"
+		class="absolute right-0 flex items-center justify-center mb-8 mr-2 top-36"
 	>
 		<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
 		<div

@@ -35,12 +35,16 @@
 			busStops.push({
 				stop_id: busStop.properties.start_stop_id,
 				stop_name: busStop.properties.start_stop_name,
+				start_stop: busStop.geometry.coordinates[0],
+				end_stop: busStop.geometry.coordinates[busStop.geometry.coordinates.length - 1],
 				is_last_stop: false
 			});
 			if (index == busLine.length - 1) {
 				busStops.push({
 					stop_id: busStop.properties.end_stop_id,
 					stop_name: busStop.properties.end_stop_name,
+					start_stop: null,
+					end_stop: null,
 					is_last_stop: true
 				});
 			}
@@ -111,6 +115,8 @@
 								stop_id={busStop.stop_id}
 								stop_name={busStop.stop_name}
 								is_last_stop={busStop.is_last_stop}
+								start_stop={busStop.start_stop}
+								end_stop={busStop.end_stop}
 							/>
 						{/each}
 					{/if}

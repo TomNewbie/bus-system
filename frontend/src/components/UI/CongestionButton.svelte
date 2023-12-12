@@ -1,6 +1,6 @@
 <script>
 	// @ts-nocheck
-	import { currentIndex, minute } from '../../stores/stores';
+	import { canReroute, currentIndex, minute } from '../../stores/stores';
 
 	let busLinePopoverVisible;
 	$: {
@@ -22,25 +22,15 @@
 		isOpen = false;
 	}
 
-	// @ts-ignore
-	function toggleFunction(checkbox) {
-		showTraffic = !showTraffic;
-		if (checkbox.checked) {
-			console.log('Toggle is ON');
-		} else {
-			console.log('Toggle is OFF');
-			isOpen = false;
-		}
-	}
-	let showTraffic = false;
 	let isOpen = false;
-	let items = ['Current', 'Next 10 minutes', 'Next 20 minutes', 'Next 30 minutes'];
+	let items = ['Choose time to predict', 'Next 10 minutes', 'Next 20 minutes', 'Next 30 minutes'];
 	let times = [0, 10, 20, 30];
 	let time = '';
 	let valueToFetch = 0;
 	function updateTime(index) {
 		time = items[index];
 		minute.set(times[index]);
+		canReroute.set(false);
 		isOpen = false;
 	}
 
@@ -55,31 +45,13 @@
 
 <body class="relative flex justify-end mt-3 mr-3" class:hidden={!busLinePopoverVisible}>
 	<div class="absolute flex justify-center p-4 bg-white rounded-lg">
-		<!-- Start: TOGGLE -->
-		<label class="relative items-center mt-2 mr-4 cursor-pointer enable-button">
-			<input
-				type="checkbox"
-				value=""
-				class="sr-only peer"
-				on:change={(event) => toggleFunction(event.target)}
-			/>
-			<div
-				class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"
-			/>
-		</label>
-		<!-- END: TOGGLE -->
-
 		<!-- Dropdown -->
 		<div class="mr-4">
 			<button
 				on:click={() => (isOpen = !isOpen)}
 				class="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border rounded-lg shadow-sm cursor-pointer dropdown"
-				disabled={!showTraffic}
-				style="opacity: {!showTraffic ? '0.5' : '1'}; pointer-events: {!showTraffic
-					? 'none'
-					: 'auto'}"
 			>
-				{#if !time}Current{/if} <span class="ml-1">{time}</span>
+				{#if !time}Choose time to predict{/if} <span class="ml-1">{time}</span>
 				<svg
 					xmlns="http://www.w3.org/2000/svg"
 					class="inline-block w-4 h-4 ml-2"

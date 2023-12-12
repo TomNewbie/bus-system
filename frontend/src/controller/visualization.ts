@@ -94,3 +94,5 @@ export function viewFullMap(busNetwork: BusNetwork, map: Map, mapConfig: MapStat
 function removeMarker() {
 	stopsMarker.forEach((stopMarker) => stopMarker.remove());
 }
+
+

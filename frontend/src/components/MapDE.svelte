@@ -5,6 +5,7 @@
 	import CongestionButton from '../components/UI/CongestionButton.svelte';
 	import ChooseModelButton from '../components/UI/ChooseModelButton.svelte';
 	import Toast from '../components/UI/Toast.svelte';
+	import ReroutingButton from './UI/ReroutingButton.svelte';
 </script>
 
 <Map api="http://localhost:8000/de/segments">
@@ -13,4 +14,5 @@
 	<CongestionButton />
 	<ChooseModelButton />
 	<Toast />
+	<ReroutingButton />
 </Map>
