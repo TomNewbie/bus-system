@@ -1,14 +1,21 @@
 <script>
 	// @ts-nocheck
-	import { reroutingMode, start_stop_lon_lat, end_stop_lon_lat } from '../../stores/stores';
+	import {
+		reroutingMode,
+		start_stop_lon_lat,
+		end_stop_lon_lat,
+		rerouteIndex
+	} from '../../stores/stores';
 	export let stop_id;
 	export let stop_name;
 	export let is_last_stop = false;
 	export let start_stop;
 	export let end_stop;
+	export let index;
 	function updateStop() {
 		start_stop_lon_lat.set(start_stop);
 		end_stop_lon_lat.set(end_stop);
+		rerouteIndex.set(index);
 	}
 </script>
 

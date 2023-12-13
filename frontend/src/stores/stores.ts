@@ -9,4 +9,5 @@ export const canReroute = writable(false);
 export const reroutingMode = writable(false);
 export const start_stop_lon_lat = writable([]);
 export const end_stop_lon_lat = writable([]);
-export const countReroute = writable(0)
+export const countReroute = writable(0);
+export const rerouteIndex = writable(-1);

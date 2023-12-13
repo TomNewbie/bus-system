@@ -1,7 +1,10 @@
 import pkg from 'mapbox-gl';
+import type { Map } from 'mapbox-gl';
 const { LngLatBounds, Popup, Marker } = pkg;
 import { getCenterLngLat } from '../utils/mapUtils';
 import { deleteCongestionLevel } from './congestion';
+import { countReroute, currentRouteBound } from '../stores/stores';
+import { deleteRerouteLayer } from './rerouting';
 
 var stopsMarker: any[] = [];
 
@@ -17,9 +20,6 @@ export function drawDetailBusline(busNetwork: BusNetwork, index: number, map: Ma
 		]
 	);
 	let busLine = busNetwork[routeNumber];
-	console.log(busLine);
-	busLine.sort((busStopA, busStopB) => busStopA.properties.stop_sequence - busStopB.properties.stop_sequence)
-	console.log(busLine);
 	// Create marker and add Bound to fit line
 	busLine.forEach((segment) => {
 		
@@ -28,30 +28,20 @@ export function drawDetailBusline(busNetwork: BusNetwork, index: number, map: Ma
 		let popup = new Popup({ offset: 25 }).setText(startStopLabel);
 		const marker = new Marker().setLngLat(startStopLngLat).setPopup(popup).addTo(map);
 		stopsMarker.push(marker);
-		bounds.extend(segment['geometry']['coordinates'][0]);
+		bounds.extend(startStopLngLat);
 	});
 
 	let endStopLabel = busLine[busLine.length - 1]['properties']['end_stop_name'];
-
+	let endStopLngLat = busLine[busLine.length - 1]['geometry']['coordinates'][
+		busLine[busLine.length - 1]['geometry']['coordinates'].length - 1
+	]
 	let popup = new Popup({ offset: 25 }).setText(endStopLabel);
-	const marker = new Marker()
-		.setPopup(popup)
-		.setLngLat(
-			busLine[busLine.length - 1]['geometry']['coordinates'][
-				busLine[busLine.length - 1]['geometry']['coordinates'].length - 1
-			]
-		)
-		.addTo(map);
-	bounds.extend(
-		busLine[busLine.length - 1]['geometry']['coordinates'][
-			busLine[busLine.length - 1]['geometry']['coordinates'].length - 1
-		]
-	);
-
-	stopsMarker.push(marker);
+	const marker1 = new Marker().setLngLat(endStopLngLat).setPopup(popup).addTo(map);
+	stopsMarker.push(marker1);
+	bounds.extend(endStopLngLat);
 
 	map.fitBounds(bounds, {
-		padding: { top: 10, bottom: 25, left: 300, right: 5 }
+		padding: { top: 100, bottom: 25, left: 300, right: 5 }
 	});
 
 	setDisableLayer(busNetwork, index, map);
@@ -76,6 +66,8 @@ export function viewFullMap(busNetwork: BusNetwork, map: Map, mapConfig: MapStat
 	if (!map.getLayer(`route_0`)) return;
 
 	deleteCongestionLevel(busNetwork, map);
+	deleteRerouteLayer(map)
+	countReroute.set(0);
 
 	removeMarker();
 
