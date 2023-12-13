@@ -17,6 +17,7 @@ jobs:
       frontend: ${{ steps.filter.outputs.frontend }}
       streaming-server: ${{ steps.filter.outputs.streaming-server }}
       rust-server: ${{ steps.filter.outputs.rust-server }}
+      prediction-server: ${{steps.filter.outputs.prediction-server}}
     steps:
       - uses: actions/checkout@v3
         with:
@@ -79,6 +80,23 @@ jobs:
       port: 8000:8000
     secrets:
       HOST_SERVER: ${{ secrets.API_SERVER_HOST }}
+      DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+      DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+      SSH_USERNAME: ${{ secrets.SSH_USERNAME }}
+      SSH_KEY: ${{ secrets.SSH_KEY }}
+      PASSPHRASE: ${{ secrets.PASSPHRASE }}
+
+  cd-prediction-server:
+    needs: changes
+    if: ${{ needs.changes.outputs.prediction-server== 'true' }}
+    uses: ./.github/workflows/deployment.yml
+    with:
+      DOCKER_IMAGE_NAME: prediction-server
+      CONTAINER_NAME: prediction-server
+      working-directory: backend/prediction
+      port: 5000:5000
+    secrets:
+      HOST_SERVER: ${{ secrets.PREDICTION_SERVER_HOST }}
       DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
       DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
       SSH_USERNAME: ${{ secrets.SSH_USERNAME }}
