@@ -10,8 +10,8 @@ const congestionColors: {
 } = {
 	0: '#43D224', // Congestion level 1
 	1: '#FFE58F', // Congestion level 2
-	2: '#FE6240', // Congestion level 3
-	3: '#fc7a7a', // Congestion level 4
+	2: '#FFA500', // Congestion level 3
+	3: '#FC7A7A', // Congestion level 4
 	4: '#B60606' // Congestion level 5
 };
 

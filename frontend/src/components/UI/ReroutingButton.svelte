@@ -1,27 +1,26 @@
 <script>
 	// @ts-nocheck
-	import { minute, reroutingMode, canReroute, busNetwork } from '../../stores/stores';
+	import { minute, reroutingMode, canReroute } from '../../stores/stores';
 	import html2canvas from 'html2canvas';
 
 	function setRerouting() {
 		let temp = $reroutingMode;
 		reroutingMode.set(!temp);
-		console.log($busNetwork);
 	}
 
-	function takeScreenshot() {
-		const fullScreen = document.documentElement;
+	// function takeScreenshot() {
+	// 	const fullScreen = document.documentElement;
 
-		html2canvas(fullScreen).then((canvas) => {
-			const imgData = canvas.toDataURL('image/png');
+	// 	html2canvas(fullScreen).then((canvas) => {
+	// 		const imgData = canvas.toDataURL('image/png');
 
-			// Create a link element to download the image
-			const link = document.createElement('a');
-			link.href = imgData;
-			link.download = 'newRoute.png';
-			link.click();
-		});
-	}
+	// 		// Create a link element to download the image
+	// 		const link = document.createElement('a');
+	// 		link.href = imgData;
+	// 		link.download = 'newRoute.png';
+	// 		link.click();
+	// 	});
+	// }
 </script>
 
 <body class="relative flex justify-end" class:hidden={!$canReroute || $minute === 0}>
@@ -43,13 +42,13 @@
 		</label>
 		<!-- END: TOGGLE -->
 		<!-- Button for download -->
-		<div>
+		<!-- <div>
 			<button
 				on:click={() => takeScreenshot()}
 				class="px-3 py-2 ml-3 text-blue-500 transition duration-300 ease-in-out bg-transparent border-2 border-blue-500 rounded hover:bg-blue-500 hover:text-white"
 			>
 				Download new route
 			</button>
-		</div>
+		</div> -->
 	</div>
 </body>

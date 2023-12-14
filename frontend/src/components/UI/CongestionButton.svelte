@@ -91,14 +91,14 @@
 		<!-- Congestion level -->
 		<div class="flex flex-col justify-center">
 			<div class="flex justify-between">
-				<p>Fast</p>
-				<p>Slow</p>
+				<p>Fast(0)</p>
+				<p>Slow(4)</p>
 			</div>
 			<div class="flex">
 				<div class="w-8 h-4 bg-[#43D224] border-gray-600 focus:outline-none" />
 				<div class="w-8 h-4 bg-[#FFE58F] border-gray-600 focus:outline-none" />
 				<div class="w-8 h-4 bg-[#FFA500] border-gray-600 focus:outline-none" />
-				<div class="w-8 h-4 bg-[#fc7a7a] border-gray-600 focus:outline-none" />
+				<div class="w-8 h-4 bg-[#FC7A7A] border-gray-600 focus:outline-none" />
 				<div class="w-8 h-4 bg-[#B60606] border-gray-600 focus:outline-none" />
 			</div>
 		</div>

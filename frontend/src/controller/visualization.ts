@@ -20,6 +20,8 @@ export function drawDetailBusline(busNetwork: BusNetwork, index: number, map: Ma
 		]
 	);
 	let busLine = busNetwork[routeNumber];
+	busLine.sort((busStopA, busStopB) => busStopA.properties.stop_sequence - busStopB.properties.stop_sequence)
+
 	// Create marker and add Bound to fit line
 	busLine.forEach((segment) => {
 		

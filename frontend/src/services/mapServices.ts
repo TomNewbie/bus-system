@@ -4,7 +4,6 @@ export async function fetchBusLine(api: any) {
 		const response = await fetch(api);
 		if (response.ok) {
 			const data: GeoJsonWithId[] = await response.json();
-			console.log(data);
 			// Process the data and remove the "_id" attribute
 			a = data.map((item: any) => {
 				const { _id, ...itemWithoutId } = item;

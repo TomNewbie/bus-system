@@ -9,8 +9,8 @@ const congestionColors: {
 } = {
 	0: '#43D224', // Congestion level 1
 	1: '#FFE58F', // Congestion level 2
-	2: '#FE6240', // Congestion level 3
-	3: '#fc7a7a', // Congestion level 4
+	2: '#FFA500', // Congestion level 3
+	3: '#FC7A7A', // Congestion level 4
 	4: '#B60606' // Congestion level 5
 };
 
@@ -43,15 +43,30 @@ export async function fetchReroute(latlon1: [number, number], latlon2: [number, 
       })
       .then(data => {
 		countReroute.update(current => current + 1);
-		drawRerouting(data.routes[0], map, get(countReroute));
-	
+		drawRerouting(data.routes[0], map, get(rerouteIndex));
+		let busLines = get(busNetwork);
+		let currentBusStop = busLines[get(currentIndex)][get(rerouteIndex)];
+		let lineColor = map.getPaintProperty(`segment_${get(rerouteIndex)}`, 'line-color');
+		let currentDistance = currentBusStop.properties.distance_m;
+		let currentCongestionLevel = findCongestionLevelByColor(lineColor);
+		let rerouteDistance = data.routes[0].distance;
+		let rerouteCongestionLevel = findCongestionLevelByColor(mapSpeed(data.routes[0].legs[0].annotation.speed));
+
 		setTimeout(() => {
-            if (!confirm('Do you want to choose a new route?')) {
-                removeReroute(map, get(countReroute));
-            } else {
+			const confirmationMessage = `Do you want to choose a new route? 
+			The current distance is: ${currentDistance}.
+		Current Congestion Level: (${currentCongestionLevel}) ${mapCongestionLevelToInfo(currentCongestionLevel)} km/h.
+		Reroute Distance: ${rerouteDistance}.
+		Reroute Congestion Level: (${rerouteCongestionLevel}) ${mapCongestionLevelToInfo(rerouteCongestionLevel)} km/h.
+		Do you want to choose a new route?`;
+
+			if (!confirm(confirmationMessage)) {
+				removeReroute(map, get(rerouteIndex));
+			} else {
 				removeOriginalRoute(map, get(rerouteIndex));
 			}
-        }, 2000);
+		}, 5000);
+
 		
 		setTimeout(() => {
 			drawDetailBusline(get(busNetwork), get(currentIndex), map);
@@ -69,13 +84,9 @@ export async function fetchReroute(latlon1: [number, number], latlon2: [number, 
 	map: Map,
 	index: any
 ) {
-		console.log("rerouting...")
 		// Determine the color based on congestion level
-		const speeds = route.legs[0].annotation.speed;
-		const speed = speeds.reduce((total:number, num:number) => total + num, 0)  / speeds.length;
-		const colorIndex = mapSpeed(speed);
+		const color = mapSpeed(route.legs[0].annotation.speed);
 	  
-		const color = congestionColors[colorIndex];
 		
 		// Create a source and layer for each segment
 		map.addSource(`segment_reroute_${index}`, {
@@ -98,8 +109,7 @@ export async function fetchReroute(latlon1: [number, number], latlon2: [number, 
 			},
 			paint: {
 				'line-color': color,
-				'line-width': 10,
-				'line-opacity': 0.5
+				'line-width': 4,
 			}
 		});
 
@@ -126,19 +136,20 @@ function removeOriginalRoute(map: Map, index: number) {
   }
   
 
-function mapSpeed(speedMs: number) {
-	const speedKmh = speedMs * 3.6; // Convert m/s to km/h
+function mapSpeed(speeds: number[]) {
+	const speed = speeds.reduce((total:number, num:number) => total + num, 0)  / speeds.length;
+	const speedKmh = speed * 3.6; // Convert m/s to km/h
   
 	if (speedKmh > 40) {
-	  return 0;
+	  return congestionColors[0];
 	} else if (speedKmh > 30 && speedKmh <= 40) {
-	  return 1;
+	  return congestionColors[1];
 	} else if (speedKmh > 20 && speedKmh <= 30) {
-	  return 2;
+	  return congestionColors[2];
 	} else if (speedKmh > 15 && speedKmh <= 20) {
-	  return 3;
+	  return congestionColors[3];
 	} else {
-	  return 4;
+	  return congestionColors[4];
 	}
   }
 
@@ -157,3 +168,34 @@ function mapSpeed(speedMs: number) {
 	
   }
   
+  function findCongestionLevelByColor(colorCode: string) {
+	switch (colorCode) {
+		case '#43D224':
+			return 0;
+		case '#FFE58F':
+			return 1;
+		case '#FFA500':
+			return 2;
+		case '#FC7A7A':
+			return 3;
+		case '#B60606':
+			return 4;
+	}
+}
+
+  function mapCongestionLevelToInfo(congestionLevel: number) {
+    switch (congestionLevel) {
+        case 0:
+            return 'Speed > 40';
+        case 1:
+            return 'Speed in range 30 - 40';
+        case 2:
+            return 'Speed in range 20 - 30';
+        case 3:
+            return 'Speed in range 15 - 20';
+        case 4:
+            return 'Speed <= 15';
+        default:
+            return 'Invalid speed level';
+    }
+}
