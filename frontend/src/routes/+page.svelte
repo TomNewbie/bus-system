@@ -10,7 +10,7 @@
 <Router {url}>
 	<div>
 		<Route path="/"><Home /></Route>
-		<Route path="/de" component={MapDe} />
-		<Route path="/ca" component={MapCa} />
+		<Route path="/de"><MapDe /></Route>
+		<Route path="/ca"><MapCa /></Route>
 	</div>
 </Router>

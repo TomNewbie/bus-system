@@ -2,7 +2,7 @@
 	// @ts-nocheck
 
 	import BusStopTag from '../UI/BusStopTag.svelte';
-	import { busNetwork, currentIndex } from '../../stores/stores';
+	import { busNetwork, canReroute, currentIndex } from '../../stores/stores';
 
 	// @ts-ignore
 	let isLoading = true; // Add a loading flag
@@ -35,13 +35,19 @@
 			busStops.push({
 				stop_id: busStop.properties.start_stop_id,
 				stop_name: busStop.properties.start_stop_name,
-				is_last_stop: false
+				start_stop: busStop.geometry.coordinates[0],
+				end_stop: busStop.geometry.coordinates[busStop.geometry.coordinates.length - 1],
+				is_last_stop: false,
+				index: index
 			});
 			if (index == busLine.length - 1) {
 				busStops.push({
 					stop_id: busStop.properties.end_stop_id,
 					stop_name: busStop.properties.end_stop_name,
-					is_last_stop: true
+					start_stop: null,
+					end_stop: null,
+					is_last_stop: true,
+					index: index
 				});
 			}
 		});
@@ -53,6 +59,7 @@
 	function navigateToSearch() {
 		busLinePopoverVisible = false;
 		currentIndex.set(-1);
+		canReroute.set(false);
 	}
 
 	function onFullMap(index) {
@@ -111,6 +118,9 @@
 								stop_id={busStop.stop_id}
 								stop_name={busStop.stop_name}
 								is_last_stop={busStop.is_last_stop}
+								start_stop={busStop.start_stop}
+								end_stop={busStop.end_stop}
+								index={busStop.index}
 							/>
 						{/each}
 					{/if}

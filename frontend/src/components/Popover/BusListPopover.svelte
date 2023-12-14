@@ -40,6 +40,9 @@
 	}
 
 	let searchTerm = '';
+	$: inputClass = `w-${
+		isTransformed ? '5/6' : 'full'
+	} px-8 py-2 border border-gray-300 rounded-xl focus:border-black`;
 </script>
 
 <body>
@@ -50,7 +53,7 @@
 			>
 				<input
 					type="text"
-					class="w-5/6 px-8 py-2 border border-gray-300 rounded-xl focus:border-black"
+					class={inputClass}
 					bind:value={searchTerm}
 					placeholder="Search..."
 					on:click={() => toggleTransform('input')}

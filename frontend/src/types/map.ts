@@ -4,6 +4,7 @@ interface GeoJson {
 	geometry: Geometry;
 }
 
+
 interface GeoJsonWithCongestionLevel extends GeoJson {
 	congestion_level: number;
 }

@@ -4,11 +4,20 @@
 	// @ts-ignore
 	import { Map } from 'mapbox-gl';
 	import '../../../node_modules/mapbox-gl/dist/mapbox-gl.css';
-	import { currentIndex, busNetwork, minute, model } from '../../stores/stores';
+	import {
+		currentIndex,
+		busNetwork,
+		minute,
+		model,
+		start_stop_lon_lat,
+		end_stop_lon_lat
+	} from '../../stores/stores';
 	import { getCenterLngLat } from '../../utils/mapUtils';
 	import { fetchBusLine } from '../../services/mapServices';
 	import { drawDetailBusline, viewFullMap } from '../../controller/visualization';
 	import { fetchCongestionData } from '../../controller/congestion';
+	import { fetchReroute } from '../../controller/rerouting';
+
 	import LoadingScreen from '../UI/LoadingScreen.svelte';
 
 	let map: Map;
@@ -21,9 +30,8 @@
 		viewFullMap($busNetwork, map, mapConfig);
 		drawDetailBusline($busNetwork, $currentIndex, map);
 	}
-	$: {
-		fetchCongestionData($busNetwork, $currentIndex, $minute, map, $model);
-	}
+	$: fetchCongestionData($busNetwork, $currentIndex, $minute, map, $model);
+	$: fetchReroute($start_stop_lon_lat, $end_stop_lon_lat, map);
 	// Load the JSON data
 	$: formatedBuslines = $busNetwork;
 

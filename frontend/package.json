@@ -29,6 +29,7 @@
 	},
 	"type": "module",
 	"dependencies": {
+		"html2canvas": "^1.4.1",
 		"mapbox-gl": "^2.15.0",
 		"svelte-routing": "^2.10.0"
 	}

@@ -1,7 +1,7 @@
 import type { Map } from 'mapbox-gl';
 import { setDisableLayer } from './visualization';
 import { fetchCongestionDataByBusline } from '../services/mapServices';
-import { isToastShowed} from '../stores/stores';
+import { canReroute, isToastShowed, reroutingMode} from '../stores/stores';
 
 let abortController: AbortController;
 let previousIndex = -1;
@@ -10,8 +10,8 @@ const congestionColors: {
 } = {
 	0: '#43D224', // Congestion level 1
 	1: '#FFE58F', // Congestion level 2
-	2: '#FE6240', // Congestion level 3
-	3: '#fc7a7a', // Congestion level 4
+	2: '#FFA500', // Congestion level 3
+	3: '#FC7A7A', // Congestion level 4
 	4: '#B60606' // Congestion level 5
 };
 
@@ -81,14 +81,12 @@ export async function fetchCongestionData(
 	);
 	//toast
 	isToastShowed.set(true);
-	console.log('asdsa');
+	canReroute.set(true);
 	drawCongestionLevel(busNetwork, result, map);
 }
 
 export function deleteCongestionLevel(busNetwork: BusNetwork, map: Map) {
 	if (previousIndex == -1 || previousIndex == undefined) return;
-	console.log('hehehe');
-	console.log(previousIndex);
 	if (abortController) {
 		abortController.abort();
 	}
