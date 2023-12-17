@@ -32,6 +32,7 @@
 				type="checkbox"
 				value=""
 				class="sr-only peer"
+				checked={$reroutingMode}
 				on:change={() => {
 					setRerouting();
 				}}
