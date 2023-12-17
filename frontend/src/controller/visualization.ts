@@ -3,7 +3,7 @@ import type { Map } from 'mapbox-gl';
 const { LngLatBounds, Popup, Marker } = pkg;
 import { getCenterLngLat } from '../utils/mapUtils';
 import { deleteCongestionLevel } from './congestion';
-import { countReroute, currentRouteBound } from '../stores/stores';
+import { countReroute, canReroute, reroutingMode } from '../stores/stores';
 import { deleteRerouteLayer } from './rerouting';
 
 var stopsMarker: any[] = [];
@@ -70,6 +70,8 @@ export function viewFullMap(busNetwork: BusNetwork, map: Map, mapConfig: MapStat
 	deleteCongestionLevel(busNetwork, map);
 	deleteRerouteLayer(map)
 	countReroute.set(0);
+	canReroute.set(false);
+	reroutingMode.set(false);
 
 	removeMarker();
 
