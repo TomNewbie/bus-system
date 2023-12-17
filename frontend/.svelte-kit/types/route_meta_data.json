@@ -1,3 +1,11 @@
 {
-	"/": []
+	"/": [],
+	"/ca": [
+		"src/routes/ca/+layout.js",
+		"src/routes/ca/+layout.js"
+	],
+	"/de": [
+		"src/routes/de/+layout.js",
+		"src/routes/de/+layout.js"
+	]
 }
