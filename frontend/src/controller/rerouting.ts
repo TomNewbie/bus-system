@@ -30,9 +30,6 @@ export async function fetchReroute(latlon1: [number, number], latlon2: [number, 
 	
   
     const apiUrl: string = `https://api.mapbox.com/directions/v5/mapbox/driving/${formattedLatLon1};${formattedLatLon2}?alternatives=false&annotations=speed%2Cdistance&geometries=geojson&language=en&overview=full&steps=true&access_token=${accessToken}`;
-	map.fitBounds(bounds, {
-		padding: { top: 200, bottom: 100, left: 300, right: 100 }
-	});
 
     fetch(apiUrl)
       .then(response => {
@@ -51,25 +48,25 @@ export async function fetchReroute(latlon1: [number, number], latlon2: [number, 
 		let currentCongestionLevel = findCongestionLevelByColor(lineColor);
 		let rerouteDistance = data.routes[0].distance;
 		let rerouteCongestionLevel = findCongestionLevelByColor(mapSpeed(data.routes[0].legs[0].annotation.speed));
-
+		map.fitBounds(bounds, {
+			padding: { top: 200, bottom: 100, left: 300, right: 100 }
+		});
 		showPopup(currentDistance, currentCongestionLevel, rerouteDistance, rerouteCongestionLevel)
-  .then((userChoice) => {
-    // Handle user's choice here
-    if (!userChoice) {
-        removeReroute(map, get(rerouteIndex));
-      } else {
-        removeOriginalRoute(map, get(rerouteIndex));
-      }
-  })
-  .catch((error) => {
-    // Handle errors if any
-    console.error('Error with popup:', error);
-  });
-
-		
-		setTimeout(() => {
+		.then((userChoice) => {
+			// Handle user's choice here
+			if (!userChoice) {
+				removeReroute(map, get(rerouteIndex));
+			} else {
+				removeOriginalRoute(map, get(rerouteIndex));
+			}
+		})
+		.catch((error) => {
+			// Handle errors if any
+			console.error('Error with popup:', error);
+		})
+		.finally(() => {
 			drawDetailBusline(get(busNetwork), get(currentIndex), map);
-		}, 2000)
+		})
 	})
       .catch(error => {
         console.error('There was a problem with the fetch operation:', error);
@@ -119,7 +116,6 @@ export async function fetchReroute(latlon1: [number, number], latlon2: [number, 
 function removeOriginalRoute(map: Map, index: number) {
 	
 	if (map.getLayer(`segment_${index}`)) {
-		console.log(index)
 	  map.removeLayer(`segment_${index}`);
 	}
   }
@@ -166,14 +162,6 @@ function mapSpeed(speeds: number[]) {
 	}
 	
   }
-
-  export function handleRouteChoice(choice: boolean){
-	if (true) {
-
-	} else {
-
-	}
-  }
   
   function findCongestionLevelByColor(colorCode: string) {
 	switch (colorCode) {
@@ -188,23 +176,6 @@ function mapSpeed(speeds: number[]) {
 		case '#B60606':
 			return 4;
 	}
-}
-
-  function mapCongestionLevelToInfo(congestionLevel: number) {
-    switch (congestionLevel) {
-        case 0:
-            return 'v > 40';
-        case 1:
-            return '30 < v <= 40';
-        case 2:
-            return '20 < v <= 30';
-        case 3:
-            return '15 < v <= 20';
-        case 4:
-            return 'v <= 15';
-        default:
-            return 'Invalid speed level';
-    }
 }
 
 function showPopup(
