@@ -14,7 +14,9 @@ const congestionColors: {
 	4: '#B60606' // Congestion level 5
 };
 
-export async function fetchReroute(latlon1: [number, number], latlon2: [number, number], map:Map): Promise<any> {
+export async function fetchReroute(latlon1: [number, number], latlon2: [number, number], map:Map) {
+	if (busNetwork == undefined) return;
+	if (get(currentIndex) == -1 || get(currentIndex) == undefined) return;
     const accessToken: string = "pk.eyJ1IjoidGhhbmgzMDAxIiwiYSI6ImNsbjMwMzlsczBlMTQycm5rY3p2cTltdXIifQ.n7uqai-eq-VyjI9-BtJxYg";
   
     function formatCoordinates(coordArray: number[]): string {

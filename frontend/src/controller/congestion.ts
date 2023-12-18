@@ -63,6 +63,8 @@ export async function fetchCongestionData(
 	map: Map,
 	model: string
 ) {
+	if (busNetwork == undefined) return;
+	if (currentIndex == -1 || currentIndex == undefined) return;
 	deleteCongestionLevel(busNetwork, map);
 	setDisableLayer(busNetwork, currentIndex, map);
 	if (minute == 0) return;
