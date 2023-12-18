@@ -23,7 +23,7 @@
 	let map: Map;
 	let mapContainer: Map;
 	let lng, lat, zoom;
-	const mapConfig: MapState = { zoom: 11 };
+	const mapConfig: MapState = { zoom: 9 };
 	export let api = '';
 
 	$: {

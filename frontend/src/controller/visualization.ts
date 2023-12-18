@@ -77,7 +77,7 @@ export function viewFullMap(busNetwork: BusNetwork, map: Map, mapConfig: MapStat
 
 	map.flyTo({
 		center: getCenterLngLat(mapConfig, busNetwork),
-		zoom: 11
+		zoom: 9
 	});
 
 	busNetwork.forEach((_, routeIndex) => {
