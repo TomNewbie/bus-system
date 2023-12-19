@@ -22,7 +22,7 @@ use crate::{
 
 lazy_static! {
     static ref URL: &'static str = std::env::var("APP_ENVIRONMENT")
-        .map(|_| "predict")
+        .map(|_| "157.245.204.41")
         .unwrap_or("localhost");
 }
 
@@ -93,10 +93,16 @@ pub async fn predict_congestion(
             return HttpResponse::NotFound().finish();
         }
     };
-    let model = match req.match_info().get("model") {
+    let model: String = match req.match_info().get("model") {
         None => return HttpResponse::BadRequest().finish(),
         Some(model) => match model {
-            "lstm" | "random-forest" => model,
+            "lstm" | "random-forest" => {
+                if country == "ca" {
+                    String::from(model) + "-2"
+                } else {
+                    model.to_string()
+                }
+            },
             path => {
                 let msg = format!("Model {} not supported", path);
                 tracing::error!(msg);
@@ -148,7 +154,7 @@ pub async fn predict_congestion(
         arrival_hour: time_for_prediction.hour(),
         arrival_minute: time_for_prediction.minute(),
     };
-    let url = format!("http://{}:5000/{}", "157.245.204.41", model);
+    let url = format!("http://{}:5000/{}", URL.clone() , model);
     let client = reqwest::Client::new();
     let resp = match client.post(url).json(&prediction_route).send().await {
         Ok(resp) => resp,

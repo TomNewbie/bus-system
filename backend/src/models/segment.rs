@@ -23,6 +23,7 @@ pub struct Properties {
     pub segment_id: String,
     pub start_stop_id: String,
     pub end_stop_id: String,
+    #[serde(alias = "distance")]
     pub distance_m: f64,
 }
 
