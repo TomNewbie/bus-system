@@ -30,7 +30,7 @@
 		viewFullMap($busNetwork, map, mapConfig);
 		drawDetailBusline($busNetwork, $currentIndex, map);
 	}
-	$: fetchCongestionData($busNetwork, $currentIndex, $minute, map, $model);
+	$: fetchCongestionData(api, $busNetwork, $currentIndex, $minute, map, $model);
 	$: fetchReroute($start_stop_lon_lat, $end_stop_lon_lat, map);
 	// Load the JSON data
 	$: formatedBuslines = $busNetwork;

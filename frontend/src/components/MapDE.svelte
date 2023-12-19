@@ -8,7 +8,7 @@
 	import ReroutingButton from './UI/ReroutingButton.svelte';
 </script>
 
-<Map api="http://188.166.180.176:8000/de/segments">
+<Map api="http://188.166.180.176:8000/de">
 	<BusListPopover />
 	<BLinePopover />
 	<CongestionButton />

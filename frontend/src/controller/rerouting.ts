@@ -14,158 +14,142 @@ const congestionColors: {
 	4: '#B60606' // Congestion level 5
 };
 
-export async function fetchReroute(latlon1: [number, number], latlon2: [number, number], map:Map) {
+export async function fetchReroute(latlon1: [number, number], latlon2: [number, number], map: Map) {
 	if (busNetwork == undefined) return;
 	if (get(currentIndex) == -1 || get(currentIndex) == undefined) return;
-    const accessToken: string = "pk.eyJ1IjoidGhhbmgzMDAxIiwiYSI6ImNsbjMwMzlsczBlMTQycm5rY3p2cTltdXIifQ.n7uqai-eq-VyjI9-BtJxYg";
-  
-    function formatCoordinates(coordArray: number[]): string {
-      return coordArray.map(coord => coord.toFixed(6)).join(',');
-    }
-	const bounds = new LngLatBounds(
-		latlon1,
-		latlon2
-	);
-  
-    const formattedLatLon1: string = formatCoordinates(latlon1);
-    const formattedLatLon2: string = formatCoordinates(latlon2);
-	
-  
-    const apiUrl: string = `https://api.mapbox.com/directions/v5/mapbox/driving/${formattedLatLon1};${formattedLatLon2}?alternatives=false&annotations=speed%2Cdistance&geometries=geojson&language=en&overview=full&steps=true&access_token=${accessToken}`;
+	const accessToken: string =
+		'pk.eyJ1IjoidGhhbmgzMDAxIiwiYSI6ImNsbjMwMzlsczBlMTQycm5rY3p2cTltdXIifQ.n7uqai-eq-VyjI9-BtJxYg';
 
-    fetch(apiUrl)
-      .then(response => {
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        return response.json();
-      })
-      .then(data => {
-		countReroute.update(current => current + 1);
-		drawRerouting(data.routes[0], map, get(rerouteIndex));
-		let busLines = get(busNetwork);
-		let currentBusStop = busLines[get(currentIndex)][get(rerouteIndex)];
-		let lineColor = map.getPaintProperty(`segment_${get(rerouteIndex)}`, 'line-color');
-		let currentDistance = currentBusStop.properties.distance_m;
-		let currentCongestionLevel = findCongestionLevelByColor(lineColor);
-		let rerouteDistance = data.routes[0].distance;
-		let rerouteCongestionLevel = findCongestionLevelByColor(mapSpeed(data.routes[0].legs[0].annotation.speed));
-		map.fitBounds(bounds, {
-			padding: { top: 200, bottom: 100, left: 300, right: 100 }
-		});
-		showPopup(currentDistance, currentCongestionLevel, rerouteDistance, rerouteCongestionLevel)
-		.then((userChoice) => {
-			// Handle user's choice here
-			if (!userChoice) {
-				removeReroute(map, get(rerouteIndex));
-			} else {
-				removeOriginalRoute(map, get(rerouteIndex));
+	function formatCoordinates(coordArray: number[]): string {
+		return coordArray.map((coord) => coord.toFixed(6)).join(',');
+	}
+	const bounds = new LngLatBounds(latlon1, latlon2);
+
+	const formattedLatLon1: string = formatCoordinates(latlon1);
+	const formattedLatLon2: string = formatCoordinates(latlon2);
+
+	const apiUrl: string = `https://api.mapbox.com/directions/v5/mapbox/driving/${formattedLatLon1};${formattedLatLon2}?alternatives=false&annotations=speed%2Cdistance&geometries=geojson&language=en&overview=full&steps=true&access_token=${accessToken}`;
+
+	fetch(apiUrl)
+		.then((response) => {
+			if (!response.ok) {
+				throw new Error('Network response was not ok');
 			}
+			return response.json();
+		})
+		.then((data) => {
+			countReroute.update((current) => current + 1);
+			drawRerouting(data.routes[0], map, get(rerouteIndex));
+			let busLines = get(busNetwork);
+			let currentBusStop = busLines[get(currentIndex)][get(rerouteIndex)];
+			let lineColor = map.getPaintProperty(`segment_${get(rerouteIndex)}`, 'line-color');
+			let currentDistance = currentBusStop.properties.distance_m;
+			let currentCongestionLevel = findCongestionLevelByColor(lineColor);
+			let rerouteDistance = data.routes[0].distance;
+			let rerouteCongestionLevel = findCongestionLevelByColor(
+				mapSpeed(data.routes[0].legs[0].annotation.speed)
+			);
+			map.fitBounds(bounds, {
+				padding: { top: 200, bottom: 100, left: 300, right: 100 }
+			});
+			showPopup(currentDistance, currentCongestionLevel, rerouteDistance, rerouteCongestionLevel)
+				.then((userChoice) => {
+					// Handle user's choice here
+					if (!userChoice) {
+						removeReroute(map, get(rerouteIndex));
+					} else {
+						removeOriginalRoute(map, get(rerouteIndex));
+					}
+				})
+				.catch((error) => {
+					// Handle errors if any
+					console.error('Error with popup:', error);
+				})
+				.finally(() => {
+					drawDetailBusline(get(busNetwork), get(currentIndex), map);
+				});
 		})
 		.catch((error) => {
-			// Handle errors if any
-			console.error('Error with popup:', error);
-		})
-		.finally(() => {
-			drawDetailBusline(get(busNetwork), get(currentIndex), map);
-		})
-	})
-      .catch(error => {
-        console.error('There was a problem with the fetch operation:', error);
-        throw error;
-      });
-
-  }
-
-  function drawRerouting(
-	route: any,
-	map: Map,
-	index: any
-) {
-		// Determine the color based on congestion level
-		const color = mapSpeed(route.legs[0].annotation.speed);
-	  
-		
-		// Create a source and layer for each segment
-		map.addSource(`segment_reroute_${index}`, {
-			type: 'geojson',
-			data: {
-				type: 'Feature',
-				//@ts-ignore
-				properties: {},
-				geometry: route.geometry
-			}
+			console.error('There was a problem with the fetch operation:', error);
+			throw error;
 		});
+}
 
-		map.addLayer({
-			id: `segment_reroute_${index}`,
-			type: 'line',
-			source: `segment_reroute_${index}`,
-			layout: {
-				'line-join': 'miter',
-				'line-cap': 'square'
-			},
-			paint: {
-				'line-color': color,
-				'line-width': 4,
-			}
-		});
+function drawRerouting(route: any, map: Map, index: any) {
+	// Determine the color based on congestion level
+	const color = mapSpeed(route.legs[0].annotation.speed);
 
-		
+	// Create a source and layer for each segment
+	map.addSource(`segment_reroute_${index}`, {
+		type: 'geojson',
+		data: {
+			type: 'Feature',
+			//@ts-ignore
+			properties: {},
+			geometry: route.geometry
+		}
+	});
 
+	map.addLayer({
+		id: `segment_reroute_${index}`,
+		type: 'line',
+		source: `segment_reroute_${index}`,
+		layout: {
+			'line-join': 'miter',
+			'line-cap': 'square'
+		},
+		paint: {
+			'line-color': color,
+			'line-width': 4
+		}
+	});
 }
 
 function removeOriginalRoute(map: Map, index: number) {
-	
 	if (map.getLayer(`segment_${index}`)) {
-	  map.removeLayer(`segment_${index}`);
+		map.removeLayer(`segment_${index}`);
 	}
-  }
-  
+}
 
-  export function removeReroute(map: Map, index: number) {
+export function removeReroute(map: Map, index: number) {
 	if (map.getLayer(`segment_reroute_${index}`)) {
-	  map.removeLayer(`segment_reroute_${index}`);
+		map.removeLayer(`segment_reroute_${index}`);
 	}
 	if (map.getSource(`segment_reroute_${index}`)) {
-	  map.removeSource(`segment_reroute_${index}`);
+		map.removeSource(`segment_reroute_${index}`);
 	}
-  }
-  
+}
 
 function mapSpeed(speeds: number[]) {
-	const speed = speeds.reduce((total:number, num:number) => total + num, 0)  / speeds.length;
+	const speed = speeds.reduce((total: number, num: number) => total + num, 0) / speeds.length;
 	const speedKmh = speed * 3.6; // Convert m/s to km/h
-  
+
 	if (speedKmh > 40) {
-	  return congestionColors[0];
+		return congestionColors[0];
 	} else if (speedKmh > 30 && speedKmh <= 40) {
-	  return congestionColors[1];
+		return congestionColors[1];
 	} else if (speedKmh > 20 && speedKmh <= 30) {
-	  return congestionColors[2];
+		return congestionColors[2];
 	} else if (speedKmh > 15 && speedKmh <= 20) {
-	  return congestionColors[3];
+		return congestionColors[3];
 	} else {
-	  return congestionColors[4];
+		return congestionColors[4];
 	}
-  }
+}
 
-
-
-  export function deleteRerouteLayer(map: Map) {
+export function deleteRerouteLayer(map: Map) {
 	let max = get(countReroute);
 	for (let i = 0; i <= max; i++) {
 		if (map.getLayer(`segment_reroute_${i}`)) {
 			map.removeLayer(`segment_reroute_${i}`);
-		  }
-		  if (map.getSource(`segment_reroute_${i}`)) {
+		}
+		if (map.getSource(`segment_reroute_${i}`)) {
 			map.removeSource(`segment_reroute_${i}`);
-		  }
+		}
 	}
-	
-  }
-  
-  function findCongestionLevelByColor(colorCode: string) {
+}
+
+function findCongestionLevelByColor(colorCode: string) {
 	switch (colorCode) {
 		case '#43D224':
 			return 0;
@@ -185,11 +169,11 @@ function showPopup(
 	currentCongestionLevel: number,
 	rerouteDistance: number,
 	rerouteCongestionLevel: number
-  ): Promise<boolean> {
+): Promise<boolean> {
 	return new Promise((resolve) => {
-	  const modal = document.createElement('div');
-	  modal.className = 'fixed inset-0 z-10 flex justify-end pt-4 pb-20 pr-4 mt-48 overflow-y-auto';
-	  modal.innerHTML = `
+		const modal = document.createElement('div');
+		modal.className = 'fixed inset-0 z-10 flex justify-end pt-4 pb-20 pr-4 mt-48 overflow-y-auto';
+		modal.innerHTML = `
 	  <div class="inline-block overflow-hidden align-bottom transition-all transform bg-white rounded-lg shadow-xl w-fit h-fit">
 	  <div class="px-4 pt-5 pb-4 bg-white">
 		<div class="text-left">
@@ -202,7 +186,7 @@ function showPopup(
 				<td class="border px-3 py-2 text-sm text-gray-500">New</td>
 				</tr>
 				<tr>
-				<td class="border px-3 py-2 text-sm text-gray-500">Distance (km)</td>
+				<td class="border px-3 py-2 text-sm text-gray-500">Distance (m)</td>
 				<td class="border px-3 py-2 text-sm text-gray-500 text-center">${currentDistance.toFixed(2)}</td>
 				<td class="border px-3 py-2 text-sm text-gray-500 text-center">${rerouteDistance.toFixed(2)}</td>
 				</tr>
@@ -244,22 +228,21 @@ function showPopup(
 	</div>
 	
 	  `;
-  
-	  // Function to handle button click
-	  function handleClick(choice: boolean) {
-		resolve(choice);
-		modal.remove();
-	  }
-  
-	  // Get buttons and attach event listeners
-	  modal.querySelectorAll('button').forEach((button, index) => {
-		button.addEventListener('click', () => {
-		  const isYesButton = index === 0; // Assuming Yes button is the first button
-		  handleClick(isYesButton);
+
+		// Function to handle button click
+		function handleClick(choice: boolean) {
+			resolve(choice);
+			modal.remove();
+		}
+
+		// Get buttons and attach event listeners
+		modal.querySelectorAll('button').forEach((button, index) => {
+			button.addEventListener('click', () => {
+				const isYesButton = index === 0; // Assuming Yes button is the first button
+				handleClick(isYesButton);
+			});
 		});
-	  });
-  
-	  document.body.appendChild(modal);
+
+		document.body.appendChild(modal);
 	});
-  }
-  
+}

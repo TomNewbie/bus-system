@@ -1,7 +1,7 @@
 export async function fetchBusLine(api: any) {
 	let a = [];
 	try {
-		const response = await fetch(api);
+		const response = await fetch(`${api}/segments`);
 		if (response.ok) {
 			const data: GeoJsonWithId[] = await response.json();
 			// Process the data and remove the "_id" attribute
@@ -27,6 +27,7 @@ export async function fetchBusLine(api: any) {
 }
 
 export async function fetchCongestionDataByBusline(
+	apiUrl: string,
 	model: string,
 	route_id: string,
 	shape_id: string,
@@ -40,7 +41,7 @@ export async function fetchCongestionDataByBusline(
 	let abortSignal = abortController.signal;
 	try {
 		const response = await fetch(
-			`http://188.166.180.176:8000/de/predict/${model}?route_id=${route_id}&shape_id=${shape_id}&direction_id=${direction_id}&minute_predict=${minute}`,
+			`${apiUrl}/predict/${model}?route_id=${route_id}&shape_id=${shape_id}&direction_id=${direction_id}&minute_predict=${minute}`,
 			{ signal: abortSignal }
 		);
 		if (response.ok) {

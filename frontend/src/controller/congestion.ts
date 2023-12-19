@@ -57,6 +57,7 @@ function drawCongestionLevel(
 }
 
 export async function fetchCongestionData(
+	apiUrl: string,
 	busNetwork: BusNetwork,
 	currentIndex: number,
 	minute: number,
@@ -75,6 +76,7 @@ export async function fetchCongestionData(
 	abortController = new AbortController();
 
 	let result = await fetchCongestionDataByBusline(
+		apiUrl,
 		model,
 		properties.route_id,
 		properties.shape_id,
