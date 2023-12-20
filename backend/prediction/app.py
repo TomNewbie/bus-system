@@ -38,7 +38,7 @@ def predict_random_forest():
 
 # RANDOM FOREST
 @app.route('/random-forest-2', methods=['POST'])
-def predict_random_forest():
+def predict_random_forest_2():
     request_data = request.get_json()
     
     result_data = run_model(request_data, "random_forest_2")
