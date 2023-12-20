@@ -6,6 +6,7 @@ from keras_preprocessing.sequence import pad_sequences
 from sklearn.preprocessing import MinMaxScaler
 from tensorflow import keras
 from random_forest import run_random_forest_model
+from random_forest import run_random_forest_model_2
 from lstm import run_lstm_model
 from lstm2 import run_lstm_2_model
 
@@ -23,7 +24,14 @@ def run_model(data, type):
         X_new = df[['arrival_hour', 'arrival_minute', 'stop_lat', 'stop_lon', 'next_lat', 'next_lon', 'direction_id']]
         X_new = scaler.fit_transform(X_new)
         df["congestion_level"] = run_random_forest_model(X_new)
-        
+
+    elif type == "random_forest_2":
+        df = df[['route_id','direction_id','arrival_hour','arrival_minute','segment_id','start_stop_id',"stop_lat","stop_lon","end_stop_id","next_lat","next_lon"]]
+        scaler = MinMaxScaler()
+        X_new = df[['arrival_hour', 'arrival_minute', 'stop_lat', 'stop_lon', 'next_lat', 'next_lon', 'direction_id']]
+        X_new = scaler.fit_transform(X_new)
+        df["congestion_level"] = run_random_forest_model_2(X_new) 
+
     elif type == "lstm":
         first_row = df.iloc[0]
         hour = first_row['arrival_hour']

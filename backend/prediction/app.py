@@ -36,6 +36,15 @@ def predict_random_forest():
     result_json = result_data.to_json(orient='records')
     return Response(result_json, mimetype='application/json')
 
+# RANDOM FOREST
+@app.route('/random-forest-2', methods=['POST'])
+def predict_random_forest():
+    request_data = request.get_json()
+    
+    result_data = run_model(request_data, "random_forest_2")
+    result_json = result_data.to_json(orient='records')
+    return Response(result_json, mimetype='application/json')
+
 # default route
 @app.route('/')
 def default_route():
